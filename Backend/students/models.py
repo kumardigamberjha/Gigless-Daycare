@@ -1,0 +1,114 @@
+from django.db import models
+from django.utils.crypto import get_random_string
+from PIL import Image
+from django.core.files.uploadedfile import InMemoryUploadedFile
+import io
+
+# Create your models here.
+class Child(models.Model):
+    first_name = models.CharField(max_length=100)
+    last_name = models.CharField(max_length=100)
+    date_of_birth = models.DateField()
+    gender = models.CharField(max_length=10)
+    blood_group = models.CharField(max_length=5, blank=True, null=True)
+    medical_history = models.TextField(blank=True)
+    emergency_contact_name = models.CharField(max_length=100)
+    emergency_contact_number = models.CharField(max_length=15)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+    image = models.ImageField(blank=True, null=True)
+    unique_id = models.CharField(max_length=30, unique=True)
+    child_fees = models.FloatField(default=0)
+    # Address Information
+    address = models.CharField(max_length=255, blank=True, null=True)
+    city = models.CharField(max_length=100, blank=True, null=True)
+    state = models.CharField(max_length=100, blank=True, null=True)
+    zip_code = models.CharField(max_length=10, blank=True, null=True)
+    parent1_name = models.CharField(max_length=100, blank=True, null=True)
+    parent1_contact_number = models.CharField(max_length=15, blank=True, null=True)
+    parent2_name = models.CharField(max_length=100, blank=True, null=True)
+    parent2_contact_number = models.CharField(max_length=15, blank=True, null=True)
+
+    def save(self, *args, **kwargs):
+        print("Self Image: ", self.unique_id)
+        self.unique_id = self.generate_unique_id()
+
+        if self.image:
+            # Open the image using Pillow
+            img = Image.open(self.image)
+            # Compress the image
+            output = io.BytesIO()
+            img.save(output, format='JPEG', quality=60)  # Adjust quality as needed
+            output.seek(0)
+            # Save the compressed image data to the image field
+            self.image.save(self.image.name, InMemoryUploadedFile(output, None, self.image.name, 'image/jpeg', output.tell(), None), save=False)
+
+
+        super().save(*args, **kwargs)
+
+    def generate_unique_id(self):
+        # Generate a unique ID using a random string
+        return get_random_string(length=10)
+
+    def __str__(self):
+        return f"{self.first_name} {self.last_name}"
+    
+    class Meta:
+        # Enforce uniqueness based on the combination of these fields
+        unique_together = ['first_name', 'last_name', 'date_of_birth', 'emergency_contact_number']
+
+
+
+############################# Attendance ###############################
+class Attendance(models.Model):
+    child = models.ForeignKey('Child', on_delete=models.CASCADE)
+    is_present = models.BooleanField(default=False)
+    datemarked = models.DateField(auto_now_add=True)
+
+    def __str__(self):
+        return f"{self.child} - {self.datemarked}"
+
+
+
+############################# Daily Activity ###############################
+
+class DailyActivity(models.Model):
+    child = models.ForeignKey(Child, on_delete=models.CASCADE)
+    ondate = models.DateField(auto_now=True)
+    meal_description = models.TextField(blank=True, null=True)
+    nap_duration = models.DurationField(blank=True, null=True)
+    playtime_activities = models.TextField(blank=True, null=True)
+    bathroom_breaks = models.PositiveIntegerField(default=0, blank=True, null=True)
+    mood = models.CharField(max_length=20, blank=True, null=True)
+    temperature = models.DecimalField(max_digits=5, decimal_places=2, blank=True, null=True)
+    medication_given = models.TextField(blank=True, null=True)
+
+    def __str__(self):
+        return f"{self.child} - {self.ondate}"
+    
+
+class ChildMedia(models.Model):
+    MEDIA_TYPES = (
+        ('Image', 'Image'),
+        ('Video', 'Video'),
+    )
+
+    ACTIVITY_TYPES = (
+        ('Meal', 'Meal'),
+        ('Nap', 'Nap'),
+        ('Playtime', 'Playtime'),
+        ('Bathroom', 'Bathroom'),
+        ('Other', 'Other'),
+    )
+
+    child = models.ForeignKey(Child, on_delete=models.CASCADE, related_name='media')
+    media_type = models.CharField(max_length=10, choices=MEDIA_TYPES, blank=True, null=True)
+    file = models.FileField(upload_to='child_media/')
+    uploaded_at = models.DateTimeField(auto_now_add=True)
+    activity_type = models.CharField(max_length=20, choices=ACTIVITY_TYPES, default='other')
+    desc = models.CharField(max_length=500,blank=True, null=True)
+
+    def __str__(self):
+        return f"{self.get_media_type_display()} of {self.child.first_name} {self.child.last_name} uploaded at {self.uploaded_at} for {self.get_activity_type_display()}"
+    
+
