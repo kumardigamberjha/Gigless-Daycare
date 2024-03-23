@@ -68,7 +68,7 @@ class _CurrentYearAccountDetailPageState
             fontWeight: FontWeight.bold,
           ),
         ),
-        backgroundColor: Colors.blue,
+        // backgroundColor: Colors.blue,
         elevation: 2,
         centerTitle: true,
       ),
@@ -190,7 +190,14 @@ class _MonthTileState extends State<MonthTile> {
   }
 
   Widget _buildAccountItem(Map<String, dynamic> payment) {
-    return Column(
+  return Container(
+    padding: EdgeInsets.all(8),
+    decoration: BoxDecoration(
+      color: Colors.grey[200],
+      borderRadius: BorderRadius.circular(8),
+    ),
+    margin: EdgeInsets.symmetric(vertical: 4),
+    child: Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
@@ -208,8 +215,9 @@ class _MonthTileState extends State<MonthTile> {
           style: TextStyle(
               fontSize: 14, fontWeight: FontWeight.w500, color: Colors.green),
         ),
-        SizedBox(height: 10),
       ],
-    );
-  }
+    ),
+  );
+}
+
 }

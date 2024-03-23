@@ -65,7 +65,7 @@ class _AttendanceChildRecordsPageState
     return Scaffold(
       appBar: AppBar(
         title: Text('Track Attendance'),
-        backgroundColor: Colors.blue,
+        // backgroundColor: Colors.blue,
       ),
       body: childRecords.isEmpty
           ? Center(
@@ -91,7 +91,7 @@ class _AttendanceChildRecordsPageState
                       child: Container(
                         decoration: BoxDecoration(
                           gradient: LinearGradient(
-                            colors: [Colors.blue, Colors.lightBlueAccent],
+                            colors: [Colors.white, Colors.white],
                             begin: Alignment.topCenter,
                             end: Alignment.bottomCenter,
                           ),
@@ -112,7 +112,7 @@ class _AttendanceChildRecordsPageState
                                       decoration: BoxDecoration(
                                         shape: BoxShape.circle,
                                         border: Border.all(
-                                            color: Colors.white, width: 4),
+                                            color: const Color.fromARGB(255, 12, 14, 15), width: 2),
                                         image: DecorationImage(
                                           image: NetworkImage(
                                             childRecords[index]['image'] ??
@@ -126,7 +126,7 @@ class _AttendanceChildRecordsPageState
                                   Text(
                                     '#${childRecords[index]['unique_id'] ?? ''}',
                                     style: TextStyle(
-                                        fontSize: 16, color: Colors.white70),
+                                        fontSize: 16, color: Colors.black),
                                   ),
                                 ],
                               ),
@@ -140,7 +140,7 @@ class _AttendanceChildRecordsPageState
                                       style: TextStyle(
                                         fontSize: 16,
                                         fontWeight: FontWeight.bold,
-                                        color: Colors.white,
+                                        color: Colors.black,
                                       ),
                                     ),
                                   ],
@@ -149,43 +149,6 @@ class _AttendanceChildRecordsPageState
                               SizedBox(width: 16),
                               Column(
                                 children: [
-                                  // Column(
-                                  //   children: [
-                                  //         IconButton(
-                                  //           icon: Icon(Icons.playlist_add),
-                                  //           onPressed: () => AddDailyActivity(
-                                  //               childRecords[index]['id']),
-                                  //           color: Colors.white,
-                                  //         ),
-                                  //         Text(
-                                  //           'Daily\nActivity',
-                                  //           textAlign: TextAlign.center,
-                                  //           style: TextStyle(
-                                  //             fontSize: 10,
-                                  //             color: Colors.white,
-                                  //           ),
-                                  //         ),
-                                  //       ],
-                                  //     ),
-                                  //     // SizedBox(width: 16),
-                                  //     Column(
-                                  //       children: [
-                                  //         IconButton(
-                                  //           icon: Icon(Icons.photo),
-                                  //           onPressed: () => AddChildMedia(
-                                  //               childRecords[index]['id']),
-                                  //           color: Colors.white,
-                                  //         ),
-                                  //         Text(
-                                  //           'Add\nMedia',
-                                  //           textAlign: TextAlign.center,
-                                  //           style: TextStyle(
-                                  //             fontSize: 10,
-                                  //             color: Colors.white,
-                                  //           ),
-                                  //         ),
-                                  //       ],
-                                  //     ),
                                   Column(
                                     children: [
                                       IconButton(
@@ -201,14 +164,14 @@ class _AttendanceChildRecordsPageState
                                             ),
                                           );
                                         },
-                                        color: Colors.white,
+                                        color: Colors.black,
                                       ),
                                       Text(
                                         'Track\nAttendance',
                                         textAlign: TextAlign.center,
                                         style: TextStyle(
                                           fontSize: 12,
-                                          color: Colors.white,
+                                          color: Colors.black,
                                         ),
                                       ),
                                     ],

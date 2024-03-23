@@ -97,7 +97,6 @@ class _ShowDailyActivityPageState extends State<ShowDailyActivityPage> {
     );
   }
 
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -125,103 +124,114 @@ class _ShowDailyActivityPageState extends State<ShowDailyActivityPage> {
                       child: GestureDetector(
                         // onTap: () => viewChildDetail(childRecords[index]['id']),
                         child: Card(
-  elevation: 4,
-  shape: RoundedRectangleBorder(
-    borderRadius: BorderRadius.circular(15),
-  ),
-  child: Container(
-    padding: EdgeInsets.all(16),
-    decoration: BoxDecoration(
-      color: Colors.white,
-      borderRadius: BorderRadius.circular(15),
-    ),
-    child: Row(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Container(
-          width: 80,
-          height: 80,
-          decoration: BoxDecoration(
-            shape: BoxShape.circle,
-            border: Border.all(
-              color: Colors.brown,
-              width: 4,
-            ),
-            image: DecorationImage(
-              image: NetworkImage(
-                childRecords[index]['image'] ??
-                    'https://via.placeholder.com/150',
-              ),
-              fit: BoxFit.cover,
-            ),
-          ),
-        ),
-        SizedBox(width: 16),
-        Expanded(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                '${childRecords[index]['first_name'] ?? ''} ${childRecords[index]['last_name'] ?? ''}',
-                style: TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.black,
-                ),
-              ),
-              SizedBox(height: 15),
-              Column(
-                children: [
-                  if (!childRecords[index]['isActivitySaved']) // Conditionally render the button
-                    ElevatedButton.icon(
-                      onPressed: () => addDailyActivity(childRecords[index]['id']),
-                      icon: Icon(Icons.add),
-                      label: Text('Add Activity'),
-                      style: ElevatedButton.styleFrom(
-                        foregroundColor: Colors.white, backgroundColor: Colors.green,
-                      ),
-                    ),
-                  SizedBox(height: 10),
-                  ElevatedButton.icon(
-                    onPressed: () => viewTodaysActivity(childRecords[index]['id']),
-                    icon: Icon(Icons.remove_red_eye),
-                    label: Text('View Activity'),
-                    style: ElevatedButton.styleFrom(
-                      foregroundColor: Colors.white, backgroundColor: Colors.blue,
-                    ),
-                  ),
-                  SizedBox(height: 10),
-                  if (childRecords[index]['isActivitySaved'])
-                  ElevatedButton.icon(
-                    onPressed: () => editTodaysActivity(childRecords[index]['id']),
-                    icon: Icon(Icons.remove_red_eye),
-                    label: Text('Edit Activity'),
-                    style: ElevatedButton.styleFrom(
-                      foregroundColor: Colors.black, backgroundColor: Colors.yellow,
-                    ),
-                  ),
-                ],
-              ),
-              SizedBox(height: 10),
-              Text(
-                childRecords[index]['isActivitySaved']
-                    ? 'Activity saved for today'
-                    : 'Activity not saved for today',
-                style: TextStyle(
-                  fontSize: 14,
-                  color: childRecords[index]['isActivitySaved']
-                      ? Colors.green
-                      : Colors.red,
-                ),
-              )
-            ],
-          ),
-        ),
-      ],
-    ),
-  ),
-),
-
+                          elevation: 4,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(15),
+                          ),
+                          child: Container(
+                            padding: EdgeInsets.all(16),
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(15),
+                            ),
+                            child: Row(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Container(
+                                  width: 80,
+                                  height: 80,
+                                  decoration: BoxDecoration(
+                                    shape: BoxShape.circle,
+                                    border: Border.all(
+                                      color: Colors.black,
+                                      width: 2,
+                                    ),
+                                    image: DecorationImage(
+                                      image: NetworkImage(
+                                        childRecords[index]['image'] ??
+                                            'https://via.placeholder.com/150',
+                                      ),
+                                      fit: BoxFit.cover,
+                                    ),
+                                  ),
+                                ),
+                                SizedBox(width: 16),
+                                Expanded(
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        '${childRecords[index]['first_name'] ?? ''} ${childRecords[index]['last_name'] ?? ''}',
+                                        style: TextStyle(
+                                          fontSize: 18,
+                                          fontWeight: FontWeight.bold,
+                                          color: Colors.black,
+                                        ),
+                                      ),
+                                      SizedBox(height: 15),
+                                      Column(
+                                        children: [
+                                          if (!childRecords[index][
+                                              'isActivitySaved']) // Conditionally render the button
+                                            ElevatedButton.icon(
+                                              onPressed: () => addDailyActivity(
+                                                  childRecords[index]['id']),
+                                              icon: Icon(Icons.add),
+                                              label: Text('Add Activity'),
+                                              style: ElevatedButton.styleFrom(
+                                                foregroundColor: Colors.white,
+                                                backgroundColor: Colors.green,
+                                              ),
+                                            ),
+                                          SizedBox(height: 10),
+                                          ElevatedButton.icon(
+                                            onPressed: () => viewTodaysActivity(
+                                                childRecords[index]['id']),
+                                            icon: Icon(Icons.remove_red_eye),
+                                            label: Text('View Activity'),
+                                            style: ElevatedButton.styleFrom(
+                                              foregroundColor: Colors.white,
+                                              backgroundColor: Colors.blue,
+                                            ),
+                                          ),
+                                          SizedBox(height: 10),
+                                          if (childRecords[index]
+                                              ['isActivitySaved'])
+                                            ElevatedButton.icon(
+                                              onPressed: () =>
+                                                  editTodaysActivity(
+                                                      childRecords[index]
+                                                          ['id']),
+                                              icon: Icon(Icons.remove_red_eye),
+                                              label: Text('Edit Activity'),
+                                              style: ElevatedButton.styleFrom(
+                                                foregroundColor: Colors.black,
+                                                backgroundColor: Colors.yellow,
+                                              ),
+                                            ),
+                                        ],
+                                      ),
+                                      SizedBox(height: 10),
+                                      Text(
+                                        childRecords[index]['isActivitySaved']
+                                            ? 'Activity saved for today'
+                                            : 'Activity not saved for today',
+                                        style: TextStyle(
+                                          fontSize: 14,
+                                          color: childRecords[index]
+                                                  ['isActivitySaved']
+                                              ? Colors.green
+                                              : Colors.red,
+                                        ),
+                                      )
+                                    ],
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
                       ),
                     );
                   },

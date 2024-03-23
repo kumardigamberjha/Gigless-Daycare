@@ -50,7 +50,7 @@ class _TotalPaymentsCurrentMonthPageState
     return Scaffold(
       appBar: AppBar(
         title: Text('Total Payments Current Month'),
-        backgroundColor: Colors.blue,
+        backgroundColor: Colors.white,
         elevation: 0, // Remove app bar shadow
       ),
       body: Container(

@@ -199,6 +199,7 @@ class _ChildCreateViewState extends State<ChildCreateView> {
     return Scaffold(
       appBar: AppBar(
         title: Text('Child Record Form'),
+        // backgroundColor: Colors.blue,
       ),
       body: isLoading
           ? Center(
@@ -282,6 +283,8 @@ class _ChildCreateViewState extends State<ChildCreateView> {
                             style: TextStyle(color: Colors.white),
                           ),
                           style: ElevatedButton.styleFrom(
+                            backgroundColor:
+                                Colors.blue, // Change background color to blue
                           ),
                         ),
                         SizedBox(height: 10),
@@ -354,6 +357,9 @@ class _ChildCreateViewState extends State<ChildCreateView> {
                         ElevatedButton(
                           onPressed: _pickImage,
                           child: Text('Pick Image'),
+                          style: ElevatedButton.styleFrom(
+                            foregroundColor: Colors.white, backgroundColor: Colors.blue, // Set text color
+                          ),
                         ),
                       ],
                     ),
@@ -443,3 +449,5 @@ class _ChildCreateViewState extends State<ChildCreateView> {
     );
   }
 }
+
+

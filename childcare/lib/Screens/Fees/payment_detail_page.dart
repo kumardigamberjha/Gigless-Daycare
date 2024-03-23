@@ -17,9 +17,9 @@ class PaymentDetailPage extends StatelessWidget {
       appBar: AppBar(
         title: Text(
           'Payment Detail',
-          style: TextStyle(color: Colors.white),
+          style: TextStyle(color: Colors.black),
         ),
-        backgroundColor: Colors.blue,
+        backgroundColor: Colors.white,
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(20.0),

@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:childcare/Screens/ChildMedia/childlisr.dart';
+import 'package:childcare/Screens/LearningResources/create_learning_resources.dart';
 import 'package:childcare/Screens/Parent/Appointment/appointmentStatus.dart';
 import 'package:childcare/Screens/Events/eventcal.dart';
 import 'package:childcare/Screens/Parent/Appointment/create_appointment.dart';
@@ -375,6 +376,20 @@ class _HomeScreenState extends State<HomeScreen> {
                   );
                 },
               ),
+              if (_user != null &&
+                (_user!.userType != "Parent" && _user!.userType == "Staff"))
+              ListTile(
+                title: Text('Learning Resources'),
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => LearningResourceForm(),
+                    ),
+                  );
+                },
+              ),
+              
 
             // ***************** For Staff ************************
             if (_user != null &&

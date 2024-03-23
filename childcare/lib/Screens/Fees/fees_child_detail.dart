@@ -37,7 +37,7 @@ class _ChildListFeesPageState extends State<ChildListFeesPage> {
     return Scaffold(
       appBar: AppBar(
         title: Text('Child Fees', style: TextStyle(fontSize: 24)),
-        backgroundColor: Colors.blue,
+        backgroundColor: Colors.white,
         elevation: 0, // Remove app bar elevation
       ),
       body: childRecords.isEmpty
@@ -60,7 +60,7 @@ class _ChildListFeesPageState extends State<ChildListFeesPage> {
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(15),
                           gradient: LinearGradient(
-                            colors: [Colors.blue, Colors.lightBlueAccent],
+                            colors: [Colors.white, Colors.white],
                             begin: Alignment.topCenter,
                             end: Alignment.bottomCenter,
                           ),
@@ -71,7 +71,7 @@ class _ChildListFeesPageState extends State<ChildListFeesPage> {
                             children: [
                               CircleAvatar(
                                 radius: 40,
-                                backgroundColor: Colors.white,
+                                backgroundColor: Colors.black,
                                 backgroundImage: NetworkImage(
                                   childRecords[index]['image'] ?? 'https://via.placeholder.com/150',
                                 ),
@@ -86,7 +86,7 @@ class _ChildListFeesPageState extends State<ChildListFeesPage> {
                                       style: TextStyle(
                                         fontSize: 18,
                                         fontWeight: FontWeight.bold,
-                                        color: Colors.white,
+                                        color: Colors.black,
                                       ),
                                     ),
                                     SizedBox(height: 8),
@@ -94,7 +94,7 @@ class _ChildListFeesPageState extends State<ChildListFeesPage> {
                                       'Age: ${calculateAge(childRecords[index]['date_of_birth'] ?? '')}',
                                       style: TextStyle(
                                         fontSize: 16,
-                                        color: Colors.white,
+                                        color: Colors.black,
                                       ),
                                     ),
                                   ],
@@ -115,13 +115,13 @@ class _ChildListFeesPageState extends State<ChildListFeesPage> {
                                         ),
                                       );
                                     },
-                                    color: Colors.white,
+                                    color: Colors.black,
                                   ),
                                   Text(
                                     'Add Fees',
                                     style: TextStyle(
                                       fontSize: 14,
-                                      color: Colors.white,
+                                      color: Colors.black,
                                     ),
                                   ),
                                   IconButton(
@@ -136,13 +136,13 @@ class _ChildListFeesPageState extends State<ChildListFeesPage> {
                                         ),
                                       );
                                     },
-                                    color: Colors.white,
+                                    color: Colors.black,
                                   ),
                                   Text(
                                     'Get Fees',
                                     style: TextStyle(
                                       fontSize: 14,
-                                      color: Colors.white,
+                                      color: Colors.black,
                                     ),
                                   ),
                                 ],

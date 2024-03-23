@@ -71,7 +71,7 @@ class _SelectedMonthlyPaymentsPageState
             fontWeight: FontWeight.bold,
           ),
         ),
-        backgroundColor: Colors.blue,
+        backgroundColor: Colors.white,
         elevation: 2,
         centerTitle: true,
       ),

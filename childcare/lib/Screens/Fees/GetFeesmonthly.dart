@@ -110,7 +110,7 @@ class _FeeListPageState extends State<FeeListPage> {
                 ? Text(errorMessage)
                 : Text(
                     'Total Received: \$${getTotalAmountReceivedForMonth(selectedMonth).toStringAsFixed(2)}'),
-        backgroundColor: Colors.blue,
+        backgroundColor: Colors.white,
       ),
       body: isLoading
           ? Center(child: CircularProgressIndicator())

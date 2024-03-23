@@ -80,13 +80,13 @@ class _ViewTodaysActivityPageState extends State<ViewTodaysActivityPage> {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          "Today's Activuty",
+          "Today's Activity",
           style: TextStyle(
             fontFamily: 'Roboto',
             fontWeight: FontWeight.bold,
           ),
         ),
-        backgroundColor: Color(0xFF007ACC),
+        backgroundColor: Colors.white,
         elevation: 4,
       ),
       body: Container(

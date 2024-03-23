@@ -21,8 +21,8 @@ class _ChildRecordsPageState extends State<ChildRecordsPage> {
   }
 
   Future<void> fetchData() async {
-    final response = await http
-        .get(Uri.parse("http://127.0.0.1:8000/student/child-list/"));
+    final response =
+        await http.get(Uri.parse("http://127.0.0.1:8000/student/child-list/"));
 
     if (response.statusCode == 200) {
       final List<dynamic> data = json.decode(response.body);
@@ -66,7 +66,7 @@ class _ChildRecordsPageState extends State<ChildRecordsPage> {
     return Scaffold(
       appBar: AppBar(
         title: Text('Child Records'),
-        backgroundColor: Colors.blue,
+        // backgroundColor: Colors.blue,
       ),
       body: childRecords.isEmpty
           ? Center(
@@ -88,14 +88,14 @@ class _ChildRecordsPageState extends State<ChildRecordsPage> {
                       elevation: 4,
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(15),
+                        side: BorderSide(
+                          color: Colors.transparent, // Border color
+                          width: 2, // Border width
+                        ),
                       ),
                       child: Container(
                         decoration: BoxDecoration(
-                          gradient: LinearGradient(
-                            colors: [Colors.blue, Colors.lightBlueAccent],
-                            begin: Alignment.topCenter,
-                            end: Alignment.bottomCenter,
-                          ),
+                          color: Colors.white, // Card background color
                           borderRadius: BorderRadius.circular(15),
                         ),
                         child: Padding(
@@ -113,7 +113,7 @@ class _ChildRecordsPageState extends State<ChildRecordsPage> {
                                       decoration: BoxDecoration(
                                         shape: BoxShape.circle,
                                         border: Border.all(
-                                            color: Colors.white, width: 4),
+                                            color: Colors.blue, width: 2),
                                         image: DecorationImage(
                                           image: NetworkImage(
                                             childRecords[index]['image'] ??
@@ -127,7 +127,9 @@ class _ChildRecordsPageState extends State<ChildRecordsPage> {
                                   Text(
                                     '#${childRecords[index]['unique_id'] ?? ''}',
                                     style: TextStyle(
-                                        fontSize: 16, color: Colors.white70),
+                                      fontSize: 16,
+                                      color: Colors.black, // Text color
+                                    ),
                                   ),
                                 ],
                               ),
@@ -141,31 +143,33 @@ class _ChildRecordsPageState extends State<ChildRecordsPage> {
                                       style: TextStyle(
                                         fontSize: 16,
                                         fontWeight: FontWeight.bold,
-                                        color: Colors.white,
+                                        color: Colors.black, // Text color
                                       ),
                                     ),
                                     SizedBox(height: 8),
                                     Text(
                                       'Age: $age',
                                       style: TextStyle(
-                                          fontSize: 16, color: Colors.white70),
+                                          fontSize: 16,
+                                          color: Colors.black), // Text color
                                     ),
                                     SizedBox(height: 4),
                                     Text(
                                       'Gender: ${childRecords[index]['gender'] ?? ''}',
                                       style: TextStyle(
-                                          fontSize: 16, color: Colors.white70),
+                                          fontSize: 16,
+                                          color: Colors.black), // Text color
                                     ),
                                     SizedBox(height: 4),
                                     Text(
                                       'Fees: \$${childRecords[index]['child_fees'] ?? ''}',
                                       style: TextStyle(
-                                          fontSize: 16, color: Colors.white70),
+                                          fontSize: 16,
+                                          color: Colors.black), // Text color
                                     ),
                                   ],
                                 ),
                               ),
-                              
                             ],
                           ),
                         ),

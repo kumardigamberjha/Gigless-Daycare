@@ -102,7 +102,7 @@ class _FeeFormPageState extends State<FeeFormPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.blue,
+        backgroundColor: Colors.white,
         title: Text('Add Fee', style: TextStyle(fontSize: 24, color: Colors.white)),
       ),
       body: Padding(
