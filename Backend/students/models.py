@@ -2,7 +2,16 @@ from django.db import models
 from django.utils.crypto import get_random_string
 from PIL import Image
 from django.core.files.uploadedfile import InMemoryUploadedFile
-import io
+import io, os
+import ffmpeg
+from django.core.files.base import ContentFile
+from io import BytesIO
+from authapp.models import CustomUser
+from django.conf import settings
+import subprocess
+from moviepy.editor import VideoFileClip
+import boto3 
+s3_client = boto3.client('s3')
 
 # Create your models here.
 class Child(models.Model):
@@ -112,3 +121,25 @@ class ChildMedia(models.Model):
         return f"{self.get_media_type_display()} of {self.child.first_name} {self.child.last_name} uploaded at {self.uploaded_at} for {self.get_activity_type_display()}"
     
 
+
+
+
+# ####################################### Resources #######################
+
+
+class LearningResource(models.Model):
+    title = models.CharField(max_length=100)
+    description = models.TextField()
+    uploaded_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return self.title
+
+
+class LearningResourceMedia(models.Model):
+    lrid = models.ForeignKey(LearningResource, on_delete=models.CASCADE)
+    title = models.CharField(max_length=100, blank=True, null=True)
+    file = models.FileField(upload_to='learning_resources/')
+
+    def __str__(self):
+        return self.title

@@ -1,7 +1,7 @@
 
 from rest_framework import generics
-from .models import Child, Attendance, DailyActivity, ChildMedia
-from .serializers import ChildSerializer, ChildSerializerGet, AttendanceSerializer, AttendanceSerializerStatus, DailyActivitySerializer, ChildMediaSerializer
+from .models import Child, Attendance, DailyActivity, ChildMedia, LearningResource
+from .serializers import ChildSerializer, ChildSerializerGet, AttendanceSerializer, AttendanceSerializerStatus, DailyActivitySerializer, ChildMediaSerializer, LearningResourceSerializer
 from rest_framework import serializers
 from rest_framework.response import Response
 from django.db import IntegrityError
@@ -18,7 +18,7 @@ from authapp.models import CustomUser
 from authapp.serializers import CustomUserSerializer
 from rest_framework.permissions import IsAuthenticated
 from django.views import View
-
+from .tasks import save_images_and_videos_to_s3
 
 class ChildListCreateView(generics.ListCreateAPIView):
     queryset = Child.objects.all()
@@ -291,8 +291,8 @@ def child_media_detail(request, pk):
     today = date.today()
     try:
         child = Child.objects.get(id=pk)
-        child_media = ChildMedia.objects.filter(child=child.id)
-
+        child_media = ChildMedia.objects.filter(child=child.id, uploaded_at__date=today)
+        print("Child Media: ", child_media)
         serializer = ChildMediaSerializer(child_media, many=True)
         
         # Serialize child details (single instance)
@@ -319,3 +319,32 @@ class CustomUserAPIView(APIView):
                 return Response("Sign in First")
         except CustomUser.DoesNotExist:
             return Response(status=status.HTTP_404_NOT_FOUND)
+        
+
+
+# $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+#                   Learning Resources
+# $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+
+@api_view(['POST'])
+def create_learning_resource(request):
+    if request.method == 'POST':
+        title = request.data.get('title')
+        description = request.data.get('description')
+        image_file = request.FILES.get('image')  # Assuming the field name for the image is 'image'
+        video_file = request.FILES.get('video')  # Assuming the field name for the video is 'video'
+
+        try:
+            # Save text fields first
+            learning_resource = LearningResource.objects.create(
+                title=title,
+                description=description,
+            )
+
+            # Call Celery task to save images and videos asynchronously
+            save_images_and_videos_to_s3.delay(learning_resource.id, image_file, video_file)
+
+            return Response({"message": "Learning resource created successfully"}, status=status.HTTP_201_CREATED)
+        except Exception as e:
+            print("Error: ", e)
+            return Response({"message": "Failed to create learning resource"}, status=status.HTTP_400_BAD_REQUEST)

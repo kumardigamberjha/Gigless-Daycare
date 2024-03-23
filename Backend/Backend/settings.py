@@ -28,7 +28,7 @@ SECRET_KEY = 'django-insecure-gt&n0vos84=bp%l^a)nlubm2#ht3_fwt9%z=@xl3j%ef+oukdq
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['127.0.0.1', 'localhost', '192.168.97.81']
+ALLOWED_HOSTS = ['127.0.0.1', 'localhost', '192.168.97.81', '127.0.0.1']
 
 AUTH_USER_MODEL = 'authapp.CustomUser'
 
@@ -199,9 +199,8 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 # #############  AWS S3 Bucket Setting  #####################
 
 AWS_SECRET_ACCESS_KEY = 'aoYN52R6dXTXiDRsfZvgC4MD+MS/3ETbfMMEj2AB'
-#AWS_ACCESS_KEY_ID = 'AKIA4EJ5GABHIDFWCDZ3'
+
 AWS_ACCESS_KEY_ID = 'AKIAZMTLT3R3GS3IKKJB'
-# AWS_SECRET_ACCESS_KEY = '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'
 
 #AWS_SECRET_ACCESS_KEY = 'GoN6VWZxP4X2yc6QySDIquS5Bo1A1gO1BWlqBKPA'
 AWS_STORAGE_BUCKET_NAME = 'codingindiastorage'

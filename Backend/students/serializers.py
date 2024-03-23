@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Child, Attendance, DailyActivity, ChildMedia
+from .models import Child, Attendance, DailyActivity, ChildMedia, LearningResource
 
 
 class ChildSerializer(serializers.ModelSerializer):
@@ -52,4 +52,11 @@ class DailyActivitySerializer(serializers.ModelSerializer):
 class ChildMediaSerializer(serializers.ModelSerializer):
     class Meta:
         model = ChildMedia
+        fields = '__all__'
+
+
+
+class LearningResourceSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = LearningResource
         fields = '__all__'

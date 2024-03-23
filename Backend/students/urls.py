@@ -15,10 +15,10 @@ urlpatterns = [
     path('api/daily-activity/<int:child_id>/', views.daily_activity_view, name='daily-activity'),
     path('child-media/', views.child_media_list, name="child_media"),
     path('child-media/<int:pk>/', views.child_media_detail, name="child_media_detail"),
-    
     # Current User API View 
     path('api/user/', views.CustomUserAPIView.as_view(), name='api-user-detail'),
 
     # ########### Monthly Attendance ###############
     path('attendance/stats/<int:child_id>/', views.AttendanceStatsView.as_view(), name='attendance_stats'),
+    path('api/resources/', views.create_learning_resource, name='create_learning_resource'),
 ]
