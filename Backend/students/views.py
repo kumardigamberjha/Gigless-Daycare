@@ -309,6 +309,7 @@ def child_media_detail(request, pk):
 class CustomUserAPIView(APIView):
     permission_classes = [IsAuthenticated]
     def get(self, request):
+        print("CUstom User: ", request.user)
         try:
             try:
                 current_user = request.user.unique_id

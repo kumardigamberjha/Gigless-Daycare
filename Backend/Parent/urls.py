@@ -12,5 +12,7 @@ urlpatterns = [
     path('ParentCurrentmonth_payments_list/', views.ParentCurrentmonth_payments_list, name='ParentCurrentmonth_payments_list'),
 
     path('dailyactivityforparent/<int:child_id>/', views.DailyActivityForParent, name='daily_activity_for_parent'),
+    path('dailyactivitymediaforparent/<int:child_id>/', views.DailyActivityMediaForParent, name='daily_activity_media_for_parent'),
+
     path('Fees/<int:child_id>/', views.fees_list, name="fees_list_account_view_to_parent"),
 ]

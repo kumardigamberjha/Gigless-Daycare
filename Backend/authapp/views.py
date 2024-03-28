@@ -6,7 +6,7 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework_simplejwt.views import TokenObtainPairView
 from rest_framework import status
 from rest_framework.response import Response
-
+from .models import CustomUser
 from rest_framework.decorators import api_view
 from .serializers import CustomUserSerializer
 from django.contrib.auth import authenticate, login, logout
@@ -15,9 +15,11 @@ from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.decorators import login_required
 from rest_framework.decorators import authentication_classes, permission_classes
 from rest_framework_simplejwt.tokens import RefreshToken
-
+from students.models import Child
+from students.serializers import ChildSerializer
 from rest_framework_simplejwt.tokens import AccessToken
 from rest_framework_simplejwt.exceptions import InvalidToken, TokenError
+from django.db.models import Q
 
 class TokenValidationView(APIView):
     @authentication_classes([])  # Use an empty list to disable authentication for this view
@@ -66,8 +68,9 @@ def register_user(request):
         serializer = CustomUserSerializer(data=request.data)
         print("Username: ", request.data.get('username'))
         print("UserType: ", request.data.get('usertype'))
-
+        
         if serializer.is_valid():
+            print("Serializer data:", serializer.validated_data)
             user = serializer.save()
 
             # Log in the user after successful registration
@@ -75,21 +78,53 @@ def register_user(request):
             print("Login Done")
 
             return Response(serializer.data, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        else:
+            print("Serializer errors:", serializer.errors)
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     
 
-# class LogoutView(APIView):
-#     #  permission_classes = (IsAuthenticated,)
-#      def post(self, request):
-          
-#           try:
-#                refresh_token = request.data["refresh_token"]
-#             #    token = RefreshToken(refresh_token)
-#             #    token.blacklist()
-#                return Response(status=status.HTTP_205_RESET_CONTENT)
-#           except Exception as e:
-#                return Response(status=status.HTTP_400_BAD_REQUEST)
 
+@api_view(['GET'])
+# @authentication_classes([])  # Disable authentication for this view
+@permission_classes([]) 
+def user_list(request):
+    if request.method == 'GET':
+        users = CustomUser.objects.filter(usertype="Staff")
+        serializer = CustomUserSerializer(users, many=True)
+        return Response(serializer.data)
+
+
+@api_view(['GET'])
+# @authentication_classes([])  # Disable authentication for this view
+@permission_classes([]) 
+def parent_list(request):
+    if request.method == 'GET':
+        users = CustomUser.objects.filter(usertype="Parent")
+        serializer = CustomUserSerializer(users, many=True)
+        return Response(serializer.data)
+
+
+@api_view(['GET'])
+# @authentication_classes([])  # Disable authentication for this view
+@permission_classes([]) 
+def parent_detail_list(request, parent_id):
+    if request.method == 'GET':
+        user = CustomUser.objects.get(id=parent_id)
+        print("User: ", user)
+        childs = Child.objects.filter(Q(parent1_contact_number=user.mobile_number) | 
+                                       Q(parent2_contact_number=user.mobile_number) | 
+                                       Q(emergency_contact_number=user.mobile_number))
+        print("Children: ", childs)
+        
+        user_serializer = CustomUserSerializer(user)
+        child_serializer = ChildSerializer(childs, many=True)
+        
+        response_data = {
+            "user": user_serializer.data,
+            "children": child_serializer.data
+        }
+        
+        return Response(response_data)
 
 
 @csrf_exempt

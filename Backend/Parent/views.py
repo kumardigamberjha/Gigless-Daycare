@@ -14,8 +14,8 @@ from django.db.models import Sum
 from .models import ParentAppointment, ParentModel
 from .serializers  import ParentAppointmentSerializer
 from authapp.models import CustomUser
-from students.models import Child, Attendance, DailyActivity
-from students.serializers import ChildSerializerGet, AttendanceStatusSerializer, DailyActivitySerializer, ChildSerializer
+from students.models import Child, Attendance, DailyActivity, ChildMedia
+from students.serializers import ChildSerializerGet, AttendanceStatusSerializer, DailyActivitySerializer, ChildSerializer, ChildMediaSerializer
 
 from Accounts.models import Fee
 from Accounts.serializers import FeeSerializer
@@ -210,6 +210,32 @@ def DailyActivityForParent(request, child_id):
         return Response({'error': 'Child not found'}, status=status.HTTP_404_NOT_FOUND)
     
 
+
+@api_view(['GET'])
+def DailyActivityMediaForParent(request, child_id):
+    today = date.today()
+    print("Today: ", today)
+    try:
+        qs = get_object_or_404(Child, id=child_id)
+        daily_activities = ChildMedia.objects.filter(child=qs, uploaded_at=today)
+        # Serialize daily activities
+        serializer = ChildMediaSerializer(daily_activities, many=True)
+        
+        # Check if any daily activity exists for today
+        is_activity_saved = daily_activities.exists()
+
+        # Serialize child details (single instance)
+        child_ser = ChildSerializer(qs)
+        response_data = {
+            'data': serializer.data,
+            'user': child_ser.data,  # Access serialized data attribute for a single instance
+            'is_activity_saved': is_activity_saved,
+        }
+
+        return Response(response_data, status=status.HTTP_200_OK)
+    except Child.DoesNotExist:
+        return Response({'error': 'Child not found'}, status=status.HTTP_404_NOT_FOUND)
+    
 
 
 

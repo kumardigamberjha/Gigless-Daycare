@@ -14,8 +14,12 @@ from .models import CustomUser
 class CustomUserSerializer(serializers.ModelSerializer):
     class Meta:
         model = CustomUser
-        fields = ('id', 'email', 'username', 'password', 'mobile_number', 'usertype')  # Add 'mobile_number' field
-        extra_kwargs = {'password': {'write_only': True}}
+        fields = ('id', 'email', 'username', 'password', 'mobile_number', 'usertype', 'unique_id')  # Add 'mobile_number' field
+        # extra_kwargs = {'password': {'write_only': True}}
+        extra_kwargs = {
+            'password': {'write_only': True},  # Ensure password is write-only
+            'unique_id': {'read_only': True},  # Exclude unique_id from validation
+        }   
 
     def create(self, validated_data):
         email = validated_data.get('email', '')
