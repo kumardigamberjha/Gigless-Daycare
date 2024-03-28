@@ -23,7 +23,7 @@ class _PPaymentsPageState extends State<PPaymentsPage> {
       SharedPreferences prefs = await SharedPreferences.getInstance();
       String? accessToken = prefs.getString('accessToken');
 
-      String apiUrl = 'http://127.0.0.1:8000/Parent/ParentCurrentmonth_payments_list/';
+      String apiUrl = 'http://192.168.224.81:8000/Parent/ParentCurrentmonth_payments_list/';
       final response = await http.get(
         Uri.parse(apiUrl),
         headers: {

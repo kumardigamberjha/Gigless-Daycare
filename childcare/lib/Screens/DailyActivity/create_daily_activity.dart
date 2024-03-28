@@ -42,7 +42,7 @@ class _DailyActivityPageState extends State<DailyActivityPage> {
       var request = http.MultipartRequest(
         'POST',
         Uri.parse(
-            'http://127.0.0.1:8000/student/api/create-daily-activity/${widget.childId}/'),
+            'http://192.168.224.81:8000/student/api/create-daily-activity/${widget.childId}/'),
       );
       request.fields['child'] = widget.childId.toString();
       request.fields['meal_description'] = mealDescriptionController.text;

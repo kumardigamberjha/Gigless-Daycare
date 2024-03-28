@@ -26,7 +26,7 @@ class _CreateParentAppointmentViewState
     String? accessToken = prefs.getString('accessToken');
 
     final response = await http.post(
-      Uri.parse('http://127.0.0.1:8000/Parent/createappointments/'),
+      Uri.parse('http://192.168.224.81:8000/Parent/createappointments/'),
       headers: {
         'Authorization': 'Bearer $accessToken',
       },

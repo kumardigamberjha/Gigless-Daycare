@@ -90,7 +90,7 @@ class _ChildCreateViewState extends State<ChildCreateView> {
       isLoading = true;
     });
 
-    final String apiUrl = 'http://127.0.0.1:8000/student/children/';
+    final String apiUrl = 'http://192.168.224.81:8000/student/children/';
 
     String formattedDateOfBirth = '';
     if (dateOfBirthController.text.isNotEmpty) {

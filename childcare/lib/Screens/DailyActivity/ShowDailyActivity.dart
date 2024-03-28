@@ -27,14 +27,14 @@ class _ShowDailyActivityPageState extends State<ShowDailyActivityPage> {
   Future<void> fetchData() async {
     try {
       final response = await http
-          .get(Uri.parse("http://127.0.0.1:8000/student/child-list/"));
+          .get(Uri.parse("http://192.168.224.81:8000/student/child-list/"));
 
       if (response.statusCode == 200) {
         final List<dynamic> data = json.decode(response.body);
 
         for (var child in data) {
           final statusResponse = await http.get(Uri.parse(
-              "http://127.0.0.1:8000/student/api/daily-activity/${child['id']}"));
+              "http://192.168.224.81:8000/student/api/daily-activity/${child['id']}"));
 
           if (statusResponse.statusCode == 200) {
             final Map<String, dynamic> statusData =

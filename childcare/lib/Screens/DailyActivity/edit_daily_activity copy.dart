@@ -50,7 +50,7 @@ class _EditDailyActivityPageState extends State<EditDailyActivityPage> {
     try {
       final response = await http.get(
         Uri.parse(
-          "http://127.0.0.1:8000/student/api/daily-activity/${widget.childId}/",
+          "http://192.168.224.81:8000/student/api/daily-activity/${widget.childId}/",
         ),
       );
 
@@ -116,7 +116,7 @@ class _EditDailyActivityPageState extends State<EditDailyActivityPage> {
       var request = http.MultipartRequest(
         'POST',
         Uri.parse(
-            'http://127.0.0.1:8000/student/api/edit-daily-activity/${widget.childId}/'),
+            'http://192.168.224.81:8000/student/api/edit-daily-activity/${widget.childId}/'),
       );
       request.fields['child'] = widget.childId.toString();
       request.fields['meal_description'] = mealDescriptionController.text;

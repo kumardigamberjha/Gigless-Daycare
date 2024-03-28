@@ -1,7 +1,9 @@
 import 'dart:convert';
+import 'package:childcare/Screens/ChildMedia/show_child_media.dart';
 import 'package:childcare/Screens/Childrens/showchild.dart';
 import 'package:childcare/Screens/DailyActivity/view_todays_activity.dart';
 import 'package:childcare/Screens/Parent/FeesList/fee.dart';
+import 'package:childcare/Screens/Parent/childmediaP.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
@@ -32,7 +34,7 @@ class _ParentChildPageState extends State<ParentChildPage> {
       SharedPreferences prefs = await SharedPreferences.getInstance();
       String? accessToken = prefs.getString('accessToken');
       final response = await http.get(
-        Uri.parse('http://127.0.0.1:8000/Parent/childtodaysattendancep/'),
+        Uri.parse('http://192.168.224.81:8000/Parent/childtodaysattendancep/'),
         headers: {
           'Authorization': 'Bearer $accessToken',
         },
@@ -57,7 +59,7 @@ class _ParentChildPageState extends State<ParentChildPage> {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String? accessToken = prefs.getString('accessToken');
     final response = await http.get(
-      Uri.parse("http://127.0.0.1:8000/Parent/"),
+      Uri.parse("http://192.168.224.81:8000/Parent/"),
       headers: {
         'Authorization': 'Bearer $accessToken',
       },
@@ -212,13 +214,16 @@ class _ParentChildPageState extends State<ParentChildPage> {
                                   Expanded(
                                     child: ElevatedButton.icon(
                                       onPressed: () {
-  Navigator.push(
-    context,
-    MaterialPageRoute(
-      builder: (context) => ViewTodaysActivityPage(childId: childRecords[index]['id']),
-    ),
-  );
-},
+                                        Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder: (context) =>
+                                                ViewTodaysActivityPage(
+                                                    childId: childRecords[index]
+                                                        ['id']),
+                                          ),
+                                        );
+                                      },
                                       icon: Icon(Icons.remove_red_eye),
                                       label: Text(
                                         "Today's Activity",
@@ -241,6 +246,40 @@ class _ParentChildPageState extends State<ParentChildPage> {
                                     ),
                                   ),
                                   SizedBox(width: 16),
+                                  Expanded(
+                                    child: ElevatedButton.icon(
+                                      onPressed: () {
+                                        Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder: (context) =>
+                                                ChildMediaDetailPage(
+                                                    childId: childRecords[index]
+                                                        ['id']),
+                                          ),
+                                        );
+                                      },
+                                      icon: Icon(Icons.remove_red_eye),
+                                      label: Text(
+                                        "Today's Activity",
+                                        style: TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 16,
+                                          color: Colors.white,
+                                        ),
+                                      ),
+                                      style: ElevatedButton.styleFrom(
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(8.0),
+                                        ),
+                                        padding: EdgeInsets.symmetric(
+                                            horizontal: 16, vertical: 8),
+                                        backgroundColor: Colors
+                                            .blue, // Button background color
+                                      ),
+                                    ),
+                                  ),
                                 ],
                               ),
                             ],
@@ -271,4 +310,14 @@ class _ParentChildPageState extends State<ParentChildPage> {
       ),
     );
   }
+
+  void viewChildMedia(int childId) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => ChildMediaPage(childId: childId),
+      ),
+    );
+  }
+  //
 }

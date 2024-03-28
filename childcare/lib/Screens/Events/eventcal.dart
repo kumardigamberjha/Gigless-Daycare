@@ -61,7 +61,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
   void _fetchEvents() async {
     // Make an HTTP GET request to your backend API endpoint
     var response = await http
-        .get(Uri.parse('http://127.0.0.1:8000/CalendarEvent/api/events/'));
+        .get(Uri.parse('http://192.168.224.81:8000/CalendarEvent/api/events/'));
 
     // Check if the request was successful (HTTP 200 OK)
     if (response.statusCode == 200) {
@@ -182,7 +182,7 @@ Widget build(BuildContext context) {
                       },
                     ),
                   ),
-                  SizedBox(height: 16),
+                  SizedBox(height: 5),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
@@ -242,7 +242,7 @@ Widget build(BuildContext context) {
                 // Send HTTP POST request to backend to create event
                 final response = await http.post(
                   Uri.parse(
-                      'http://127.0.0.1:8000/CalendarEvent/api/create-event/'),
+                      'http://192.168.224.81:8000/CalendarEvent/api/create-event/'),
                   headers: <String, String>{
                     'Content-Type': 'application/json; charset=UTF-8',
                   },
@@ -312,7 +312,7 @@ void _editEvent(DateTime selectedDay, int index) async {
               // Send HTTP POST request to backend to edit event
               try {
                 final response = await http.post(
-                  Uri.parse('http://127.0.0.1:8000/CalendarEvent/edit-event/'),
+                  Uri.parse('http://192.168.224.81:8000/CalendarEvent/edit-event/'),
                   headers: <String, String>{
                     'Content-Type': 'application/json; charset=UTF-8',
                   },
@@ -372,7 +372,7 @@ void _deleteEvent(DateTime selectedDay, int index) async {
               // Send HTTP DELETE request to backend to delete event
               try {
                 final response = await http.delete(
-                  Uri.parse('http://127.0.0.1:8000/CalendarEvent/DeleteEvent/$eventId/'),
+                  Uri.parse('http://192.168.224.81:8000/CalendarEvent/DeleteEvent/$eventId/'),
                   headers: <String, String>{
                     'Content-Type': 'application/json; charset=UTF-8',
                   },

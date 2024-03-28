@@ -31,7 +31,7 @@ class _AppointmentStatusStaffPageState extends State<AppointmentStatusStaffPage>
     String? accessToken = prefs.getString('accessToken');
     try {
       final response = await http.get(
-        Uri.parse('http://127.0.0.1:8000/Parent/appointmentstatus/'),
+        Uri.parse('http://192.168.224.81:8000/Parent/appointmentstatus/'),
         headers: {
           'Authorization': 'Bearer $accessToken',
         },
@@ -223,11 +223,6 @@ class _AppointmentStatusStaffPageState extends State<AppointmentStatusStaffPage>
                     return _buildAppointmentItem(index, appointments[index]);
                   },
                 ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: updateAppointmentAndNavigate,
-        tooltip: 'Update Appointment',
-        child: Icon(Icons.add),
-      ),
     );
   }
 }

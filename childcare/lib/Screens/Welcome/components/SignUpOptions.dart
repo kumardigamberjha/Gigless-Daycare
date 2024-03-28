@@ -41,19 +41,19 @@ class SignUpOptions extends StatelessWidget {
                 SizedBox(
                   height: size.height * 0.05,
                 ),
-                RoundedButton(
-                  text: "Staff",
-                  press: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) {
-                          return StaffSignUpScreen();
-                        },
-                      ),
-                    );
-                  },
-                ),
+                // RoundedButton(
+                //   text: "Staff",
+                //   press: () {
+                //     Navigator.push(
+                //       context,
+                //       MaterialPageRoute(
+                //         builder: (context) {
+                //           return StaffSignUpScreen();
+                //         },
+                //       ),
+                //     );
+                //   },
+                // ),
                 SizedBox(
                   height: 10, // Adjust as needed
                 ),

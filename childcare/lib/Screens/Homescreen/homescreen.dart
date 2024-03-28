@@ -19,6 +19,10 @@ import 'package:childcare/Screens/Parent/Appointment/show_appointment.dart';
 import 'package:childcare/Screens/Parent/ChildInformation/childinfo.dart';
 import 'package:childcare/Screens/Parent/FeesList/feelist.dart';
 import 'package:childcare/Screens/Parent/eventp.dart';
+import 'package:childcare/Screens/Signup/CreateSatff.dart';
+import 'package:childcare/Screens/Signup/ParentSignUpScreen.dart';
+import 'package:childcare/Screens/Signup/showParentpage.dart';
+import 'package:childcare/Screens/Signup/showstaffpage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:http/http.dart' as http;
@@ -63,7 +67,7 @@ Future<void> logout(BuildContext context) async {
 
     if (refreshToken != null) {
       var response = await http.post(
-        Uri.parse('http://127.0.0.1:8000/logout/'),
+        Uri.parse('http://192.168.224.81:8000/logout/'),
         body: {'refresh_token': refreshToken},
       );
 
@@ -118,7 +122,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
     if (accessToken != null) {
       final response = await http.get(
-        Uri.parse('http://127.0.0.1:8000/student/api/user/'),
+        Uri.parse('http://192.168.224.81:8000/student/api/user/'),
         headers: {
           'Authorization': 'Bearer $accessToken',
         },
@@ -158,58 +162,64 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
 
       // ***************** Content *************************
+      // ***************** Content *************************
       backgroundColor:
           Colors.black, // Set the background color of the page to black
-      body: ListView(
-        padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-        children: [
-          // First section: Revenue Overview
-          _buildSection(
-            context,
-            'Revenue Overview',
-            Icons.attach_money,
-            Colors.green,
-            [
-              _buildCard(
-                context,
-                'Yearly Revenue',
-                '\$120,000',
-                Colors.green,
-              ),
-              SizedBox(height: 16),
-              _buildCard(
-                context,
-                'Monthly Revenue',
-                '\$10,000',
-                Colors.blue,
-              ),
-            ],
-          ),
-          SizedBox(height: 24), // Add some space between sections
-          // Second section: Student Statistics
-          _buildSection(
-            context,
-            'Student Statistics',
-            Icons.school,
-            Colors.orange,
-            [
-              _buildCard(
-                context,
-                'Number of Child Enrolled',
-                '500',
-                Colors.orange,
-              ),
-              SizedBox(height: 16),
-              _buildCard(
-                context,
-                'Present Students',
-                '350',
-                Colors.purple,
-              ),
-            ],
-          ),
-        ],
-      ),
+      body: _user != null
+          ? (_user!.userType == "Staff"
+              ? ListView(
+                  padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                  children: [
+                    // First section: Revenue Overview
+                    _buildSection(
+                      context,
+                      'Revenue Overview',
+                      Icons.attach_money,
+                      Colors.green,
+                      [
+                        _buildCard(
+                          context,
+                          'Yearly Revenue',
+                          '\$120,000',
+                          Colors.green,
+                        ),
+                        SizedBox(height: 16),
+                        _buildCard(
+                          context,
+                          'Monthly Revenue',
+                          '\$10,000',
+                          Colors.blue,
+                        ),
+                      ],
+                    ),
+                    SizedBox(height: 24), // Add some space between sections
+                    // Second section: Student Statistics
+                    _buildSection(
+                      context,
+                      'Student Statistics',
+                      Icons.school,
+                      Colors.orange,
+                      [
+                        _buildCard(
+                          context,
+                          'Number of Child Enrolled',
+                          '500',
+                          Colors.orange,
+                        ),
+                        SizedBox(height: 16),
+                        _buildCard(
+                          context,
+                          'Present Students',
+                          '350',
+                          Colors.purple,
+                        ),
+                      ],
+                    ),
+                  ],
+                )
+              : ParentChildPage()) // Navigate to ParentChildPage if the user is not null and is a parent
+          : SizedBox.shrink(), // If the user is null, display nothing
+
       // ****************** Content Ends ********************
 
       drawer: Drawer(
@@ -233,6 +243,8 @@ class _HomeScreenState extends State<HomeScreen> {
               title: Text('students'),
               backgroundColor: Colors.blue,
               children: [
+                // StaffSignUpScreen
+
                 if (_user != null && (_user!.userType == "Staff"))
                   Padding(
                     padding: EdgeInsets.only(left: 16.0),
@@ -274,6 +286,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       },
                     ),
                   ),
+                  // Text(_user!.userType),
                 if (_user != null && (_user!.userType == "Parent"))
                   Padding(
                     padding: EdgeInsets.only(left: 16.0),
@@ -297,6 +310,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
               ],
             ),
+
             if (_user != null &&
                 (_user!.userType != "Parent" && _user!.userType == "Staff"))
               ExpansionTile(
@@ -348,6 +362,75 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
                 ],
               ),
+
+            if (_user != null &&
+                (_user!.userType != "Parent" && _user!.userType == "Staff"))
+              ExpansionTile(
+                title: Text('Staff'),
+                backgroundColor: Colors.blue,
+                children: [
+                  Padding(
+                    padding: EdgeInsets.only(left: 16.0),
+                    child: ListTile(
+                      title: Text(
+                        'Add Staff',
+                        style: TextStyle(
+                          color: Colors.white,
+                        ),
+                      ),
+                      onTap: () {
+                        // Navigate to the settings screen or implement the desired action
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => StaffRegistrationPage(),
+                          ),
+                        );
+                      },
+                    ),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.only(left: 16.0),
+                    child: ListTile(
+                      title: Text(
+                        'Staff Record',
+                        style: TextStyle(
+                          color: Colors.white,
+                        ),
+                      ),
+                      onTap: () {
+                        // Navigate to the settings screen or implement the desired action
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => UserListPage(),
+                          ),
+                        );
+                      },
+                    ),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.only(left: 16.0),
+                    child: ListTile(
+                      title: Text(
+                        'Parents Record',
+                        style: TextStyle(
+                          color: Colors.white,
+                        ),
+                      ),
+                      onTap: () {
+                        // Navigate to the settings screen or implement the desired action
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => ParentListPage(),
+                          ),
+                        );
+                      },
+                    ),
+                  ),
+                ],
+              ),
             if (_user != null &&
                 (_user!.userType != "Parent" && _user!.userType == "Staff"))
               ListTile(
@@ -362,8 +445,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 },
               ),
 
-
-              if (_user != null &&
+            if (_user != null &&
                 (_user!.userType != "Parent" && _user!.userType == "Staff"))
               ListTile(
                 title: Text('Child Media'),
@@ -376,20 +458,19 @@ class _HomeScreenState extends State<HomeScreen> {
                   );
                 },
               ),
-              if (_user != null &&
-                (_user!.userType != "Parent" && _user!.userType == "Staff"))
-              ListTile(
-                title: Text('Learning Resources'),
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => LearningResourceForm(),
-                    ),
-                  );
-                },
-              ),
-              
+            // if (_user != null &&
+            //     (_user!.userType != "Parent" && _user!.userType == "Staff"))
+            //   ListTile(
+            //     title: Text('Learning Resources'),
+            //     onTap: () {
+            //       Navigator.push(
+            //         context,
+            //         MaterialPageRoute(
+            //           builder: (context) => LearningResourceForm(),
+            //         ),
+            //       );
+            //     },
+            //   ),
 
             // ***************** For Staff ************************
             if (_user != null &&
@@ -599,14 +680,43 @@ class _HomeScreenState extends State<HomeScreen> {
                   );
                 },
               ),
-            Padding(
-              padding: EdgeInsets.only(left: 16.0),
-              child: ListTile(
-                title: ElevatedButton(
-                  onPressed: () => logout(context),
-                  child: Text('Logout'),
-                ),
-              ),
+
+            ListTile(
+              title: Text('Logout'),
+              onTap: () {
+                showDialog(
+                  context: context,
+                  builder: (BuildContext context) {
+                    // Check if the context is still active
+                    if (Navigator.of(context).canPop()) {
+                      return AlertDialog(
+                        title: Text('Logout'),
+                        content: Text('Are you sure you want to logout?'),
+                        actions: <Widget>[
+                          ElevatedButton(
+                            onPressed: () {
+                              Navigator.of(context).pop(); // Close the dialog
+                              logout(context); // Call the logout function
+                            },
+                            child: Text('Yes'),
+                          ),
+                          TextButton(
+                            onPressed: () {
+                              Navigator.of(context).pop(); // Close the dialog
+                            },
+                            child: Text('No'),
+                          ),
+                        ],
+                      );
+                    } else {
+                      // Context is no longer active, possibly already disposed
+                      // Handle this case gracefully, such as showing a snackbar
+                      // or navigating to a different screen
+                      return Container();
+                    }
+                  },
+                );
+              },
             ),
           ],
         ),

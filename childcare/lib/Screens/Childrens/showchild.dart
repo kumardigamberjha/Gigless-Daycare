@@ -27,7 +27,7 @@ class _ShowChildDetailState extends State<ShowChildDetail> {
     try {
       final response = await http.get(
         Uri.parse(
-          "http://127.0.0.1:8000/student/children/${widget.childId}/",
+          "http://192.168.224.81:8000/student/children/${widget.childId}/",
         ),
       );
 

@@ -48,7 +48,7 @@ class _CalendarScreenForParentState extends State<CalendarScreenForParent> {
   void _fetchEvents() async {
     // Make an HTTP GET request to your backend API endpoint
     var response = await http
-        .get(Uri.parse('http://127.0.0.1:8000/CalendarEvent/api/events/'));
+        .get(Uri.parse('http://192.168.224.81:8000/CalendarEvent/api/events/'));
 
     // Check if the request was successful (HTTP 200 OK)
     if (response.statusCode == 200) {

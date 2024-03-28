@@ -34,7 +34,7 @@ class _SelectedMonthlyPaymentsPageState
     try {
       final response = await http.get(
         Uri.parse(
-            'http://127.0.0.1:8000/Accounts/total-payments-selected-month/?month=$month&year=$year'),
+            'http://192.168.224.81:8000/Accounts/total-payments-selected-month/?month=$month&year=$year'),
       );
 
       if (response.statusCode == 200) {

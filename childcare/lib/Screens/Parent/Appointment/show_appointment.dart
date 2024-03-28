@@ -24,7 +24,7 @@ class _AppointmentStatusPageState extends State<AppointmentStatusPage> {
     String? accessToken = prefs.getString('accessToken');
     try {
       final response = await http.get(
-        Uri.parse('http://127.0.0.1:8000/Parent/appointmentstatus/'),
+        Uri.parse('http://192.168.224.81:8000/Parent/appointmentstatus/'),
         headers: {
           'Authorization': 'Bearer $accessToken',
         },

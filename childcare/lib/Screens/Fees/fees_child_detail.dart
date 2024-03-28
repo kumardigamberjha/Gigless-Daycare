@@ -19,7 +19,7 @@ class _ChildListFeesPageState extends State<ChildListFeesPage> {
   }
 
   Future<void> fetchData() async {
-    final response = await http.get(Uri.parse("http://127.0.0.1:8000/student/child-list/"));
+    final response = await http.get(Uri.parse("http://192.168.224.81:8000/student/child-list/"));
 
     if (response.statusCode == 200) {
       final List<dynamic> data = json.decode(response.body);

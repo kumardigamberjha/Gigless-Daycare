@@ -31,7 +31,7 @@ class _FeeFormPageState extends State<FeeFormPage> {
     final firstDayOfMonth = DateTime(now.year, now.month, 1);
     final lastDayOfMonth = DateTime(now.year, now.month + 1, 0);
 
-    final String apiUrl = 'http://127.0.0.1:8000/Accounts/Fees/${widget.childId}/';
+    final String apiUrl = 'http://192.168.224.81:8000/Accounts/Fees/${widget.childId}/';
 
     final response = await http.get(Uri.parse(apiUrl));
 
@@ -67,7 +67,7 @@ class _FeeFormPageState extends State<FeeFormPage> {
       isSaving = true;
     });
 
-    final String apiUrl = 'http://127.0.0.1:8000/Accounts/Fees/${widget.childId}/';
+    final String apiUrl = 'http://192.168.224.81:8000/Accounts/Fees/${widget.childId}/';
 
     final response = await http.post(
       Uri.parse(apiUrl),

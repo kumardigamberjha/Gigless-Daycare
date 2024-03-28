@@ -24,7 +24,7 @@ class _AttendancePageState extends State<AttendancePage> {
 
     try {
       final response = await http.get(
-        Uri.parse('http://127.0.0.1:8000/student/api/current-attendance/'),
+        Uri.parse('http://192.168.224.81:8000/student/api/current-attendance/'),
       );
 
       if (response.statusCode == 200) {
@@ -53,7 +53,7 @@ class _AttendancePageState extends State<AttendancePage> {
       }
 
       final response = await http.post(
-        Uri.parse('http://127.0.0.1:8000/student/toggle-attendance/'),
+        Uri.parse('http://192.168.224.81:8000/student/toggle-attendance/'),
         headers: {"Content-Type": "application/json"},
         body: jsonEncode({
           'child_id': childId.toString(),

@@ -22,7 +22,7 @@ class _TotalPaymentsCurrentMonthPageState
   Future<void> fetchTotalPaymentsCurrentMonth() async {
     try {
       final response = await http.get(
-          Uri.parse('http://127.0.0.1:8000/Accounts/total-payments-current-month/'));
+          Uri.parse('http://192.168.224.81:8000/Accounts/total-payments-current-month/'));
 
       if (response.statusCode == 200) {
         final data = json.decode(response.body);

@@ -55,7 +55,7 @@ class _FeeListPageState extends State<FeeListPage> {
   Future<void> fetchFees() async {
     try {
       final response = await http.get(Uri.parse(
-          'http://127.0.0.1:8000/Accounts/Fees/${widget.childId}/'));
+          'http://192.168.224.81:8000/Accounts/Fees/${widget.childId}/'));
 
       if (response.statusCode == 200) {
         final jsonData = json.decode(response.body);

@@ -30,7 +30,7 @@ class _UpdateAppointmentPageState extends State<UpdateAppointmentPage> {
     String? accessToken = prefs.getString('accessToken');
     try {
       final response = await http.put(
-        Uri.parse('http://127.0.0.1:8000/Parent/updateappointment/${widget.appointmentId}/'),
+        Uri.parse('http://192.168.224.81:8000/Parent/updateappointment/${widget.appointmentId}/'),
         headers: {
           'Authorization': 'Bearer $accessToken',
         },

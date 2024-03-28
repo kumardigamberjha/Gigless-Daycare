@@ -17,7 +17,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class AuthService {
   static const String baseUrl =
-      'http://127.0.0.1:8000/'; // Replace with your API base URL
+      'http://192.168.224.81:8000/'; // Replace with your API base URL
 
   static Future<Map<String, dynamic>> login(
       String username, String password) async {
@@ -176,7 +176,7 @@ class _BodyState extends State<Body> {
 
   Future<void> loginUser(String username, String password) async {
     final response = await http.post(
-      Uri.parse('http://127.0.0.1:8000/token/'),
+      Uri.parse('http://192.168.224.81:8000/token/'),
       body: {
         'username': username,
         'password': password,

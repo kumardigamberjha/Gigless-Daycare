@@ -22,7 +22,7 @@ class _TrackAttendancePageState extends State<TrackAttendancePage> {
   }
 
   Future<Map<String, dynamic>> fetchAttendanceStats() async {
-    final response = await http.get(Uri.parse('http://127.0.0.1:8000/student/attendance/stats/${widget.childId}/'));
+    final response = await http.get(Uri.parse('http://192.168.224.81:8000/student/attendance/stats/${widget.childId}/'));
 
     if (response.statusCode == 200) {
       return json.decode(response.body);

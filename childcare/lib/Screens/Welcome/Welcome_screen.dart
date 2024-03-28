@@ -15,7 +15,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
   void initState() {
     super.initState();
     // Show splash screen for 5 seconds before checking token validity
-    Future.delayed(Duration(seconds: 5), () {
+    Future.delayed(Duration(seconds: 6), () {
       checkTokenValidity();
     });
   }
@@ -41,29 +41,33 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
         // Redirect to LoginScreen if token is invalid
         Navigator.pushReplacement(
           context,
-          MaterialPageRoute(builder: (context) {
-          return LoginScreen(
-            successMessage: 'Registration successful. Please log in.',
-          );
-        },),
+          MaterialPageRoute(
+            builder: (context) {
+              return LoginScreen(
+                successMessage: 'Registration successful. Please log in.',
+              );
+            },
+          ),
         );
       }
     } else {
       // Redirect to LoginScreen if not logged in
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(builder: (context) {
-          return LoginScreen(
-            successMessage: 'Registration successful. Please log in.',
-          );
-        },),
+        MaterialPageRoute(
+          builder: (context) {
+            return LoginScreen(
+              successMessage: 'Registration successful. Please log in.',
+            );
+          },
+        ),
       );
     }
   }
 
   Future<bool> validateToken(String accessToken) async {
     final response = await http.post(
-      Uri.parse('http://127.0.0.1:8000/validate-token/'),
+      Uri.parse('http://192.168.224.81:8000/validate-token/'),
       headers: {'Content-Type': 'application/json'},
       body: jsonEncode({'token': accessToken}),
     );
@@ -83,9 +87,13 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
       body: Center(
         // child: CircularProgressIndicator(), // Placeholder for splash screen
         child: Image.asset(
-          'assets/images/gdlogo.jpeg',
-          width: 150, // Set width to 150
-          height: 150, // Set height to 150
+          'assets/images/gdgif.gif', // Path to your GIF file
+          // width: 150, // Set width to 150
+          // height: 150, // Set height to 150
+          width: MediaQuery.of(context)
+              .size
+              .width, // Set width to full screen width
+          height: MediaQuery.of(context).size.height,
         ),
       ),
     );

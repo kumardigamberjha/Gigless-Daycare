@@ -23,43 +23,43 @@ class _LearningResourceFormState extends State<LearningResourceForm> {
   }
 
   Future<void> _submitForm() async {
-  try {
-    var request = http.MultipartRequest(
-      'POST',
-      Uri.parse('http://127.0.0.1:8000/student/api/resources/'), // Replace with your backend URL
-    );
-    request.fields['title'] = _titleController.text;
-    request.fields['description'] = _descriptionController.text;
-
-    // Upload the selected video file
-    if (_selectedFile != null) {
-      request.files.add(
-        http.MultipartFile(
-          'file',
-          _selectedFile!.readAsBytes().asStream(),
-          _selectedFile!.lengthSync(),
-          filename: _selectedFile!.path.split('/').last,
-        ),
+    try {
+      var request = http.MultipartRequest(
+        'POST',
+        Uri.parse(
+            'http://192.168.224.81:8000/student/api/resources/'), // Replace with your backend URL
       );
-    }
+      request.fields['title'] = _titleController.text;
+      request.fields['description'] = _descriptionController.text;
 
-    var streamedResponse = await request.send();
-    if (streamedResponse.statusCode == 201) {
-      // Resource created successfully
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Resource created successfully')),
-      );
-      // Navigate back to the previous page
-      Navigator.of(context).pop();
-    } else {
-      throw Exception('Failed to create resource');
+      // Upload the selected video file
+      if (_selectedFile != null) {
+        request.files.add(
+          http.MultipartFile(
+            'file',
+            _selectedFile!.readAsBytes().asStream(),
+            _selectedFile!.lengthSync(),
+            filename: _selectedFile!.path.split('/').last,
+          ),
+        );
+      }
+
+      var streamedResponse = await request.send();
+      if (streamedResponse.statusCode == 201) {
+        // Resource created successfully
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Resource created successfully')),
+        );
+        // Navigate back to the previous page
+        Navigator.of(context).pop();
+      } else {
+        throw Exception('Failed to create resource');
+      }
+    } catch (e) {
+      // Handle errors
+      print(e.toString());
     }
-  } catch (e) {
-    // Handle errors
-    print(e.toString());
   }
-}
-
 
   @override
   Widget build(BuildContext context) {
@@ -87,17 +87,17 @@ class _LearningResourceFormState extends State<LearningResourceForm> {
             SizedBox(height: 20),
             _selectedFile != null
                 ? Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  'Selected Video:',
-                  style: TextStyle(fontWeight: FontWeight.bold),
-                ),
-                SizedBox(height: 5),
-                Text(_selectedFile!.path),
-                SizedBox(height: 20),
-              ],
-            )
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'Selected Video:',
+                        style: TextStyle(fontWeight: FontWeight.bold),
+                      ),
+                      SizedBox(height: 5),
+                      Text(_selectedFile!.path),
+                      SizedBox(height: 20),
+                    ],
+                  )
                 : SizedBox(),
             ElevatedButton(
               onPressed: _submitForm,

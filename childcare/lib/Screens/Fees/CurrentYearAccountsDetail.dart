@@ -27,7 +27,7 @@ class _CurrentYearAccountDetailPageState
     });
     try {
       final response = await http.get(
-        Uri.parse('http://127.0.0.1:8000/Accounts/current-year-payments/'),
+        Uri.parse('http://192.168.224.81:8000/Accounts/current-year-payments/'),
       );
 
       if (response.statusCode == 200) {
