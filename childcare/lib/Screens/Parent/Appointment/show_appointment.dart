@@ -24,7 +24,7 @@ class _AppointmentStatusPageState extends State<AppointmentStatusPage> {
     String? accessToken = prefs.getString('accessToken');
     try {
       final response = await http.get(
-        Uri.parse('http://192.168.224.81:8000/Parent/appointmentstatus/'),
+        Uri.parse('https://daycare.codingindia.co.in/Parent/appointmentstatus/'),
         headers: {
           'Authorization': 'Bearer $accessToken',
         },
@@ -91,7 +91,12 @@ class _AppointmentStatusPageState extends State<AppointmentStatusPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Appointment Status'),
+        title: Text(
+          'Appointment Status',
+          style: TextStyle(color: Colors.white),
+        ),
+        backgroundColor: Colors.purple,
+        foregroundColor: Colors.white,
       ),
       body: _isLoading
           ? Center(child: CircularProgressIndicator())

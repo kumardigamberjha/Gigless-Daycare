@@ -90,7 +90,7 @@ class _ChildCreateViewState extends State<ChildCreateView> {
       isLoading = true;
     });
 
-    final String apiUrl = 'http://192.168.224.81:8000/student/children/';
+    final String apiUrl = 'https://daycare.codingindia.co.in/student/children/';
 
     String formattedDateOfBirth = '';
     if (dateOfBirthController.text.isNotEmpty) {
@@ -198,8 +198,13 @@ class _ChildCreateViewState extends State<ChildCreateView> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Child Record Form'),
-        // backgroundColor: Colors.blue,
+        title: Text(
+          'Create Child Form',
+          style: TextStyle(color: Colors.white),
+        ),
+        backgroundColor: Colors.purple,
+        foregroundColor: Colors.white,
+
       ),
       body: isLoading
           ? Center(
@@ -284,7 +289,7 @@ class _ChildCreateViewState extends State<ChildCreateView> {
                           ),
                           style: ElevatedButton.styleFrom(
                             backgroundColor:
-                                Colors.blue, // Change background color to blue
+                                Colors.purple, // Change background color to purple
                           ),
                         ),
                         SizedBox(height: 10),
@@ -358,7 +363,7 @@ class _ChildCreateViewState extends State<ChildCreateView> {
                           onPressed: _pickImage,
                           child: Text('Pick Image'),
                           style: ElevatedButton.styleFrom(
-                            foregroundColor: Colors.white, backgroundColor: Colors.blue, // Set text color
+                            foregroundColor: Colors.white, backgroundColor: Colors.purple, // Set text color
                           ),
                         ),
                       ],

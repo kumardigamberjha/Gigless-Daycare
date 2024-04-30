@@ -14,7 +14,7 @@ class MyApp extends StatelessWidget {
       title: "Child Care",
       // home: SplashScreen(), 
       theme: ThemeData(
-        // primarySwatch: Colors.blue,
+        // primarySwatch: Colors.purple,
         primaryColor: KPrimaryColor,
         scaffoldBackgroundColor: Colors.white,
       ),

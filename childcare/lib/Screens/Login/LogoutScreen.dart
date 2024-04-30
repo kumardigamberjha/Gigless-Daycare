@@ -5,7 +5,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class AuthService {
   static const String baseUrl =
-      'http://192.168.224.81:8000//'; // Replace with your Django server URL
+      'https://daycare.codingindia.co.in//'; // Replace with your Django server URL
 
   static Future<void> logout() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();

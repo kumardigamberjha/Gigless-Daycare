@@ -42,11 +42,16 @@ class _AddChildMediaPageState extends State<AddChildMediaPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Add Child Media'),
-        backgroundColor: Colors.white,
-        foregroundColor: Colors.black,
-        elevation: 0,
-        iconTheme: IconThemeData(color: Colors.black),
+        title: Text(
+          "Add Child Media",
+          style: TextStyle(
+            fontFamily: 'Roboto',
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        backgroundColor: Colors.purple,
+        foregroundColor: Colors.white,
+        elevation: 4,
       ),
       body: SingleChildScrollView(
         padding: EdgeInsets.all(16.0),
@@ -58,6 +63,10 @@ class _AddChildMediaPageState extends State<AddChildMediaPage> {
             ElevatedButton(
               onPressed: _pickMedia,
               child: Text('Select Media'),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.purple,
+                foregroundColor: Colors.white,
+              ),
             ),
             SizedBox(height: 16.0),
             DropdownButtonFormField<String>(
@@ -88,12 +97,18 @@ class _AddChildMediaPageState extends State<AddChildMediaPage> {
             ),
             SizedBox(height: 16.0),
             ElevatedButton(
-              onPressed: _isUploading ? null : () async {
-                await _uploadMedia();
-              },
+              onPressed: _isUploading
+                  ? null
+                  : () async {
+                      await _uploadMedia();
+                    },
               child: _isUploading
                   ? CircularProgressIndicator()
                   : Text('Upload Media'),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.purple,
+                foregroundColor: Colors.white,
+              ),
             ),
           ],
         ),
@@ -167,7 +182,7 @@ class _AddChildMediaPageState extends State<AddChildMediaPage> {
       return;
     }
 
-    final String apiUrl = 'http://192.168.224.81:8000/student/child-media/';
+    final String apiUrl = 'https://daycare.codingindia.co.in/student/child-media/';
     final String childId = widget.childId.toString();
 
     try {

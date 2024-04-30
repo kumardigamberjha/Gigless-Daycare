@@ -28,14 +28,14 @@ class _ShowChildActivityMediaPageState
   Future<void> fetchData() async {
     try {
       final response = await http
-          .get(Uri.parse("http://192.168.224.81:8000/student/child-list/"));
+          .get(Uri.parse("https://daycare.codingindia.co.in/student/child-list/"));
 
       if (response.statusCode == 200) {
         final List<dynamic> data = json.decode(response.body);
 
         for (var child in data) {
           final statusResponse = await http.get(Uri.parse(
-              "http://192.168.224.81:8000/student/api/daily-activity/${child['id']}"));
+              "https://daycare.codingindia.co.in/student/api/daily-activity/${child['id']}"));
 
           if (statusResponse.statusCode == 200) {
             final Map<String, dynamic> statusData =
@@ -111,8 +111,16 @@ class _ShowChildActivityMediaPageState
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Activity Media'),
-        backgroundColor: Colors.white, // Dark brown
+        title: Text(
+          "Activity Media",
+          style: TextStyle(
+            fontFamily: 'Roboto',
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        backgroundColor: Colors.purple,
+        foregroundColor: Colors.white,
+        elevation: 4,
       ),
       body: isLoading
           ? Center(
@@ -185,7 +193,9 @@ class _ShowChildActivityMediaPageState
                                             icon: Icon(Icons.remove_red_eye),
                                             label: Text('Add Activity'),
                                             style: ElevatedButton.styleFrom(
-                                              foregroundColor: Colors.white, backgroundColor: Colors.blue, // Text color
+                                              foregroundColor: Colors.white,
+                                              backgroundColor:
+                                                  Colors.purple, // Text color
                                             ),
                                           ),
                                           SizedBox(
@@ -198,13 +208,14 @@ class _ShowChildActivityMediaPageState
                                             icon: Icon(Icons.history),
                                             label: Text('View Activity'),
                                             style: ElevatedButton.styleFrom(
-                                              foregroundColor: Colors.white, backgroundColor: Colors.green, // Text color
+                                              foregroundColor: Colors.white,
+                                              backgroundColor:
+                                                  Colors.green, // Text color
                                             ),
                                           ),
                                         ],
                                       ),
-                                     // Adjusted spacing between button row and text
-                                      
+                                      // Adjusted spacing between button row and text
                                     ],
                                   ),
                                 ),

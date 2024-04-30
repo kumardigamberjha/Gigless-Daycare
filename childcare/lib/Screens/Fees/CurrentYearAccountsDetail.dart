@@ -27,7 +27,7 @@ class _CurrentYearAccountDetailPageState
     });
     try {
       final response = await http.get(
-        Uri.parse('http://192.168.224.81:8000/Accounts/current-year-payments/'),
+        Uri.parse('https://daycare.codingindia.co.in/Accounts/current-year-payments/'),
       );
 
       if (response.statusCode == 200) {
@@ -62,15 +62,10 @@ class _CurrentYearAccountDetailPageState
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          'Current Year Account Detail',
-          style: TextStyle(
-            fontSize: 20,
-            fontWeight: FontWeight.bold,
-          ),
+          'Current Year Revenue',
+          style: TextStyle(color: Colors.white),
         ),
-        // backgroundColor: Colors.blue,
-        elevation: 2,
-        centerTitle: true,
+        backgroundColor: Colors.purple,
       ),
       body: Padding(
         padding: const EdgeInsets.all(20.0),
@@ -111,7 +106,7 @@ class _CurrentYearAccountDetailPageState
     return Container(
       padding: EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: Colors.blue,
+        color: Colors.purple,
         borderRadius: BorderRadius.circular(8),
         boxShadow: [
           BoxShadow(
@@ -190,34 +185,33 @@ class _MonthTileState extends State<MonthTile> {
   }
 
   Widget _buildAccountItem(Map<String, dynamic> payment) {
-  return Container(
-    padding: EdgeInsets.all(8),
-    decoration: BoxDecoration(
-      color: Colors.grey[200],
-      borderRadius: BorderRadius.circular(8),
-    ),
-    margin: EdgeInsets.symmetric(vertical: 4),
-    child: Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          'Date: ${payment['date']}',
-          style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
-        ),
-        SizedBox(height: 4),
-        Text(
-          'From: ${payment['child_name']}',
-          style: TextStyle(fontSize: 14, color: Colors.grey[600]),
-        ),
-        SizedBox(height: 4),
-        Text(
-          'Amount: \$${payment['amount'].toStringAsFixed(2)}',
-          style: TextStyle(
-              fontSize: 14, fontWeight: FontWeight.w500, color: Colors.green),
-        ),
-      ],
-    ),
-  );
-}
-
+    return Container(
+      padding: EdgeInsets.all(8),
+      decoration: BoxDecoration(
+        color: Colors.grey[200],
+        borderRadius: BorderRadius.circular(8),
+      ),
+      margin: EdgeInsets.symmetric(vertical: 4),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            'Date: ${payment['date']}',
+            style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
+          ),
+          SizedBox(height: 4),
+          Text(
+            'From: ${payment['child_name']}',
+            style: TextStyle(fontSize: 14, color: Colors.grey[600]),
+          ),
+          SizedBox(height: 4),
+          Text(
+            'Amount: \$${payment['amount'].toStringAsFixed(2)}',
+            style: TextStyle(
+                fontSize: 14, fontWeight: FontWeight.w500, color: Colors.green),
+          ),
+        ],
+      ),
+    );
+  }
 }

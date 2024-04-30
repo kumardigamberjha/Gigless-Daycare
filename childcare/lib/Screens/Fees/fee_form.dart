@@ -31,7 +31,8 @@ class _FeeFormPageState extends State<FeeFormPage> {
     final firstDayOfMonth = DateTime(now.year, now.month, 1);
     final lastDayOfMonth = DateTime(now.year, now.month + 1, 0);
 
-    final String apiUrl = 'http://192.168.224.81:8000/Accounts/Fees/${widget.childId}/';
+    final String apiUrl =
+        'https://daycare.codingindia.co.in/Accounts/Fees/${widget.childId}/';
 
     final response = await http.get(Uri.parse(apiUrl));
 
@@ -42,8 +43,10 @@ class _FeeFormPageState extends State<FeeFormPage> {
 
       for (var fee in fees) {
         final feeDate = DateTime.parse(fee['date_paid']);
-        if (feeDate.isAfter(firstDayOfMonth) && feeDate.isBefore(lastDayOfMonth)) {
-          final feeAmount = double.parse(fee['amount']); // Parse amount as double
+        if (feeDate.isAfter(firstDayOfMonth) &&
+            feeDate.isBefore(lastDayOfMonth)) {
+          final feeAmount =
+              double.parse(fee['amount']); // Parse amount as double
           totalPaidThisMonth += feeAmount;
         }
       }
@@ -67,7 +70,8 @@ class _FeeFormPageState extends State<FeeFormPage> {
       isSaving = true;
     });
 
-    final String apiUrl = 'http://192.168.224.81:8000/Accounts/Fees/${widget.childId}/';
+    final String apiUrl =
+        'https://daycare.codingindia.co.in/Accounts/Fees/${widget.childId}/';
 
     final response = await http.post(
       Uri.parse(apiUrl),
@@ -102,8 +106,11 @@ class _FeeFormPageState extends State<FeeFormPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.white,
-        title: Text('Add Fee', style: TextStyle(fontSize: 24, color: Colors.white)),
+        title: Text(
+          'Add Fee',
+          style: TextStyle(color: Colors.white),
+        ),
+        backgroundColor: Colors.purple,
       ),
       body: Padding(
         padding: EdgeInsets.all(16.0),
@@ -112,17 +119,26 @@ class _FeeFormPageState extends State<FeeFormPage> {
           children: [
             Text(
               'Enter Fee Details',
-              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Colors.black),
+              style: TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.black),
             ),
             SizedBox(height: 20),
             Text(
               'Child Fees Paid This Month: $childFeesPaidThisMonth',
-              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.black87),
+              style: TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.black87),
             ),
             SizedBox(height: 20),
             Text(
               'Child Fees Left This Month: $childFeesLeft',
-              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.black87),
+              style: TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.black87),
             ),
             SizedBox(height: 20),
             TextFormField(
@@ -151,7 +167,7 @@ class _FeeFormPageState extends State<FeeFormPage> {
                   onPressed: () => _selectDate(context),
                   child: Text(
                     DateFormat('dd/MM/yyyy').format(selectedDate),
-                    style: TextStyle(fontSize: 16, color: Colors.blue),
+                    style: TextStyle(fontSize: 16, color: Colors.purple),
                   ),
                 ),
               ],
@@ -170,8 +186,13 @@ class _FeeFormPageState extends State<FeeFormPage> {
                       );
                     },
                     style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.purple,
+                      foregroundColor: Colors.white, // Set the background color
+                      textStyle: TextStyle(
+                          fontSize: 16,
+                          color: Colors.white), // Set the text color
                     ),
-                    child: Text('Save Fee', style: TextStyle(fontSize: 16, color: Colors.white)),
+                    child: Text('Save Fee'),
                   ),
           ],
         ),

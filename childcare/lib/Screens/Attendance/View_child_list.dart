@@ -9,8 +9,6 @@ import 'package:childcare/Screens/Fees/fee_form.dart';
 import 'package:childcare/Screens/Fees/GetFeesmonthly.dart';
 import 'package:childcare/Screens/Fees/monthly_payment.dart';
 
-
-
 class AttendanceChildRecordsPage extends StatefulWidget {
   @override
   _AttendanceChildRecordsPageState createState() =>
@@ -28,8 +26,8 @@ class _AttendanceChildRecordsPageState
   }
 
   Future<void> fetchData() async {
-    final response = await http
-        .get(Uri.parse("http://192.168.224.81:8000/student/child-list/"));
+    final response =
+        await http.get(Uri.parse("https://daycare.codingindia.co.in/student/child-list/"));
 
     if (response.statusCode == 200) {
       final List<dynamic> data = json.decode(response.body);
@@ -64,8 +62,12 @@ class _AttendanceChildRecordsPageState
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Track Attendance'),
-        // backgroundColor: Colors.blue,
+        title: Text(
+          'Track Attendance',
+          style: TextStyle(color: Colors.white),
+        ),
+        backgroundColor: Colors.purple,
+        foregroundColor: Colors.white,
       ),
       body: childRecords.isEmpty
           ? Center(
@@ -112,7 +114,9 @@ class _AttendanceChildRecordsPageState
                                       decoration: BoxDecoration(
                                         shape: BoxShape.circle,
                                         border: Border.all(
-                                            color: const Color.fromARGB(255, 12, 14, 15), width: 2),
+                                            color: const Color.fromARGB(
+                                                255, 12, 14, 15),
+                                            width: 2),
                                         image: DecorationImage(
                                           image: NetworkImage(
                                             childRecords[index]['image'] ??
@@ -147,37 +151,35 @@ class _AttendanceChildRecordsPageState
                                 ),
                               ),
                               SizedBox(width: 16),
-                              Column(
-                                children: [
-                                  Column(
-                                    children: [
-                                      IconButton(
-                                        icon: Icon(Icons.calendar_today),
-                                        onPressed: () {
-                                          Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                              builder: (context) =>
-                                                  TrackAttendancePage(
-                                                childRecords[index]['id'],
-                                              ),
+                              Column(children: [
+                                Column(
+                                  children: [
+                                    IconButton(
+                                      icon: Icon(Icons.calendar_today),
+                                      onPressed: () {
+                                        Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder: (context) =>
+                                                TrackAttendancePage(
+                                              childRecords[index]['id'],
                                             ),
-                                          );
-                                        },
-                                        color: Colors.black,
+                                          ),
+                                        );
+                                      },
+                                      color: Colors.purple,
+                                    ),
+                                    Text(
+                                      'Track\nAttendance',
+                                      textAlign: TextAlign.center,
+                                      style: TextStyle(
+                                        fontSize: 12,
+                                        color: Colors.purple,
                                       ),
-                                      Text(
-                                        'Track\nAttendance',
-                                        textAlign: TextAlign.center,
-                                        style: TextStyle(
-                                          fontSize: 12,
-                                          color: Colors.black,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ]
-                              )    
+                                    ),
+                                  ],
+                                ),
+                              ])
                             ],
                           ),
                         ),

@@ -24,7 +24,7 @@ class _AttendancePageState extends State<AttendancePage> {
 
     try {
       final response = await http.get(
-        Uri.parse('http://192.168.224.81:8000/student/api/current-attendance/'),
+        Uri.parse('https://daycare.codingindia.co.in/student/api/current-attendance/'),
       );
 
       if (response.statusCode == 200) {
@@ -53,7 +53,7 @@ class _AttendancePageState extends State<AttendancePage> {
       }
 
       final response = await http.post(
-        Uri.parse('http://192.168.224.81:8000/student/toggle-attendance/'),
+        Uri.parse('https://daycare.codingindia.co.in/student/toggle-attendance/'),
         headers: {"Content-Type": "application/json"},
         body: jsonEncode({
           'child_id': childId.toString(),
@@ -77,7 +77,13 @@ class _AttendancePageState extends State<AttendancePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Attendance Records'),
+        title: Text(
+          'Mark Attendance',
+          style: TextStyle(color: Colors.white),
+        ),
+        backgroundColor: Colors.purple,
+        foregroundColor: Colors.white,
+
       ),
       body: isLoading
           ? Center(

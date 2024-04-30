@@ -11,7 +11,7 @@ class _UserListPageState extends State<UserListPage> {
   List<dynamic> users = [];
 
   Future<void> fetchUsers() async {
-    final response = await http.get(Uri.parse('http://192.168.224.81:8000/userslist/'));
+    final response = await http.get(Uri.parse('https://daycare.codingindia.co.in/userslist/'));
     if (response.statusCode == 200) {
       setState(() {
         users = json.decode(response.body);
@@ -31,7 +31,12 @@ class _UserListPageState extends State<UserListPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('User List'),
+        title: Text(
+          'Staff List',
+          style: TextStyle(color: Colors.white),
+        ),
+        backgroundColor: Colors.purple,
+        foregroundColor: Colors.white,
       ),
       body: ListView.builder(
         itemCount: users.length,
@@ -89,7 +94,13 @@ class UserDetailsPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('User Details'),
+        title: Text(
+          "Staff's Detail",
+          style: TextStyle(color: Colors.white),
+        ),
+        backgroundColor: Colors.purple,
+        foregroundColor: Colors.white,
+
       ),
       body: Padding(
         padding: EdgeInsets.all(16.0),

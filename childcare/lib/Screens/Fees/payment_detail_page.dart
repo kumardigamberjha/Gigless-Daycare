@@ -16,10 +16,10 @@ class PaymentDetailPage extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          'Payment Detail',
-          style: TextStyle(color: Colors.black),
+          'Payment Details',
+          style: TextStyle(color: Colors.white),
         ),
-        backgroundColor: Colors.white,
+        backgroundColor: Colors.purple,
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(20.0),
@@ -60,7 +60,7 @@ class PaymentDetailPage extends StatelessWidget {
           style: TextStyle(
             fontSize: 24,
             fontWeight: FontWeight.bold,
-            color: Colors.blue[800],
+            color: Colors.purple[800],
           ),
         ),
         SizedBox(height: 10),
@@ -100,14 +100,14 @@ class PaymentDetailPage extends StatelessWidget {
           children: [
             Container(
               decoration: BoxDecoration(
-                color: Colors.blue.withOpacity(0.2),
+                color: Colors.purple.withOpacity(0.2),
                 borderRadius: BorderRadius.circular(10),
               ),
               padding: EdgeInsets.all(12),
               child: Icon(
                 icon,
                 size: 24,
-                color: Colors.blue,
+                color: Colors.purple,
               ),
             ),
             SizedBox(width: 20),
@@ -119,7 +119,7 @@ class PaymentDetailPage extends StatelessWidget {
                   style: TextStyle(
                     fontSize: 18,
                     fontWeight: FontWeight.bold,
-                    color: Colors.blue[800],
+                    color: Colors.purple[800],
                   ),
                 ),
                 SizedBox(height: 5),

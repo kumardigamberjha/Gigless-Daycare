@@ -34,7 +34,7 @@ class _ParentChildPageState extends State<ParentChildPage> {
       SharedPreferences prefs = await SharedPreferences.getInstance();
       String? accessToken = prefs.getString('accessToken');
       final response = await http.get(
-        Uri.parse('http://192.168.224.81:8000/Parent/childtodaysattendancep/'),
+        Uri.parse('https://daycare.codingindia.co.in/Parent/childtodaysattendancep/'),
         headers: {
           'Authorization': 'Bearer $accessToken',
         },
@@ -59,7 +59,7 @@ class _ParentChildPageState extends State<ParentChildPage> {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String? accessToken = prefs.getString('accessToken');
     final response = await http.get(
-      Uri.parse("http://192.168.224.81:8000/Parent/"),
+      Uri.parse("https://daycare.codingindia.co.in/Parent/"),
       headers: {
         'Authorization': 'Bearer $accessToken',
       },
@@ -84,8 +84,11 @@ class _ParentChildPageState extends State<ParentChildPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Child Records'),
-        backgroundColor: Colors.blue,
+        title: Text(
+          'Child Records',
+          style: TextStyle(color: Colors.white),
+        ),
+        backgroundColor: Colors.purple,
       ),
       body: isLoading
           ? Center(child: CircularProgressIndicator())
@@ -139,7 +142,7 @@ class _ParentChildPageState extends State<ParentChildPage> {
                                         decoration: BoxDecoration(
                                           shape: BoxShape.circle,
                                           border: Border.all(
-                                              color: Colors.blue, width: 4),
+                                              color: Colors.purple, width: 4),
                                           image: DecorationImage(
                                             image: NetworkImage(
                                               childRecords[index]['image'] ??
@@ -241,7 +244,7 @@ class _ParentChildPageState extends State<ParentChildPage> {
                                         padding: EdgeInsets.symmetric(
                                             horizontal: 16, vertical: 8),
                                         backgroundColor: Colors
-                                            .blue, // Button background color
+                                            .purple, // Button background color
                                       ),
                                     ),
                                   ),
@@ -276,7 +279,7 @@ class _ParentChildPageState extends State<ParentChildPage> {
                                         padding: EdgeInsets.symmetric(
                                             horizontal: 16, vertical: 8),
                                         backgroundColor: Colors
-                                            .blue, // Button background color
+                                            .purple, // Button background color
                                       ),
                                     ),
                                   ),

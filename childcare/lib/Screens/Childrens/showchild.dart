@@ -27,7 +27,7 @@ class _ShowChildDetailState extends State<ShowChildDetail> {
     try {
       final response = await http.get(
         Uri.parse(
-          "http://192.168.224.81:8000/student/children/${widget.childId}/",
+          "https://daycare.codingindia.co.in/student/children/${widget.childId}/",
         ),
       );
 
@@ -85,7 +85,8 @@ class _ShowChildDetailState extends State<ShowChildDetail> {
             fontWeight: FontWeight.bold,
           ),
         ),
-        backgroundColor: Color(0xFF007ACC),
+        foregroundColor: Colors.white,
+        backgroundColor: Colors.purple,
         elevation: 4,
       ),
       body: SingleChildScrollView(
@@ -96,7 +97,7 @@ class _ShowChildDetailState extends State<ShowChildDetail> {
             children: [
               CircleAvatar(
                 radius: 80,
-                backgroundColor: Color(0xFF007ACC),
+                backgroundColor: Colors.purple,
                 child: CircleAvatar(
                     radius: 75,
                     backgroundImage: childData['image'] != null
@@ -110,7 +111,7 @@ class _ShowChildDetailState extends State<ShowChildDetail> {
                 style: TextStyle(
                   fontSize: 16,
                   fontWeight: FontWeight.bold,
-                  color: Color(0xFF007ACC),
+                  color: Colors.purple,
                 ),
               ),
               SizedBox(height: 20),
@@ -204,14 +205,14 @@ class _ShowChildDetailState extends State<ShowChildDetail> {
           style: TextStyle(
             fontSize: 18,
             fontWeight: FontWeight.bold,
-            color: Color(0xFF007ACC),
+            color: Colors.purple,
           ),
         ),
         subtitle: Row(
           children: [
             Icon(
               icon,
-              color: Color(0xFF007ACC),
+              color: Colors.purple,
               size: 20,
             ),
             SizedBox(width: 8),

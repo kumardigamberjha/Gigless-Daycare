@@ -20,7 +20,7 @@ class _StaffRegistrationPageState extends State<StaffRegistrationPage> {
     if (_formKey.currentState!.validate()) {
       // Form is valid, proceed with registration
       final response = await http.post(
-        Uri.parse('http://192.168.224.81:8000/register/'),
+        Uri.parse('https://daycare.codingindia.co.in/register/'),
         body: {
           'username': _usernameController.text,
           'email': _emailController.text,
@@ -48,7 +48,11 @@ class _StaffRegistrationPageState extends State<StaffRegistrationPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Staff Registration'),
+        title: Text(
+          'Staff Registration',
+          style: TextStyle(color: Colors.white),
+        ),
+        backgroundColor: Colors.purple,
       ),
       body: Padding(
         padding: EdgeInsets.all(16.0),
@@ -75,7 +79,9 @@ class _StaffRegistrationPageState extends State<StaffRegistrationPage> {
                     return 'Please enter an email';
                   }
                   // Email validation
-                  if (!RegExp(r'\b[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}\b', caseSensitive: false).hasMatch(value)) {
+                  if (!RegExp(r'\b[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}\b',
+                          caseSensitive: false)
+                      .hasMatch(value)) {
                     return 'Please enter a valid email';
                   }
                   return null;
@@ -101,7 +107,9 @@ class _StaffRegistrationPageState extends State<StaffRegistrationPage> {
                   labelText: 'Password',
                   suffixIcon: IconButton(
                     icon: Icon(
-                      _passwordVisible ? Icons.visibility : Icons.visibility_off,
+                      _passwordVisible
+                          ? Icons.visibility
+                          : Icons.visibility_off,
                       color: Colors.grey,
                     ),
                     onPressed: () {
@@ -126,8 +134,11 @@ class _StaffRegistrationPageState extends State<StaffRegistrationPage> {
               SizedBox(height: 16),
               ElevatedButton(
                 onPressed: _registerStaff,
+                style: ElevatedButton.styleFrom(
+                  foregroundColor: Colors.white, backgroundColor: Colors.purple, // text color
+                ),
                 child: Text('Register'),
-              ),
+              )
             ],
           ),
         ),

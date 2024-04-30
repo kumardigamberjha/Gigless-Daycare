@@ -54,8 +54,8 @@ class _FeeListPageState extends State<FeeListPage> {
 
   Future<void> fetchFees() async {
     try {
-      final response = await http.get(Uri.parse(
-          'http://192.168.224.81:8000/Accounts/Fees/${widget.childId}/'));
+      final response = await http.get(
+          Uri.parse('https://daycare.codingindia.co.in/Accounts/Fees/${widget.childId}/'));
 
       if (response.statusCode == 200) {
         final jsonData = json.decode(response.body);
@@ -68,7 +68,7 @@ class _FeeListPageState extends State<FeeListPage> {
               .map((fee) => DateTime.parse(fee.datePaid).month)
               .toSet()
               .toList();
-              selectedMonth = months.isNotEmpty ? months[0] : DateTime.now().month;
+          selectedMonth = months.isNotEmpty ? months[0] : DateTime.now().month;
           isLoading = false;
         });
       } else {
@@ -104,19 +104,18 @@ class _FeeListPageState extends State<FeeListPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: isLoading
-            ? Text('Fees List')
-            : errorMessage.isNotEmpty
-                ? Text(errorMessage)
-                : Text(
-                    'Total Received: \$${getTotalAmountReceivedForMonth(selectedMonth).toStringAsFixed(2)}'),
-        backgroundColor: Colors.white,
+        title: Text(
+          'Fee List',
+          style: TextStyle(color: Colors.white),
+        ),
+        backgroundColor: Colors.purple,
       ),
       body: isLoading
           ? Center(child: CircularProgressIndicator())
           : errorMessage.isNotEmpty
               ? Center(child: Text(errorMessage))
-              : SingleChildScrollView( // Wrap your content with SingleChildScrollView
+              : SingleChildScrollView(
+                  // Wrap your content with SingleChildScrollView
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -143,37 +142,45 @@ class _FeeListPageState extends State<FeeListPage> {
                         child: Center(
                           child: Text(
                             'Child Name: $childName',
-                            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                            style: TextStyle(
+                                fontSize: 18, fontWeight: FontWeight.bold),
                           ),
                         ),
                       ),
                       ListView.builder(
-  shrinkWrap: true,
-  physics: NeverScrollableScrollPhysics(),
-  itemCount: fees.length,
-  itemBuilder: (context, index) {
-    final fee = fees[index];
-    final feeMonth = DateTime.parse(fee.datePaid).month;
-    if (feeMonth != selectedMonth) {
-      // Skip fees that don't match the selected month
-      return SizedBox.shrink();
-    }
-    return Card(
-      elevation: 4,
-      margin: EdgeInsets.symmetric(vertical: 8, horizontal: 16),
-      child: ListTile(
-        title: Text('Date: ${fee.datePaid}'),
-        subtitle: Text('Amount: \$${fee.amount.toStringAsFixed(2)}', style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500, color: Colors.green),),
-      ),
-    );
-  },
-),
+                        shrinkWrap: true,
+                        physics: NeverScrollableScrollPhysics(),
+                        itemCount: fees.length,
+                        itemBuilder: (context, index) {
+                          final fee = fees[index];
+                          final feeMonth = DateTime.parse(fee.datePaid).month;
+                          if (feeMonth != selectedMonth) {
+                            // Skip fees that don't match the selected month
+                            return SizedBox.shrink();
+                          }
+                          return Card(
+                            elevation: 4,
+                            margin: EdgeInsets.symmetric(
+                                vertical: 8, horizontal: 16),
+                            child: ListTile(
+                              title: Text('Date: ${fee.datePaid}'),
+                              subtitle: Text(
+                                'Amount: \$${fee.amount.toStringAsFixed(2)}',
+                                style: TextStyle(
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.w500,
+                                    color: Colors.green),
+                              ),
+                            ),
+                          );
+                        },
+                      ),
                       Padding(
                         padding: const EdgeInsets.all(8.0),
                         child: Container(
                           padding: EdgeInsets.all(16),
                           decoration: BoxDecoration(
-                            color: Colors.blue,
+                            color: Colors.purple,
                             borderRadius: BorderRadius.circular(8),
                             boxShadow: [
                               BoxShadow(
@@ -189,11 +196,15 @@ class _FeeListPageState extends State<FeeListPage> {
                             children: [
                               Text(
                                 'Total Amount',
-                                style: TextStyle(fontSize: 16, color: Colors.white),
+                                style: TextStyle(
+                                    fontSize: 16, color: Colors.white),
                               ),
                               Text(
                                 '\$${getTotalAmountReceivedForMonth(selectedMonth).toStringAsFixed(2)}',
-                                style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.white),
+                                style: TextStyle(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.white),
                               ),
                             ],
                           ),

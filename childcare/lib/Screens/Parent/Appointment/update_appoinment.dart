@@ -30,7 +30,7 @@ class _UpdateAppointmentPageState extends State<UpdateAppointmentPage> {
     String? accessToken = prefs.getString('accessToken');
     try {
       final response = await http.put(
-        Uri.parse('http://192.168.224.81:8000/Parent/updateappointment/${widget.appointmentId}/'),
+        Uri.parse('https://daycare.codingindia.co.in/Parent/updateappointment/${widget.appointmentId}/'),
         headers: {
           'Authorization': 'Bearer $accessToken',
         },
@@ -76,7 +76,12 @@ class _UpdateAppointmentPageState extends State<UpdateAppointmentPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Update Appointment'),
+        title: Text(
+          'Update Appointment',
+          style: TextStyle(color: Colors.white),
+        ),
+        backgroundColor: Colors.purple,
+        foregroundColor: Colors.white,
       ),
       body: _isLoading
           ? Center(child: CircularProgressIndicator())

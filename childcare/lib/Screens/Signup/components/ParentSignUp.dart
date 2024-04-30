@@ -169,7 +169,7 @@ class ParentSignUp extends StatelessWidget {
 Future<void> signUpUser(String email, String password, String mobileNumber,
     String username, String usertype, BuildContext context) async {
   final response = await http.post(
-    Uri.parse('http://192.168.224.81:8000/register/'),
+    Uri.parse('https://daycare.codingindia.co.in/register/'),
     body: {
       'email': email,
       'password': password,
@@ -197,7 +197,7 @@ Future<void> signUpUser(String email, String password, String mobileNumber,
 Future<void> loginUsers(String username, String password, BuildContext context) async {
   String usernames = username.substring(0, username.indexOf('@'));
   final response = await http.post(
-    Uri.parse('http://192.168.224.81:8000/token/'),
+    Uri.parse('https://daycare.codingindia.co.in/token/'),
     body: {
       'username': usernames,
       'password': password,

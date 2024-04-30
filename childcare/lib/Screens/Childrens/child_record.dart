@@ -22,7 +22,7 @@ class _ChildRecordsPageState extends State<ChildRecordsPage> {
 
   Future<void> fetchData() async {
     final response =
-        await http.get(Uri.parse("http://192.168.224.81:8000/student/child-list/"));
+        await http.get(Uri.parse("https://daycare.codingindia.co.in/student/child-list/"));
 
     if (response.statusCode == 200) {
       final List<dynamic> data = json.decode(response.body);
@@ -65,8 +65,13 @@ class _ChildRecordsPageState extends State<ChildRecordsPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Child Records'),
-        // backgroundColor: Colors.blue,
+        title: Text(
+          'Child Records',
+          style: TextStyle(color: Colors.white),
+        ),
+        backgroundColor: Colors.purple,
+        foregroundColor: Colors.white,
+
       ),
       body: childRecords.isEmpty
           ? Center(
@@ -113,7 +118,7 @@ class _ChildRecordsPageState extends State<ChildRecordsPage> {
                                       decoration: BoxDecoration(
                                         shape: BoxShape.circle,
                                         border: Border.all(
-                                            color: Colors.blue, width: 2),
+                                            color: Colors.purple, width: 2),
                                         image: DecorationImage(
                                           image: NetworkImage(
                                             childRecords[index]['image'] ??

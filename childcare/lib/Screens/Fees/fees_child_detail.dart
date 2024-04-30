@@ -19,7 +19,8 @@ class _ChildListFeesPageState extends State<ChildListFeesPage> {
   }
 
   Future<void> fetchData() async {
-    final response = await http.get(Uri.parse("http://192.168.224.81:8000/student/child-list/"));
+    final response =
+        await http.get(Uri.parse("https://daycare.codingindia.co.in/student/child-list/"));
 
     if (response.statusCode == 200) {
       final List<dynamic> data = json.decode(response.body);
@@ -36,9 +37,11 @@ class _ChildListFeesPageState extends State<ChildListFeesPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Child Fees', style: TextStyle(fontSize: 24)),
-        backgroundColor: Colors.white,
-        elevation: 0, // Remove app bar elevation
+        title: Text(
+          'Child Fees',
+          style: TextStyle(color: Colors.white),
+        ),
+        backgroundColor: Colors.purple,
       ),
       body: childRecords.isEmpty
           ? Center(
@@ -48,7 +51,8 @@ class _ChildListFeesPageState extends State<ChildListFeesPage> {
               itemCount: childRecords.length,
               itemBuilder: (context, index) {
                 return Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                   child: GestureDetector(
                     onTap: () {},
                     child: Card(
@@ -73,7 +77,8 @@ class _ChildListFeesPageState extends State<ChildListFeesPage> {
                                 radius: 40,
                                 backgroundColor: Colors.black,
                                 backgroundImage: NetworkImage(
-                                  childRecords[index]['image'] ?? 'https://via.placeholder.com/150',
+                                  childRecords[index]['image'] ??
+                                      'https://via.placeholder.com/150',
                                 ),
                               ),
                               SizedBox(width: 16),
@@ -165,7 +170,8 @@ class _ChildListFeesPageState extends State<ChildListFeesPage> {
       DateTime currentDate = DateTime.now();
       int age = currentDate.year - birthDate.year;
       if (currentDate.month < birthDate.month ||
-          (currentDate.month == birthDate.month && currentDate.day < birthDate.day)) {
+          (currentDate.month == birthDate.month &&
+              currentDate.day < birthDate.day)) {
         age--;
       }
       return age.toString();

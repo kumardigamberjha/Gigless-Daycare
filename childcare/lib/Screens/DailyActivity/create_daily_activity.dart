@@ -42,7 +42,7 @@ class _DailyActivityPageState extends State<DailyActivityPage> {
       var request = http.MultipartRequest(
         'POST',
         Uri.parse(
-            'http://192.168.224.81:8000/student/api/create-daily-activity/${widget.childId}/'),
+            'https://daycare.codingindia.co.in/student/api/create-daily-activity/${widget.childId}/'),
       );
       request.fields['child'] = widget.childId.toString();
       request.fields['meal_description'] = mealDescriptionController.text;
@@ -118,7 +118,11 @@ class _DailyActivityPageState extends State<DailyActivityPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Save Daily Activity with Media'),
+        title: Text(
+          'Daily Activity Form',
+          style: TextStyle(color: Colors.white),
+        ),
+        backgroundColor: Colors.purple,
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16.0),
@@ -172,9 +176,12 @@ class _DailyActivityPageState extends State<DailyActivityPage> {
                   SizedBox(height: 15),
             
             ElevatedButton(
-              onPressed: _isSaving ? null : saveDailyActivity,
-              child: _isSaving ? CircularProgressIndicator() : Text('Save Daily Activity with Media'),
-            ),
+  onPressed: _isSaving ? null : saveDailyActivity,
+  style: ElevatedButton.styleFrom(
+    foregroundColor: Colors.white, backgroundColor: Colors.purple, // text color
+  ),
+  child: _isSaving ? CircularProgressIndicator() : Text('Save Daily Activity'),
+  )
           ],
         ),
       ),

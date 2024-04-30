@@ -61,7 +61,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
   void _fetchEvents() async {
     // Make an HTTP GET request to your backend API endpoint
     var response = await http
-        .get(Uri.parse('http://192.168.224.81:8000/CalendarEvent/api/events/'));
+        .get(Uri.parse('https://daycare.codingindia.co.in/CalendarEvent/api/events/'));
 
     // Check if the request was successful (HTTP 200 OK)
     if (response.statusCode == 200) {
@@ -107,8 +107,17 @@ class _CalendarScreenState extends State<CalendarScreen> {
 Widget build(BuildContext context) {
   return Scaffold(
     appBar: AppBar(
-      title: Text('Event Calendar'),
-    ),
+        title: Text(
+          "Event Calendar",
+          style: TextStyle(
+            fontFamily: 'Roboto',
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        backgroundColor: Colors.purple,
+        foregroundColor: Colors.white,
+        elevation: 4,
+      ),
     body: SingleChildScrollView(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
@@ -242,7 +251,7 @@ Widget build(BuildContext context) {
                 // Send HTTP POST request to backend to create event
                 final response = await http.post(
                   Uri.parse(
-                      'http://192.168.224.81:8000/CalendarEvent/api/create-event/'),
+                      'https://daycare.codingindia.co.in/CalendarEvent/api/create-event/'),
                   headers: <String, String>{
                     'Content-Type': 'application/json; charset=UTF-8',
                   },
@@ -312,7 +321,7 @@ void _editEvent(DateTime selectedDay, int index) async {
               // Send HTTP POST request to backend to edit event
               try {
                 final response = await http.post(
-                  Uri.parse('http://192.168.224.81:8000/CalendarEvent/edit-event/'),
+                  Uri.parse('https://daycare.codingindia.co.in/CalendarEvent/edit-event/'),
                   headers: <String, String>{
                     'Content-Type': 'application/json; charset=UTF-8',
                   },
@@ -372,7 +381,7 @@ void _deleteEvent(DateTime selectedDay, int index) async {
               // Send HTTP DELETE request to backend to delete event
               try {
                 final response = await http.delete(
-                  Uri.parse('http://192.168.224.81:8000/CalendarEvent/DeleteEvent/$eventId/'),
+                  Uri.parse('https://daycare.codingindia.co.in/CalendarEvent/DeleteEvent/$eventId/'),
                   headers: <String, String>{
                     'Content-Type': 'application/json; charset=UTF-8',
                   },

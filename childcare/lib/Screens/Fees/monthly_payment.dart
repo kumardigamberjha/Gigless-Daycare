@@ -21,8 +21,8 @@ class _TotalPaymentsCurrentMonthPageState
 
   Future<void> fetchTotalPaymentsCurrentMonth() async {
     try {
-      final response = await http.get(
-          Uri.parse('http://192.168.224.81:8000/Accounts/total-payments-current-month/'));
+      final response = await http.get(Uri.parse(
+          'https://daycare.codingindia.co.in/Accounts/total-payments-current-month/'));
 
       if (response.statusCode == 200) {
         final data = json.decode(response.body);
@@ -49,9 +49,11 @@ class _TotalPaymentsCurrentMonthPageState
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Total Payments Current Month'),
-        backgroundColor: Colors.white,
-        elevation: 0, // Remove app bar shadow
+        title: Text(
+          'Monthly Revenue',
+          style: TextStyle(color: Colors.white),
+        ),
+        backgroundColor: Colors.purple,
       ),
       body: Container(
         padding: EdgeInsets.all(20),
@@ -116,4 +118,3 @@ class _TotalPaymentsCurrentMonthPageState
     );
   }
 }
-

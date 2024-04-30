@@ -67,7 +67,7 @@ Future<void> logout(BuildContext context) async {
 
     if (refreshToken != null) {
       var response = await http.post(
-        Uri.parse('http://192.168.224.81:8000/logout/'),
+        Uri.parse('https://daycare.codingindia.co.in/logout/'),
         body: {'refresh_token': refreshToken},
       );
 
@@ -104,6 +104,7 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   CustomUser? _user;
   Map<String, dynamic>? dashboardData;
+  Map<String, dynamic>? jsonResponse;
 
   @override
   void initState() {
@@ -122,7 +123,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
     if (accessToken != null) {
       final response = await http.get(
-        Uri.parse('http://192.168.224.81:8000/student/api/user/'),
+        Uri.parse('https://daycare.codingindia.co.in/student/api/user/'),
         headers: {
           'Authorization': 'Bearer $accessToken',
         },
@@ -143,10 +144,12 @@ class _HomeScreenState extends State<HomeScreen> {
 
   Future<Map<String, dynamic>> fetchDashboardData() async {
     final response =
-        await http.get(Uri.parse('127.0.0.1:8000/Accounts/dashboard/'));
+        await http.get(Uri.parse('https://daycare.codingindia.co.in/Accounts/dashboard/'));
 
+    print("Json Response: ${jsonResponse}");
     if (response.statusCode == 200) {
       // If the server returns a 200 OK response, parse the JSON
+      jsonResponse = json.decode(response.body);
       return jsonDecode(response.body);
     } else {
       // If the server did not return a 200 OK response, throw an exception
@@ -158,67 +161,71 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Giggles Daycare'),
+        title: Text('Giggles Daycare', style: TextStyle(color: Colors.white)),
+        backgroundColor: Color(0xFF6A1B9A),
       ),
+      backgroundColor: Colors.white,
+      body: ListView(
+        padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+        children: [
+          _buildSection(
+            'Revenue Overview',
+            Icons.attach_money,
+            Color(0xFF388E3C),
+            [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  _buildCard(
+                      'Yearly Revenue',
+                      "\$${dashboardData?['year_amount'] ?? '0'}",
+                      Color(0xFF388E3C),
+                      Colors.white),
 
-      // ***************** Content *************************
-      // ***************** Content *************************
-      backgroundColor:
-          Colors.black, // Set the background color of the page to black
-      body: _user != null
-          ? (_user!.userType == "Staff"
-              ? ListView(
-                  padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                  children: [
-                    // First section: Revenue Overview
-                    _buildSection(
-                      context,
-                      'Revenue Overview',
-                      Icons.attach_money,
-                      Colors.green,
-                      [
-                        _buildCard(
-                          context,
-                          'Yearly Revenue',
-                          '\$120,000',
-                          Colors.green,
-                        ),
-                        SizedBox(height: 16),
-                        _buildCard(
-                          context,
-                          'Monthly Revenue',
-                          '\$10,000',
-                          Colors.blue,
-                        ),
-                      ],
-                    ),
-                    SizedBox(height: 24), // Add some space between sections
-                    // Second section: Student Statistics
-                    _buildSection(
-                      context,
-                      'Student Statistics',
-                      Icons.school,
-                      Colors.orange,
-                      [
-                        _buildCard(
-                          context,
-                          'Number of Child Enrolled',
-                          '500',
-                          Colors.orange,
-                        ),
-                        SizedBox(height: 16),
-                        _buildCard(
-                          context,
-                          'Present Students',
-                          '350',
-                          Colors.purple,
-                        ),
-                      ],
-                    ),
-                  ],
-                )
-              : ParentChildPage()) // Navigate to ParentChildPage if the user is not null and is a parent
-          : SizedBox.shrink(), // If the user is null, display nothing
+                  // _buildCard('Monthly Revenue', '\$8,333', Color(0xFF388E3C),
+                  //     Colors.white),
+                  _buildCard(
+                      'Monthly Revenue',
+                      "\$${dashboardData?['total_payments'] ?? '0'}",
+                      Color(0xFF388E3C),
+                      Colors.white),
+                ],
+              ),
+            ],
+          ),
+          SizedBox(height: 24),
+          _buildSection(
+            'Student Statistics',
+            Icons.school,
+            Color(0xFFFF9800),
+            [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  // _buildCard(
+                  // 'Total Students', '${jsonResponse!['students']}', Color(0xFF388E3C), Colors.white),
+                  _buildCard(
+                      'Total Students',
+                      "${dashboardData?['students'] ?? '0'}",
+                      Color(0xFF388E3C),
+                      Colors.white),
+
+                  _buildCard(
+                      'Present Today', '${dashboardData?['present'] ?? '0'}', Color(0xFF388E3C), Colors.white),
+                ],
+              ),
+              SizedBox(height: 16),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  _buildCard(
+                      'Absent Today', '${dashboardData?['absent'] ?? '0'}', Color(0xFFD32F2F), Colors.white),
+                ],
+              ),
+            ],
+          ),
+        ],
+      ),
 
       // ****************** Content Ends ********************
 
@@ -229,19 +236,48 @@ class _HomeScreenState extends State<HomeScreen> {
           children: <Widget>[
             DrawerHeader(
               decoration: BoxDecoration(
-                color: Colors.blue,
+                color: Colors.purple,
               ),
-              child: Text(
-                'Giggles Daycare',
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 24,
-                ),
+              child: Stack(
+                children: [
+                  Positioned(
+                    top: 0,
+                    left: 0,
+                    child: Image.asset(
+                      'assets/images/GD_Logo.png', // Replace 'assets/logo.png' with the actual path to your logo image
+                      width: 100, // Adjust the width of the logo as needed
+                    ),
+                  ),
+                  Positioned(
+                    bottom: 12.0,
+                    left: 12.0,
+                    child: Text(
+                      'Giggles Daycare',
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 24,
+                      ),
+                    ),
+                  ),
+                ],
               ),
             ),
+            if (_user != null &&
+                (_user!.userType != "Parent" && _user!.userType == "Staff"))
+              ListTile(
+                title: Text('Dashboard'),
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => HomeScreen(),
+                    ),
+                  );
+                },
+              ),
             ExpansionTile(
               title: Text('students'),
-              backgroundColor: Colors.blue,
+              backgroundColor: Colors.purple,
               children: [
                 // StaffSignUpScreen
 
@@ -265,6 +301,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       },
                     ),
                   ),
+
                 if (_user != null && (_user!.userType == "Staff"))
                   Padding(
                     padding: EdgeInsets.only(left: 16.0),
@@ -286,7 +323,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       },
                     ),
                   ),
-                  // Text(_user!.userType),
+                // Text(_user!.userType),
                 if (_user != null && (_user!.userType == "Parent"))
                   Padding(
                     padding: EdgeInsets.only(left: 16.0),
@@ -315,7 +352,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 (_user!.userType != "Parent" && _user!.userType == "Staff"))
               ExpansionTile(
                 title: Text('Attendance'),
-                backgroundColor: Colors.blue,
+                backgroundColor: Colors.purple,
                 children: [
                   if (_user != null &&
                       (_user!.userType != "Parent" ||
@@ -367,7 +404,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 (_user!.userType != "Parent" && _user!.userType == "Staff"))
               ExpansionTile(
                 title: Text('Staff'),
-                backgroundColor: Colors.blue,
+                backgroundColor: Colors.purple,
                 children: [
                   Padding(
                     padding: EdgeInsets.only(left: 16.0),
@@ -458,19 +495,6 @@ class _HomeScreenState extends State<HomeScreen> {
                   );
                 },
               ),
-            // if (_user != null &&
-            //     (_user!.userType != "Parent" && _user!.userType == "Staff"))
-            //   ListTile(
-            //     title: Text('Learning Resources'),
-            //     onTap: () {
-            //       Navigator.push(
-            //         context,
-            //         MaterialPageRoute(
-            //           builder: (context) => LearningResourceForm(),
-            //         ),
-            //       );
-            //     },
-            //   ),
 
             // ***************** For Staff ************************
             if (_user != null &&
@@ -506,7 +530,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
             ExpansionTile(
               title: Text('Appointment'),
-              backgroundColor: Colors.blue,
+              backgroundColor: Colors.purple,
               children: [
                 if (_user != null &&
                     (_user!.userType == "Parent" && _user!.userType != "Staff"))
@@ -579,7 +603,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 (_user!.userType != "Parent" && _user!.userType == "Staff"))
               ExpansionTile(
                 title: Text('Accounts'),
-                backgroundColor: Colors.blue,
+                backgroundColor: Colors.purple,
                 children: [
                   if (_user != null &&
                       (_user!.userType != "Parent" ||
@@ -724,29 +748,23 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  Widget _buildSection(BuildContext context, String title, IconData icon,
-      Color color, List<Widget> cards) {
+  Widget _buildSection(
+      String title, IconData icon, Color color, List<Widget> cards) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         Padding(
           padding: const EdgeInsets.symmetric(vertical: 16),
-          child: Row(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              Icon(
-                icon,
-                size: 32,
-                color: Colors.grey, // Set the icon color to grey
-              ),
-              SizedBox(width: 8),
-              Text(
-                title,
-                style: TextStyle(
-                  fontSize: 28,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.white, // Set the text color to white
-                ),
-              ),
+              Icon(icon, size: 32, color: color),
+              SizedBox(height: 8),
+              Text(title,
+                  style: TextStyle(
+                      fontSize: 28,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.black)),
             ],
           ),
         ),
@@ -756,39 +774,28 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Widget _buildCard(
-      BuildContext context, String title, String value, Color color) {
-    return GestureDetector(
-      onTap: () {
-        // Add onTap functionality if needed
-      },
+      String title, String value, Color textColor, Color backgroundColor) {
+    return Expanded(
       child: Card(
         elevation: 4,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(12),
-        ),
-        color: Colors.grey[900], // Set the card background color to dark grey
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+        color: backgroundColor,
         child: Padding(
-          padding: const EdgeInsets.all(16),
+          padding: const EdgeInsets.all(14),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(
-                title,
-                style: TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.white, // Set the text color to white
-                ),
-              ),
+              Text(title,
+                  style: TextStyle(
+                      fontSize: 14,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.black)),
               SizedBox(height: 8),
-              Text(
-                value,
-                style: TextStyle(
-                  fontSize: 28,
-                  fontWeight: FontWeight.bold,
-                  color: color,
-                ),
-              ),
+              Text(value,
+                  style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                      color: textColor)),
             ],
           ),
         ),

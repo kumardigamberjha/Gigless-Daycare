@@ -24,8 +24,8 @@ class _ChildMediaPageState extends State<ChildMediaPage> {
   Future<void> fetchChildMedia() async {
     try {
       final response = await http.get(
-        Uri.parse('http://192.168.224.81:8000/Parent/dailyactivitymediaforparent/${widget.childId}'),
-        // Replace 'http://192.168.224.81:8000/ChildMediaForParent/${widget.childId}' with your actual API endpoint
+        Uri.parse('https://daycare.codingindia.co.in/Parent/dailyactivitymediaforparent/${widget.childId}'),
+        // Replace 'https://daycare.codingindia.co.in/ChildMediaForParent/${widget.childId}' with your actual API endpoint
         headers: {
           'Content-Type': 'application/json',
           // Add any required headers
@@ -53,8 +53,11 @@ class _ChildMediaPageState extends State<ChildMediaPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Child Media'),
-        backgroundColor: Colors.blue,
+        title: Text(
+          'Child Media',
+          style: TextStyle(color: Colors.white),
+        ),
+        backgroundColor: Colors.purple,
       ),
       body: isLoading
           ? Center(child: CircularProgressIndicator())

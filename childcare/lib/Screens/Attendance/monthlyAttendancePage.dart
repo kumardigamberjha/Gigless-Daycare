@@ -22,7 +22,7 @@ class _TrackAttendancePageState extends State<TrackAttendancePage> {
   }
 
   Future<Map<String, dynamic>> fetchAttendanceStats() async {
-    final response = await http.get(Uri.parse('http://192.168.224.81:8000/student/attendance/stats/${widget.childId}/'));
+    final response = await http.get(Uri.parse('https://daycare.codingindia.co.in/student/attendance/stats/${widget.childId}/'));
 
     if (response.statusCode == 200) {
       return json.decode(response.body);
@@ -39,7 +39,7 @@ class _TrackAttendancePageState extends State<TrackAttendancePage> {
           'Attendance Stats',
           style: TextStyle(color: Colors.white),
         ),
-        backgroundColor: Colors.blue[900],
+        backgroundColor: Colors.purple,
       ),
       body: FutureBuilder<Map<String, dynamic>>(
         future: _attendanceStatsFuture,
@@ -78,7 +78,7 @@ class _TrackAttendancePageState extends State<TrackAttendancePage> {
                     SizedBox(height: 10),
                     _buildDateListExpansionTile('Leaves Dates', attendanceStats['absent_dates'], Icons.cancel, Colors.red),
                     SizedBox(height: 10),
-                    _buildDateListExpansionTile('Holidays Dates', attendanceStats['holiday_dates'], Icons.calendar_today, Colors.blue),
+                    _buildDateListExpansionTile('Holidays Dates', attendanceStats['holiday_dates'], Icons.calendar_today, Colors.purple),
                   ],
                 ),
               ),

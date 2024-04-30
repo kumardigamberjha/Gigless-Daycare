@@ -26,7 +26,7 @@ class _CreateParentAppointmentViewState
     String? accessToken = prefs.getString('accessToken');
 
     final response = await http.post(
-      Uri.parse('http://192.168.224.81:8000/Parent/createappointments/'),
+      Uri.parse('https://daycare.codingindia.co.in/Parent/createappointments/'),
       headers: {
         'Authorization': 'Bearer $accessToken',
       },
@@ -49,8 +49,12 @@ class _CreateParentAppointmentViewState
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Request Appointment'),
-        backgroundColor: Colors.blue, // Updated app bar color
+        title: Text(
+          'Request Appointment',
+          style: TextStyle(color: Colors.white),
+        ),
+        backgroundColor: Colors.purple,
+        foregroundColor: Colors.white,
       ),
       body: SingleChildScrollView(
         padding: EdgeInsets.all(20.0),
@@ -117,7 +121,7 @@ class _CreateParentAppointmentViewState
               },
               child: Text('Create Appointment'),
               style: ElevatedButton.styleFrom(
-                foregroundColor: Colors.white, backgroundColor: Colors.blue, // Text color
+                foregroundColor: Colors.white, backgroundColor: Colors.purple, // Text color
                 elevation: 3, // Elevation
                 padding: EdgeInsets.symmetric(vertical: 15, horizontal: 30),
                 shape: RoundedRectangleBorder(

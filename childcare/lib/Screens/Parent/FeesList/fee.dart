@@ -43,7 +43,7 @@ class _FeeFormPageForParentState extends State<FeeFormPageForParent> {
   final firstDayOfMonth = DateTime(now.year, now.month, 1);
   final lastDayOfMonth = DateTime(now.year, now.month + 1, 0);
 
-  final String apiUrl = 'http://192.168.224.81:8000/Parent/Fees/${widget.childId}/';
+  final String apiUrl = 'https://daycare.codingindia.co.in/Parent/Fees/${widget.childId}/';
 
   try {
     final response = await http.get(
@@ -90,7 +90,7 @@ class _FeeFormPageForParentState extends State<FeeFormPageForParent> {
       isSaving = true;
     });
 
-    final String apiUrl = 'http://192.168.224.81:8000/Accounts/Fees/${widget.childId}/';
+    final String apiUrl = 'https://daycare.codingindia.co.in/Accounts/Fees/${widget.childId}/';
 
     final response = await http.post(
       Uri.parse(apiUrl),
@@ -125,8 +125,11 @@ class _FeeFormPageForParentState extends State<FeeFormPageForParent> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.blue,
-        title: Text('Add Fee', style: TextStyle(fontSize: 24, color: Colors.white)),
+        title: Text(
+          'Add Fee',
+          style: TextStyle(color: Colors.white),
+        ),
+        backgroundColor: Colors.purple,
       ),
       body: Padding(
         padding: EdgeInsets.all(16.0),

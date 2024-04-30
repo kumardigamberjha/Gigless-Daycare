@@ -12,7 +12,7 @@ class _ParentListPageState extends State<ParentListPage> {
   List<dynamic> users = [];
 
   Future<void> fetchUsers() async {
-    final response = await http.get(Uri.parse('http://192.168.224.81:8000/ParentList/'));
+    final response = await http.get(Uri.parse('https://daycare.codingindia.co.in/ParentList/'));
     if (response.statusCode == 200) {
       setState(() {
         users = json.decode(response.body);
@@ -32,7 +32,11 @@ class _ParentListPageState extends State<ParentListPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Parent List'),
+        title: Text(
+          'Parent List',
+          style: TextStyle(color: Colors.white),
+        ),
+        backgroundColor: Colors.purple,
       ),
       body: ListView.builder(
         itemCount: users.length,
@@ -100,7 +104,7 @@ class _ParentDetailPageState extends State<ParentDetailPage> {
   }
 
   Future<void> fetchParentDetails() async {
-    final response = await http.get(Uri.parse('http://192.168.224.81:8000/ParentListDetail/${widget.parentId}/'));
+    final response = await http.get(Uri.parse('https://daycare.codingindia.co.in/ParentListDetail/${widget.parentId}/'));
     if (response.statusCode == 200) {
       setState(() {
         final data = json.decode(response.body);
@@ -116,7 +120,11 @@ class _ParentDetailPageState extends State<ParentDetailPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Parent Details'),
+        title: Text(
+          'Parents List',
+          style: TextStyle(color: Colors.white),
+        ),
+        backgroundColor: Colors.purple,
       ),
       body: SingleChildScrollView(
         child: Padding(

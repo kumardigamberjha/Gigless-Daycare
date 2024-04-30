@@ -1,4 +1,5 @@
 import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:childcare/Screens/Homescreen/homescreen.dart';
 import 'package:childcare/Screens/Login/login_screen.dart';
@@ -15,7 +16,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
   void initState() {
     super.initState();
     // Show splash screen for 5 seconds before checking token validity
-    Future.delayed(Duration(seconds: 6), () {
+    Future.delayed(Duration(seconds: 3), () {
       checkTokenValidity();
     });
   }
@@ -25,7 +26,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
     String? retrievedToken = prefs.getString('accessToken');
     String? refreshToken = prefs.getString('refreshToken');
 
-    print('Retrieved Access Token: $retrievedToken');
+    print('Retrieved Access Token: $retrievedToken'); 
     print('Retrieved Refresh Token: $refreshToken');
 
     // Check the validity of the access token
@@ -67,7 +68,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
 
   Future<bool> validateToken(String accessToken) async {
     final response = await http.post(
-      Uri.parse('http://192.168.224.81:8000/validate-token/'),
+      Uri.parse('https://daycare.codingindia.co.in/validate-token/'),
       headers: {'Content-Type': 'application/json'},
       body: jsonEncode({'token': accessToken}),
     );
@@ -85,15 +86,11 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Center(
-        // child: CircularProgressIndicator(), // Placeholder for splash screen
+        // Placeholder for default logo
         child: Image.asset(
-          'assets/images/gdgif.gif', // Path to your GIF file
-          // width: 150, // Set width to 150
-          // height: 150, // Set height to 150
-          width: MediaQuery.of(context)
-              .size
-              .width, // Set width to full screen width
-          height: MediaQuery.of(context).size.height,
+          'assets/images/Giggles_Daycare.png', // Path to your default logo asset
+          width: MediaQuery.of(context).size.width, // Set width to full screen width
+          height: MediaQuery.of(context).size.height, // Set height to full screen height
         ),
       ),
     );

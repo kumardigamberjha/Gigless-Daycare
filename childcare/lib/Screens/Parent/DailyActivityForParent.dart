@@ -34,7 +34,7 @@ class _DailyActivityForParentState extends State<DailyActivityForParent> {
     try {
       final response = await http.get(
         Uri.parse(
-          "http://192.168.224.81:8000/student/api/daily-activity/${widget.childId}/",
+          "https://daycare.codingindia.co.in/student/api/daily-activity/${widget.childId}/",
         ),
       );
 
@@ -87,7 +87,7 @@ class _DailyActivityForParentState extends State<DailyActivityForParent> {
             fontWeight: FontWeight.bold,
           ),
         ),
-        backgroundColor: Color(0xFF007ACC),
+        backgroundColor: Colors.purple,
         elevation: 4,
       ),
       body: Container(
@@ -176,7 +176,7 @@ class _DailyActivityForParentState extends State<DailyActivityForParent> {
   Widget buildCircleAvatar() {
     return CircleAvatar(
       radius: 80,
-      backgroundColor: Color(0xFF007ACC),
+      backgroundColor: Colors.purple,
       child: CircleAvatar(
         radius: 75,
         child: ClipOval(
@@ -206,7 +206,7 @@ class _DailyActivityForParentState extends State<DailyActivityForParent> {
           style: TextStyle(
             fontSize: 28,
             fontWeight: FontWeight.bold,
-            color: Color(0xFF007ACC),
+            color: Colors.purple,
           ),
         ),
         // Add other child information widgets here
@@ -221,14 +221,14 @@ class _DailyActivityForParentState extends State<DailyActivityForParent> {
         style: TextStyle(
           fontSize: 18,
           fontWeight: FontWeight.bold,
-          color: Color(0xFF007ACC),
+          color: Colors.purple,
         ),
       ),
       subtitle: Row(
         children: [
           Icon(
             icon,
-            color: Color(0xFF007ACC),
+            color: Colors.purple,
             size: 20,
           ),
           SizedBox(width: 8),
