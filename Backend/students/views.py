@@ -349,3 +349,8 @@ def create_learning_resource(request):
         except Exception as e:
             print("Error: ", e)
             return Response({"message": "Failed to create learning resource"}, status=status.HTTP_400_BAD_REQUEST)
+
+
+
+
+

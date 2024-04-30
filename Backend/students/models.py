@@ -37,6 +37,7 @@ class Child(models.Model):
     parent1_contact_number = models.CharField(max_length=15, blank=True, null=True)
     parent2_name = models.CharField(max_length=100, blank=True, null=True)
     parent2_contact_number = models.CharField(max_length=15, blank=True, null=True)
+    is_active = models.BooleanField(default=True, blank=True)
 
     def save(self, *args, **kwargs):
         print("Self Image: ", self.unique_id)

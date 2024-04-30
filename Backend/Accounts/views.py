@@ -11,6 +11,8 @@ from django.db.models import Sum
 from datetime import datetime, date
 from django.utils import timezone
 from collections import defaultdict
+from students.models import Child, Attendance
+from students.serializers import ChildSerializer, AttendanceSerializer
 
 @api_view(['GET'])
 def AccountView(request):
@@ -21,40 +23,30 @@ def DashboardView(request):
     """ Monthly  dashboard view for the admin to see all fees collected in a month"""
     current_month = timezone.now().month
     current_year = timezone.now().year
-
+    today = date.today()
+    students = Child.objects.filter(is_active=True).count()
+    present_today = Attendance.objects.filter(datemarked=today).count()
+    # present_ser = AttendanceSerializer(present_today, many=True)
+    print("Present Today: ", present_today)
+    print("Students: ", students)
+    absent = students - present_today
     # Filter payments for the current month
     payments = Fee.objects.filter(date_paid__month=current_month, date_paid__year=current_year)
-
-    # Serialize payments data
-    # payments_data = [{'date_paid': payment.date_paid, 'amount': payment.amount} for payment in payments]
 
     # Calculate the total payments for the current month
     month_payments = payments.aggregate(total_amount=Sum('amount'))['total_amount'] or 0
     print("Total Payments")
-
-
 
     # *******************************************************
                     # Yearly Payment 
     # *******************************************************
     # Filter payments for the current year
     accounts = Fee.objects.filter(date_paid__year=current_year)
+    yearly_payments = accounts.aggregate(total_amount=Sum('amount'))['total_amount'] or 0
+    print("Yearly Amounts: ", yearly_payments)
 
-    # Serialize payments data
-    account_data = []
-    year_amount = 0
-    for account in accounts:
-        # Fetch the child's name using ForeignKey relationship
-        child_name = account.child.first_name
-        # Include child's name along with other account details
-        account_data.append({
-            'date': account.date_paid.strftime('%Y-%m-%d'),
-            'child_name': child_name,
-            'amount': account.amount,
-        })
-        year_amount += account.amount
+    return JsonResponse({'total_payments': month_payments, 'year_amount': yearly_payments, 'students': students, 'present': present_today, 'absent': absent})
 
-    return JsonResponse({'total_payments': month_payments, 'year_amount': year_amount})
 
 
 @api_view(['GET', 'POST'])
