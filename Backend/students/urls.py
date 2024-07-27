@@ -21,4 +21,11 @@ urlpatterns = [
     # ########### Monthly Attendance ###############
     path('attendance/stats/<int:child_id>/', views.AttendanceStatsView.as_view(), name='attendance_stats'),
     path('api/resources/', views.create_learning_resource, name='create_learning_resource'),
+
+
+    # Rooms
+    path('rooms/', views.room_list, name='room-list'),
+    path('rooms/create/', views.room_create, name='room-create'),
+    path('rooms/update/<int:pk>/', views.room_update, name='room-update'),
+    path('rooms/delete/<int:pk>/', views.room_delete, name='room-delete'),
 ]

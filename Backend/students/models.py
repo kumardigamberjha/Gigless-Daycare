@@ -13,6 +13,14 @@ from moviepy.editor import VideoFileClip
 import boto3 
 s3_client = boto3.client('s3')
 
+
+class Rooms(models.Model):
+    name = models.CharField(max_length=55)
+
+    def __str__(self):
+        return self.name
+
+
 # Create your models here.
 class Child(models.Model):
     first_name = models.CharField(max_length=100)
@@ -27,6 +35,7 @@ class Child(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
     image = models.ImageField(blank=True, null=True)
     unique_id = models.CharField(max_length=30, unique=True)
+    room = models.ForeignKey(Rooms, on_delete=models.SET_NULL, null=True, blank=True) 
     child_fees = models.FloatField(default=0)
     # Address Information
     address = models.CharField(max_length=255, blank=True, null=True)
