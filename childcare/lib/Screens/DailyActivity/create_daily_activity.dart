@@ -42,7 +42,7 @@ class _DailyActivityPageState extends State<DailyActivityPage> {
       var request = http.MultipartRequest(
         'POST',
         Uri.parse(
-            'https://daycare.codingindia.co.in/student/api/create-daily-activity/${widget.childId}/'),
+            'https://child.codingindia.co.in/student/api/create-daily-activity/${widget.childId}/'),
       );
       request.fields['child'] = widget.childId.toString();
       request.fields['meal_description'] = mealDescriptionController.text;
@@ -122,7 +122,7 @@ class _DailyActivityPageState extends State<DailyActivityPage> {
           'Daily Activity Form',
           style: TextStyle(color: Colors.white),
         ),
-        backgroundColor: Colors.purple,
+        backgroundColor: Color(0xFF0891B2),
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16.0),
@@ -143,8 +143,7 @@ class _DailyActivityPageState extends State<DailyActivityPage> {
             TextField(
               controller: napDurationController,
               decoration: InputDecoration(
-                  labelText: 'Nap Duration',
-                  hintText: 'e.g. 2:30'),
+                  labelText: 'Nap Duration', hintText: 'e.g. 2:30'),
             ),
             TextField(
               controller: playtimeActivitiesController,
@@ -173,15 +172,17 @@ class _DailyActivityPageState extends State<DailyActivityPage> {
                   labelText: 'Medication Given',
                   hintText: 'e.g. Tylenol, None'),
             ),
-                  SizedBox(height: 15),
-            
+            SizedBox(height: 15),
             ElevatedButton(
-  onPressed: _isSaving ? null : saveDailyActivity,
-  style: ElevatedButton.styleFrom(
-    foregroundColor: Colors.white, backgroundColor: Colors.purple, // text color
-  ),
-  child: _isSaving ? CircularProgressIndicator() : Text('Save Daily Activity'),
-  )
+              onPressed: _isSaving ? null : saveDailyActivity,
+              style: ElevatedButton.styleFrom(
+                foregroundColor: Colors.white,
+                backgroundColor: Color(0xFF0891B2), // text color
+              ),
+              child: _isSaving
+                  ? CircularProgressIndicator()
+                  : Text('Save Daily Activity'),
+            )
           ],
         ),
       ),

@@ -20,7 +20,7 @@ class _StaffRegistrationPageState extends State<StaffRegistrationPage> {
     if (_formKey.currentState!.validate()) {
       // Form is valid, proceed with registration
       final response = await http.post(
-        Uri.parse('https://daycare.codingindia.co.in/register/'),
+        Uri.parse('https://child.codingindia.co.in/register/'),
         body: {
           'username': _usernameController.text,
           'email': _emailController.text,
@@ -52,7 +52,7 @@ class _StaffRegistrationPageState extends State<StaffRegistrationPage> {
           'Staff Registration',
           style: TextStyle(color: Colors.white),
         ),
-        backgroundColor: Colors.purple,
+        backgroundColor: Color(0xFF0891B2),
       ),
       body: Padding(
         padding: EdgeInsets.all(16.0),
@@ -135,7 +135,8 @@ class _StaffRegistrationPageState extends State<StaffRegistrationPage> {
               ElevatedButton(
                 onPressed: _registerStaff,
                 style: ElevatedButton.styleFrom(
-                  foregroundColor: Colors.white, backgroundColor: Colors.purple, // text color
+                  foregroundColor: Colors.white,
+                  backgroundColor: Color(0xFF0891B2), // text color
                 ),
                 child: Text('Register'),
               )

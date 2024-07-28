@@ -19,8 +19,8 @@ class _ChildListFeesPageState extends State<ChildListFeesPage> {
   }
 
   Future<void> fetchData() async {
-    final response =
-        await http.get(Uri.parse("https://daycare.codingindia.co.in/student/child-list/"));
+    final response = await http
+        .get(Uri.parse("https://child.codingindia.co.in/student/child-list/"));
 
     if (response.statusCode == 200) {
       final List<dynamic> data = json.decode(response.body);
@@ -41,7 +41,7 @@ class _ChildListFeesPageState extends State<ChildListFeesPage> {
           'Child Fees',
           style: TextStyle(color: Colors.white),
         ),
-        backgroundColor: Colors.purple,
+        backgroundColor: Color(0xFF0891B2),
       ),
       body: childRecords.isEmpty
           ? Center(

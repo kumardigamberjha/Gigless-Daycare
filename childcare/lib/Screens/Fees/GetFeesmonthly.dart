@@ -54,8 +54,8 @@ class _FeeListPageState extends State<FeeListPage> {
 
   Future<void> fetchFees() async {
     try {
-      final response = await http.get(
-          Uri.parse('https://daycare.codingindia.co.in/Accounts/Fees/${widget.childId}/'));
+      final response = await http.get(Uri.parse(
+          'https://child.codingindia.co.in/Accounts/Fees/${widget.childId}/'));
 
       if (response.statusCode == 200) {
         final jsonData = json.decode(response.body);
@@ -108,7 +108,7 @@ class _FeeListPageState extends State<FeeListPage> {
           'Fee List',
           style: TextStyle(color: Colors.white),
         ),
-        backgroundColor: Colors.purple,
+        backgroundColor: Color(0xFF0891B2),
       ),
       body: isLoading
           ? Center(child: CircularProgressIndicator())
@@ -180,7 +180,7 @@ class _FeeListPageState extends State<FeeListPage> {
                         child: Container(
                           padding: EdgeInsets.all(16),
                           decoration: BoxDecoration(
-                            color: Colors.purple,
+                            color: Color(0xFF0891B2),
                             borderRadius: BorderRadius.circular(8),
                             boxShadow: [
                               BoxShadow(

@@ -27,70 +27,74 @@ class _FeeFormPageForParentState extends State<FeeFormPageForParent> {
     fetchChildFees();
   }
 
- Future<void> fetchChildFees() async {
-  SharedPreferences prefs = await SharedPreferences.getInstance();
-  String? accessToken = prefs.getString('accessToken');
-  if (accessToken == null) {
-    // Access token not found in shared preferences
-    // Handle this case accordingly, e.g., show error message and return
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text('Access token not found. Please login again.')),
-    );
-    return;
-  }
-
-  final now = DateTime.now();
-  final firstDayOfMonth = DateTime(now.year, now.month, 1);
-  final lastDayOfMonth = DateTime(now.year, now.month + 1, 0);
-
-  final String apiUrl = 'https://daycare.codingindia.co.in/Parent/Fees/${widget.childId}/';
-
-  try {
-    final response = await http.get(
-      Uri.parse(apiUrl),
-      headers: {'Authorization': 'Bearer $accessToken'},
-    );
-
-    if (response.statusCode == 200) {
-      final responseData = jsonDecode(response.body);
-      final fees = responseData['fees'] as List<dynamic>;
-      double totalPaidThisMonth = 0;
-
-      for (var fee in fees) {
-        final feeDate = DateTime.parse(fee['date_paid']);
-        if (feeDate.isAfter(firstDayOfMonth) && feeDate.isBefore(lastDayOfMonth)) {
-          final feeAmount = double.parse(fee['amount']); // Parse amount as double
-          totalPaidThisMonth += feeAmount;
-        }
-      }
-
-      final childFees = responseData['child_fees'] as double;
-
-      setState(() {
-        childFeesPaidThisMonth = totalPaidThisMonth;
-        childFeesLeft = childFees - totalPaidThisMonth;
-      });
-    } else {
-      // Failed to fetch child fees
+  Future<void> fetchChildFees() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String? accessToken = prefs.getString('accessToken');
+    if (accessToken == null) {
+      // Access token not found in shared preferences
+      // Handle this case accordingly, e.g., show error message and return
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Failed to fetch child fees')),
+        SnackBar(content: Text('Access token not found. Please login again.')),
+      );
+      return;
+    }
+
+    final now = DateTime.now();
+    final firstDayOfMonth = DateTime(now.year, now.month, 1);
+    final lastDayOfMonth = DateTime(now.year, now.month + 1, 0);
+
+    final String apiUrl =
+        'https://child.codingindia.co.in/Parent/Fees/${widget.childId}/';
+
+    try {
+      final response = await http.get(
+        Uri.parse(apiUrl),
+        headers: {'Authorization': 'Bearer $accessToken'},
+      );
+
+      if (response.statusCode == 200) {
+        final responseData = jsonDecode(response.body);
+        final fees = responseData['fees'] as List<dynamic>;
+        double totalPaidThisMonth = 0;
+
+        for (var fee in fees) {
+          final feeDate = DateTime.parse(fee['date_paid']);
+          if (feeDate.isAfter(firstDayOfMonth) &&
+              feeDate.isBefore(lastDayOfMonth)) {
+            final feeAmount =
+                double.parse(fee['amount']); // Parse amount as double
+            totalPaidThisMonth += feeAmount;
+          }
+        }
+
+        final childFees = responseData['child_fees'] as double;
+
+        setState(() {
+          childFeesPaidThisMonth = totalPaidThisMonth;
+          childFeesLeft = childFees - totalPaidThisMonth;
+        });
+      } else {
+        // Failed to fetch child fees
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Failed to fetch child fees')),
+        );
+      }
+    } catch (e) {
+      // Handle network error
+      // Show error message to the user
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Network error. Please try again later.')),
       );
     }
-  } catch (e) {
-    // Handle network error
-    // Show error message to the user
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text('Network error. Please try again later.')),
-    );
   }
-}
 
   Future<void> saveFee() async {
     setState(() {
       isSaving = true;
     });
 
-    final String apiUrl = 'https://daycare.codingindia.co.in/Accounts/Fees/${widget.childId}/';
+    final String apiUrl =
+        'https://child.codingindia.co.in/Accounts/Fees/${widget.childId}/';
 
     final response = await http.post(
       Uri.parse(apiUrl),
@@ -129,7 +133,7 @@ class _FeeFormPageForParentState extends State<FeeFormPageForParent> {
           'Add Fee',
           style: TextStyle(color: Colors.white),
         ),
-        backgroundColor: Colors.purple,
+        backgroundColor: Color(0xFF0891B2),
       ),
       body: Padding(
         padding: EdgeInsets.all(16.0),
@@ -138,19 +142,27 @@ class _FeeFormPageForParentState extends State<FeeFormPageForParent> {
           children: [
             Text(
               'Enter Fee Details',
-              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Colors.black),
+              style: TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.black),
             ),
             SizedBox(height: 20),
             Text(
               'Child Fees Paid This Month: $childFeesPaidThisMonth',
-              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.black87),
+              style: TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.black87),
             ),
             SizedBox(height: 20),
             Text(
               'Child Fees Left This Month: $childFeesLeft',
-              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.black87),
+              style: TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.black87),
             ),
-            
           ],
         ),
       ),

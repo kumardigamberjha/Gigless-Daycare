@@ -6,10 +6,12 @@ import 'package:childcare/Screens/Parent/Appointment/update_appoinment.dart';
 
 class AppointmentStatusStaffPage extends StatefulWidget {
   @override
-  _AppointmentStatusStaffPageState createState() => _AppointmentStatusStaffPageState();
+  _AppointmentStatusStaffPageState createState() =>
+      _AppointmentStatusStaffPageState();
 }
 
-class _AppointmentStatusStaffPageState extends State<AppointmentStatusStaffPage> {
+class _AppointmentStatusStaffPageState
+    extends State<AppointmentStatusStaffPage> {
   List<Map<String, dynamic>> appointments = [];
   bool _isLoading = true;
 
@@ -31,7 +33,7 @@ class _AppointmentStatusStaffPageState extends State<AppointmentStatusStaffPage>
     String? accessToken = prefs.getString('accessToken');
     try {
       final response = await http.get(
-        Uri.parse('https://daycare.codingindia.co.in/Parent/appointmentstatus/'),
+        Uri.parse('https://child.codingindia.co.in/Parent/appointmentstatus/'),
         headers: {
           'Authorization': 'Bearer $accessToken',
         },
@@ -109,8 +111,8 @@ class _AppointmentStatusStaffPageState extends State<AppointmentStatusStaffPage>
             Navigator.push(
               context,
               MaterialPageRoute(
-                builder: (context) => UpdateAppointmentPage(
-                    appointmentId: appointment['id']),
+                builder: (context) =>
+                    UpdateAppointmentPage(appointmentId: appointment['id']),
               ),
             );
           },
@@ -122,9 +124,7 @@ class _AppointmentStatusStaffPageState extends State<AppointmentStatusStaffPage>
                 SizedBox(height: 12),
                 Text(
                   "${index + 1}. ${appointment['appointment_type']}",
-                  style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 18),
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
                 ),
                 SizedBox(height: 12),
                 Divider(), // Added a divider line
@@ -210,7 +210,7 @@ class _AppointmentStatusStaffPageState extends State<AppointmentStatusStaffPage>
           'Appointment Status',
           style: TextStyle(color: Colors.white),
         ),
-        backgroundColor: Colors.purple,
+        backgroundColor: Color(0xFF0891B2),
         foregroundColor: Colors.white,
       ),
       body: _isLoading

@@ -27,7 +27,7 @@ class _LearningResourceFormState extends State<LearningResourceForm> {
       var request = http.MultipartRequest(
         'POST',
         Uri.parse(
-            'https://daycare.codingindia.co.in/student/api/resources/'), // Replace with your backend URL
+            'https://child.codingindia.co.in/student/api/resources/'), // Replace with your backend URL
       );
       request.fields['title'] = _titleController.text;
       request.fields['description'] = _descriptionController.text;

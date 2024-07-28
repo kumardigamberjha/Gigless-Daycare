@@ -60,8 +60,8 @@ class _CalendarScreenState extends State<CalendarScreen> {
 
   void _fetchEvents() async {
     // Make an HTTP GET request to your backend API endpoint
-    var response = await http
-        .get(Uri.parse('https://daycare.codingindia.co.in/CalendarEvent/api/events/'));
+    var response = await http.get(
+        Uri.parse('https://child.codingindia.co.in/CalendarEvent/api/events/'));
 
     // Check if the request was successful (HTTP 200 OK)
     if (response.statusCode == 200) {
@@ -104,9 +104,9 @@ class _CalendarScreenState extends State<CalendarScreen> {
   }
 
   @override
-Widget build(BuildContext context) {
-  return Scaffold(
-    appBar: AppBar(
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
         title: Text(
           "Event Calendar",
           style: TextStyle(
@@ -114,105 +114,104 @@ Widget build(BuildContext context) {
             fontWeight: FontWeight.bold,
           ),
         ),
-        backgroundColor: Colors.purple,
+        backgroundColor: Color(0xFF0891B2),
         foregroundColor: Colors.white,
         elevation: 4,
       ),
-    body: SingleChildScrollView(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          TableCalendar(
-            firstDay: DateTime.utc(2021, 01, 01),
-            lastDay: DateTime.utc(2032, 12, 31),
-            focusedDay: _focusedDay,
-            daysOfWeekVisible: true,
-            calendarFormat: _calendarFormat,
-            onFormatChanged: (format) {
-              setState(() {
-                _calendarFormat = format;
-              });
-            },
-            selectedDayPredicate: (day) {
-              return isSameDay(_selectedDay, day);
-            },
-            onDaySelected: (selectedDay, focusedDay) {
-              setState(() {
-                _selectedDay = selectedDay;
-                _focusedDay = focusedDay;
-              });
-              if (_events[selectedDay] == null) {
-                _openForm(selectedDay);
-              }
-            },
-            eventLoader: (day) {
-              return _events[day] ?? [];
-            },
-          ),
-          SizedBox(height: 16),
-          if (_selectedDay != null && _events[_selectedDay!] != null)
-            Container(
-              height: 200, // Set the maximum height for the event container
-              color: Colors.grey[200],
-              padding: EdgeInsets.all(16),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    'Events on ${DateFormat('MMMM dd, yyyy').format(_selectedDay!)}:',
-                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                  ),
-                  SizedBox(height: 8),
-                  Expanded(
-                    child: ListView.builder(
-                      itemCount: _events[_selectedDay!]!.length,
-                      itemBuilder: (context, index) {
-                        final event = _events[_selectedDay!]![index];
-                        return ListTile(
-                          title: Text(event['name']),
-                          trailing: Row(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              IconButton(
-                                icon: Icon(Icons.edit),
-                                onPressed: () {
-                                  _editEvent(_selectedDay!, index);
-                                },
-                              ),
-                              IconButton(
-                                icon: Icon(Icons.delete),
-                                onPressed: () {
-                                  _deleteEvent(_selectedDay!, index);
-                                },
-                              ),
-                            ],
-                          ),
-                        );
-                      },
+      body: SingleChildScrollView(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            TableCalendar(
+              firstDay: DateTime.utc(2021, 01, 01),
+              lastDay: DateTime.utc(2032, 12, 31),
+              focusedDay: _focusedDay,
+              daysOfWeekVisible: true,
+              calendarFormat: _calendarFormat,
+              onFormatChanged: (format) {
+                setState(() {
+                  _calendarFormat = format;
+                });
+              },
+              selectedDayPredicate: (day) {
+                return isSameDay(_selectedDay, day);
+              },
+              onDaySelected: (selectedDay, focusedDay) {
+                setState(() {
+                  _selectedDay = selectedDay;
+                  _focusedDay = focusedDay;
+                });
+                if (_events[selectedDay] == null) {
+                  _openForm(selectedDay);
+                }
+              },
+              eventLoader: (day) {
+                return _events[day] ?? [];
+              },
+            ),
+            SizedBox(height: 16),
+            if (_selectedDay != null && _events[_selectedDay!] != null)
+              Container(
+                height: 200, // Set the maximum height for the event container
+                color: Colors.grey[200],
+                padding: EdgeInsets.all(16),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Events on ${DateFormat('MMMM dd, yyyy').format(_selectedDay!)}:',
+                      style:
+                          TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                     ),
-                  ),
-                  SizedBox(height: 5),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      ElevatedButton(
-                        onPressed: () {
-                          _openForm(_selectedDay!);
+                    SizedBox(height: 8),
+                    Expanded(
+                      child: ListView.builder(
+                        itemCount: _events[_selectedDay!]!.length,
+                        itemBuilder: (context, index) {
+                          final event = _events[_selectedDay!]![index];
+                          return ListTile(
+                            title: Text(event['name']),
+                            trailing: Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                IconButton(
+                                  icon: Icon(Icons.edit),
+                                  onPressed: () {
+                                    _editEvent(_selectedDay!, index);
+                                  },
+                                ),
+                                IconButton(
+                                  icon: Icon(Icons.delete),
+                                  onPressed: () {
+                                    _deleteEvent(_selectedDay!, index);
+                                  },
+                                ),
+                              ],
+                            ),
+                          );
                         },
-                        child: Text('Create Event'),
                       ),
-                    ],
-                  ),
-                ],
-              ),
-            )
-        ],
+                    ),
+                    SizedBox(height: 5),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        ElevatedButton(
+                          onPressed: () {
+                            _openForm(_selectedDay!);
+                          },
+                          child: Text('Create Event'),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              )
+          ],
+        ),
       ),
-    ),
-  );
-}
-
-
+    );
+  }
 
   void _openForm(DateTime selectedDay) async {
     String eventName = '';
@@ -251,7 +250,7 @@ Widget build(BuildContext context) {
                 // Send HTTP POST request to backend to create event
                 final response = await http.post(
                   Uri.parse(
-                      'https://daycare.codingindia.co.in/CalendarEvent/api/create-event/'),
+                      'https://child.codingindia.co.in/CalendarEvent/api/create-event/'),
                   headers: <String, String>{
                     'Content-Type': 'application/json; charset=UTF-8',
                   },
@@ -285,135 +284,137 @@ Widget build(BuildContext context) {
     );
   }
 
+  void _editEvent(DateTime selectedDay, int index) async {
+    final Map<String, dynamic> event = _events[selectedDay]![index];
+    String editedEventName = event['name'];
+    int eventId = event['id'];
 
-void _editEvent(DateTime selectedDay, int index) async {
-  final Map<String, dynamic> event = _events[selectedDay]![index];
-  String editedEventName = event['name'];
-  int eventId = event['id'];
+    // Open the dialog to edit the event
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        TextEditingController _controller =
+            TextEditingController(text: editedEventName);
 
-  // Open the dialog to edit the event
-  showDialog(
-    context: context,
-    builder: (BuildContext context) {
-      TextEditingController _controller = TextEditingController(text: editedEventName);
+        return AlertDialog(
+          title: Text('Edit Event'),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text('Edit event "${event['name']}"'),
+              TextField(
+                controller: _controller,
+                onChanged: (value) {
+                  editedEventName = value;
+                },
+                decoration: InputDecoration(labelText: 'New Event Name'),
+              ),
+            ],
+          ),
+          actions: [
+            TextButton(
+              onPressed: () async {
+                // Close the dialog
+                Navigator.of(context).pop();
 
-      return AlertDialog(
-        title: Text('Edit Event'),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Text('Edit event "${event['name']}"'),
-            TextField(
-              controller: _controller,
-              onChanged: (value) {
-                editedEventName = value;
+                // Send HTTP POST request to backend to edit event
+                try {
+                  final response = await http.post(
+                    Uri.parse(
+                        'https://child.codingindia.co.in/CalendarEvent/edit-event/'),
+                    headers: <String, String>{
+                      'Content-Type': 'application/json; charset=UTF-8',
+                    },
+                    body: jsonEncode(<String, dynamic>{
+                      'id': eventId, // Pass the event ID
+                      'name': editedEventName, // Pass the edited event name
+                    }),
+                  );
+
+                  if (response.statusCode == 200) {
+                    // Event edited successfully
+                    print('Event edited successfully');
+                    // Refresh events after editing
+                    setState(() {
+                      _fetchEvents();
+                    });
+                  } else {
+                    // Error occurred
+                    print('Failed to edit event. Error: ${response.body}');
+                  }
+                } catch (error) {
+                  print('Failed to connect to the server: $error');
+                }
               },
-              decoration: InputDecoration(labelText: 'New Event Name'),
+              child: Text('Save'),
+            ),
+            TextButton(
+              onPressed: () {
+                // Close the dialog
+                Navigator.of(context).pop();
+              },
+              child: Text('Cancel'),
             ),
           ],
-        ),
-        actions: [
-          TextButton(
-            onPressed: () async {
-              // Close the dialog
-              Navigator.of(context).pop();
+        );
+      },
+    );
+  }
 
-              // Send HTTP POST request to backend to edit event
-              try {
-                final response = await http.post(
-                  Uri.parse('https://daycare.codingindia.co.in/CalendarEvent/edit-event/'),
-                  headers: <String, String>{
-                    'Content-Type': 'application/json; charset=UTF-8',
-                  },
-                  body: jsonEncode(<String, dynamic>{
-                    'id': eventId, // Pass the event ID
-                    'name': editedEventName, // Pass the edited event name
-                  }),
-                );
+  void _deleteEvent(DateTime selectedDay, int index) async {
+    final Map<String, dynamic> event = _events[selectedDay]![index];
+    int eventId = event['id'];
 
-                if (response.statusCode == 200) {
-                  // Event edited successfully
-                  print('Event edited successfully');
-                  // Refresh events after editing
-                  setState(() {
-                    _fetchEvents();
-                  });
-                } else {
-                  // Error occurred
-                  print('Failed to edit event. Error: ${response.body}');
+    // Open the dialog to confirm event deletion
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Delete Event'),
+          content: Text('Are you sure you want to delete this event?'),
+          actions: [
+            TextButton(
+              onPressed: () async {
+                // Close the dialog
+                Navigator.of(context).pop();
+
+                // Send HTTP DELETE request to backend to delete event
+                try {
+                  final response = await http.delete(
+                    Uri.parse(
+                        'https://child.codingindia.co.in/CalendarEvent/DeleteEvent/$eventId/'),
+                    headers: <String, String>{
+                      'Content-Type': 'application/json; charset=UTF-8',
+                    },
+                  );
+
+                  if (response.statusCode == 200) {
+                    // Event deleted successfully
+                    print('Event deleted successfully');
+                    // Refresh events after deletion
+                    setState(() {
+                      _fetchEvents();
+                    });
+                  } else {
+                    // Error occurred
+                    print('Failed to delete event. Error: ${response.body}');
+                  }
+                } catch (error) {
+                  print('Failed to connect to the server: $error');
                 }
-              } catch (error) {
-                print('Failed to connect to the server: $error');
-              }
-            },
-            child: Text('Save'),
-          ),
-          TextButton(
-            onPressed: () {
-              // Close the dialog
-              Navigator.of(context).pop();
-            },
-            child: Text('Cancel'),
-          ),
-        ],
-      );
-    },
-  );
-}
-
-void _deleteEvent(DateTime selectedDay, int index) async {
-  final Map<String, dynamic> event = _events[selectedDay]![index];
-  int eventId = event['id'];
-
-  // Open the dialog to confirm event deletion
-  showDialog(
-    context: context,
-    builder: (BuildContext context) {
-      return AlertDialog(
-        title: Text('Delete Event'),
-        content: Text('Are you sure you want to delete this event?'),
-        actions: [
-          TextButton(
-            onPressed: () async {
-              // Close the dialog
-              Navigator.of(context).pop();
-
-              // Send HTTP DELETE request to backend to delete event
-              try {
-                final response = await http.delete(
-                  Uri.parse('https://daycare.codingindia.co.in/CalendarEvent/DeleteEvent/$eventId/'),
-                  headers: <String, String>{
-                    'Content-Type': 'application/json; charset=UTF-8',
-                  },
-                );
-
-                if (response.statusCode == 200) {
-                  // Event deleted successfully
-                  print('Event deleted successfully');
-                  // Refresh events after deletion
-                  setState(() {
-                    _fetchEvents();
-                  });
-                } else {
-                  // Error occurred
-                  print('Failed to delete event. Error: ${response.body}');
-                }
-              } catch (error) {
-                print('Failed to connect to the server: $error');
-              }
-            },
-            child: Text('Delete'),
-          ),
-          TextButton(
-            onPressed: () {
-              // Close the dialog
-              Navigator.of(context).pop();
-            },
-            child: Text('Cancel'),
-          ),
-        ],
-      );
-    },
-  );
-}
+              },
+              child: Text('Delete'),
+            ),
+            TextButton(
+              onPressed: () {
+                // Close the dialog
+                Navigator.of(context).pop();
+              },
+              child: Text('Cancel'),
+            ),
+          ],
+        );
+      },
+    );
+  }
 }

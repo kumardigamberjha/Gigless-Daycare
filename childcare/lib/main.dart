@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:childcare/Screens/Welcome/Welcome_screen.dart';
 import 'package:childcare/constant.dart';
 import 'package:childcare/Screens/splashscreen.dart';
+
+
+
 void main() {
   runApp(MyApp());
 }
@@ -12,9 +15,9 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: "Child Care",
-      // home: SplashScreen(), 
+      // home: SplashScreen(),
       theme: ThemeData(
-        // primarySwatch: Colors.purple,
+        // primarySwatch: Color(0xFF0891B2),
         primaryColor: KPrimaryColor,
         scaffoldBackgroundColor: Colors.white,
       ),

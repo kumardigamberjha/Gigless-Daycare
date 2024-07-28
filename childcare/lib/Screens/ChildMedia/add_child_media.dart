@@ -43,13 +43,13 @@ class _AddChildMediaPageState extends State<AddChildMediaPage> {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          "Add Child Media",
+          "Add Child Pictures",
           style: TextStyle(
             fontFamily: 'Roboto',
             fontWeight: FontWeight.bold,
           ),
         ),
-        backgroundColor: Colors.purple,
+        backgroundColor: Color(0xFF0891B2),
         foregroundColor: Colors.white,
         elevation: 4,
       ),
@@ -64,7 +64,7 @@ class _AddChildMediaPageState extends State<AddChildMediaPage> {
               onPressed: _pickMedia,
               child: Text('Select Media'),
               style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.purple,
+                backgroundColor: Color(0xFF0891B2),
                 foregroundColor: Colors.white,
               ),
             ),
@@ -106,7 +106,7 @@ class _AddChildMediaPageState extends State<AddChildMediaPage> {
                   ? CircularProgressIndicator()
                   : Text('Upload Media'),
               style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.purple,
+                backgroundColor: Color(0xFF0891B2),
                 foregroundColor: Colors.white,
               ),
             ),
@@ -182,7 +182,8 @@ class _AddChildMediaPageState extends State<AddChildMediaPage> {
       return;
     }
 
-    final String apiUrl = 'https://daycare.codingindia.co.in/student/child-media/';
+    final String apiUrl =
+        'https://child.codingindia.co.in/student/child-media/';
     final String childId = widget.childId.toString();
 
     try {

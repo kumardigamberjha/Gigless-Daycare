@@ -26,15 +26,15 @@ class _ShowDailyActivityPageState extends State<ShowDailyActivityPage> {
 
   Future<void> fetchData() async {
     try {
-      final response = await http
-          .get(Uri.parse("https://daycare.codingindia.co.in/student/child-list/"));
+      final response = await http.get(
+          Uri.parse("https://child.codingindia.co.in/student/child-list/"));
 
       if (response.statusCode == 200) {
         final List<dynamic> data = json.decode(response.body);
 
         for (var child in data) {
           final statusResponse = await http.get(Uri.parse(
-              "https://daycare.codingindia.co.in/student/api/daily-activity/${child['id']}"));
+              "https://child.codingindia.co.in/student/api/daily-activity/${child['id']}"));
 
           if (statusResponse.statusCode == 200) {
             final Map<String, dynamic> statusData =
@@ -105,7 +105,7 @@ class _ShowDailyActivityPageState extends State<ShowDailyActivityPage> {
           'Daily Activity',
           style: TextStyle(color: Colors.white),
         ),
-        backgroundColor: Colors.purple,
+        backgroundColor: Color(0xFF0891B2),
       ),
       body: isLoading
           ? Center(
@@ -195,7 +195,8 @@ class _ShowDailyActivityPageState extends State<ShowDailyActivityPage> {
                                             label: Text('View Activity'),
                                             style: ElevatedButton.styleFrom(
                                               foregroundColor: Colors.white,
-                                              backgroundColor: Colors.purple,
+                                              backgroundColor:
+                                                  Color(0xFF0891B2),
                                             ),
                                           ),
                                           SizedBox(height: 10),

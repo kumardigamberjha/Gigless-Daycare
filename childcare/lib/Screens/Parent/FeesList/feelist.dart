@@ -23,7 +23,8 @@ class _PPaymentsPageState extends State<PPaymentsPage> {
       SharedPreferences prefs = await SharedPreferences.getInstance();
       String? accessToken = prefs.getString('accessToken');
 
-      String apiUrl = 'https://daycare.codingindia.co.in/Parent/ParentCurrentmonth_payments_list/';
+      String apiUrl =
+          'https://child.codingindia.co.in/Parent/ParentCurrentmonth_payments_list/';
       final response = await http.get(
         Uri.parse(apiUrl),
         headers: {
@@ -53,7 +54,7 @@ class _PPaymentsPageState extends State<PPaymentsPage> {
           'Current Month Payments',
           style: TextStyle(color: Colors.white),
         ),
-        backgroundColor: Colors.purple,
+        backgroundColor: Color(0xFF0891B2),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -115,7 +116,7 @@ class _PPaymentsPageState extends State<PPaymentsPage> {
             Container(
               padding: EdgeInsets.all(16),
               decoration: BoxDecoration(
-                color: Colors.purple,
+                color: Color(0xFF0891B2),
                 borderRadius: BorderRadius.circular(10),
               ),
               child: Text(

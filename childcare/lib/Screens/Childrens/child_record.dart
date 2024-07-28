@@ -11,24 +11,42 @@ class ChildRecordsPage extends StatefulWidget {
   _ChildRecordsPageState createState() => _ChildRecordsPageState();
 }
 
-class _ChildRecordsPageState extends State<ChildRecordsPage> {
+class _ChildRecordsPageState extends State<ChildRecordsPage>
+    with SingleTickerProviderStateMixin {
   List<Map<String, dynamic>> childRecords = [];
+  late AnimationController _animationController;
+  late Animation<double> _animation;
 
   @override
   void initState() {
     super.initState();
     fetchData();
+    _animationController = AnimationController(
+      duration: Duration(milliseconds: 500),
+      vsync: this,
+    );
+    _animation = CurvedAnimation(
+      parent: _animationController,
+      curve: Curves.easeInOut,
+    );
+  }
+
+  @override
+  void dispose() {
+    _animationController.dispose();
+    super.dispose();
   }
 
   Future<void> fetchData() async {
-    final response =
-        await http.get(Uri.parse("https://daycare.codingindia.co.in/student/child-list/"));
+    final response = await http
+        .get(Uri.parse("https://child.codingindia.co.in/student/child-list/"));
 
     if (response.statusCode == 200) {
       final List<dynamic> data = json.decode(response.body);
 
       setState(() {
         childRecords = data.cast<Map<String, dynamic>>();
+        _animationController.forward();
       });
     } else {
       print('Failed to load child records. Error: ${response.statusCode}');
@@ -69,9 +87,7 @@ class _ChildRecordsPageState extends State<ChildRecordsPage> {
           'Child Records',
           style: TextStyle(color: Colors.white),
         ),
-        backgroundColor: Colors.purple,
-        foregroundColor: Colors.white,
-
+        backgroundColor: Color(0xFF0891B2),
       ),
       body: childRecords.isEmpty
           ? Center(
@@ -89,54 +105,26 @@ class _ChildRecordsPageState extends State<ChildRecordsPage> {
                       const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                   child: GestureDetector(
                     onTap: () => viewChildDetail(childRecords[index]['id']),
-                    child: Card(
-                      elevation: 4,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(15),
-                        side: BorderSide(
-                          color: Colors.transparent, // Border color
-                          width: 2, // Border width
-                        ),
-                      ),
-                      child: Container(
-                        decoration: BoxDecoration(
-                          color: Colors.white, // Card background color
+                    child: ScaleTransition(
+                      scale: _animation,
+                      child: Card(
+                        elevation: 2,
+                        shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(15),
                         ),
                         child: Padding(
                           padding: const EdgeInsets.all(16.0),
                           child: Row(
-                            crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Column(
-                                children: [
-                                  Padding(
-                                    padding: EdgeInsets.all(8.0),
-                                    child: Container(
-                                      width: 80,
-                                      height: 80,
-                                      decoration: BoxDecoration(
-                                        shape: BoxShape.circle,
-                                        border: Border.all(
-                                            color: Colors.purple, width: 2),
-                                        image: DecorationImage(
-                                          image: NetworkImage(
-                                            childRecords[index]['image'] ??
-                                                'https://via.placeholder.com/150',
-                                          ),
-                                          fit: BoxFit.cover,
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                  Text(
-                                    '#${childRecords[index]['unique_id'] ?? ''}',
-                                    style: TextStyle(
-                                      fontSize: 16,
-                                      color: Colors.black, // Text color
-                                    ),
-                                  ),
-                                ],
+                              ClipRRect(
+                                borderRadius: BorderRadius.circular(50),
+                                child: Image.network(
+                                  childRecords[index]['image'] ??
+                                      'https://via.placeholder.com/150',
+                                  width: 100,
+                                  height: 100,
+                                  fit: BoxFit.cover,
+                                ),
                               ),
                               SizedBox(width: 16),
                               Expanded(
@@ -144,36 +132,51 @@ class _ChildRecordsPageState extends State<ChildRecordsPage> {
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Text(
-                                      '${childRecords[index]['first_name'] ?? ''}\n${childRecords[index]['last_name'] ?? ''}',
+                                      '${childRecords[index]['first_name'] ?? ''} ${childRecords[index]['last_name'] ?? ''}',
                                       style: TextStyle(
-                                        fontSize: 16,
+                                        fontSize: 18,
                                         fontWeight: FontWeight.bold,
-                                        color: Colors.black, // Text color
                                       ),
                                     ),
-                                    SizedBox(height: 8),
+                                    SizedBox(height: 4),
+                                    Text(
+                                      'ID: ${childRecords[index]['unique_id'] ?? ''}',
+                                      style: TextStyle(
+                                        fontSize: 14,
+                                        color: Colors.grey,
+                                      ),
+                                    ),
+                                    SizedBox(height: 4),
                                     Text(
                                       'Age: $age',
                                       style: TextStyle(
-                                          fontSize: 16,
-                                          color: Colors.black), // Text color
+                                        fontSize: 14,
+                                        color: Colors.grey,
+                                      ),
                                     ),
                                     SizedBox(height: 4),
                                     Text(
                                       'Gender: ${childRecords[index]['gender'] ?? ''}',
                                       style: TextStyle(
-                                          fontSize: 16,
-                                          color: Colors.black), // Text color
+                                        fontSize: 14,
+                                        color: Colors.grey,
+                                      ),
                                     ),
                                     SizedBox(height: 4),
                                     Text(
                                       'Fees: \$${childRecords[index]['child_fees'] ?? ''}',
                                       style: TextStyle(
-                                          fontSize: 16,
-                                          color: Colors.black), // Text color
+                                        fontSize: 14,
+                                        color: Colors.grey,
+                                      ),
                                     ),
                                   ],
                                 ),
+                              ),
+                              IconButton(
+                                icon: Icon(Icons.edit, color: Colors.lightBlue),
+                                onPressed: () =>
+                                    viewChildDetail(childRecords[index]['id']),
                               ),
                             ],
                           ),

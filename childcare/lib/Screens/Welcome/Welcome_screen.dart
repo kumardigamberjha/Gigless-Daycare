@@ -26,7 +26,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
     String? retrievedToken = prefs.getString('accessToken');
     String? refreshToken = prefs.getString('refreshToken');
 
-    print('Retrieved Access Token: $retrievedToken'); 
+    print('Retrieved Access Token: $retrievedToken');
     print('Retrieved Refresh Token: $refreshToken');
 
     // Check the validity of the access token
@@ -68,7 +68,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
 
   Future<bool> validateToken(String accessToken) async {
     final response = await http.post(
-      Uri.parse('https://daycare.codingindia.co.in/validate-token/'),
+      Uri.parse('https://child.codingindia.co.in/validate-token/'),
       headers: {'Content-Type': 'application/json'},
       body: jsonEncode({'token': accessToken}),
     );
@@ -89,8 +89,12 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
         // Placeholder for default logo
         child: Image.asset(
           'assets/images/Giggles_Daycare.png', // Path to your default logo asset
-          width: MediaQuery.of(context).size.width, // Set width to full screen width
-          height: MediaQuery.of(context).size.height, // Set height to full screen height
+          width: MediaQuery.of(context)
+              .size
+              .width, // Set width to full screen width
+          height: MediaQuery.of(context)
+              .size
+              .height, // Set height to full screen height
         ),
       ),
     );

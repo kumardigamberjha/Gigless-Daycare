@@ -17,7 +17,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class AuthService {
   static const String baseUrl =
-      'https://daycare.codingindia.co.in/'; // Replace with your API base URL
+      'https://child.codingindia.co.in/'; // Replace with your API base URL
 
   static Future<Map<String, dynamic>> login(
       String username, String password) async {
@@ -61,7 +61,6 @@ class AuthService {
 }
 
 class Body extends StatefulWidget {
-  
   const Body({Key? key}) : super(key: key);
 
   @override
@@ -176,7 +175,7 @@ class _BodyState extends State<Body> {
 
   Future<void> loginUser(String username, String password) async {
     final response = await http.post(
-      Uri.parse('https://daycare.codingindia.co.in/token/'),
+      Uri.parse('https://child.codingindia.co.in/token/'),
       body: {
         'username': username,
         'password': password,

@@ -12,7 +12,8 @@ class _ParentListPageState extends State<ParentListPage> {
   List<dynamic> users = [];
 
   Future<void> fetchUsers() async {
-    final response = await http.get(Uri.parse('https://daycare.codingindia.co.in/ParentList/'));
+    final response = await http
+        .get(Uri.parse('https://child.codingindia.co.in/ParentList/'));
     if (response.statusCode == 200) {
       setState(() {
         users = json.decode(response.body);
@@ -36,7 +37,7 @@ class _ParentListPageState extends State<ParentListPage> {
           'Parent List',
           style: TextStyle(color: Colors.white),
         ),
-        backgroundColor: Colors.purple,
+        backgroundColor: Color(0xFF0891B2),
       ),
       body: ListView.builder(
         itemCount: users.length,
@@ -46,7 +47,8 @@ class _ParentListPageState extends State<ParentListPage> {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => ParentDetailPage(parentId: users[index]['id']),
+                  builder: (context) =>
+                      ParentDetailPage(parentId: users[index]['id']),
                 ),
               );
             },
@@ -104,7 +106,8 @@ class _ParentDetailPageState extends State<ParentDetailPage> {
   }
 
   Future<void> fetchParentDetails() async {
-    final response = await http.get(Uri.parse('https://daycare.codingindia.co.in/ParentListDetail/${widget.parentId}/'));
+    final response = await http.get(Uri.parse(
+        'https://child.codingindia.co.in/ParentListDetail/${widget.parentId}/'));
     if (response.statusCode == 200) {
       setState(() {
         final data = json.decode(response.body);
@@ -124,7 +127,7 @@ class _ParentDetailPageState extends State<ParentDetailPage> {
           'Parents List',
           style: TextStyle(color: Colors.white),
         ),
-        backgroundColor: Colors.purple,
+        backgroundColor: Color(0xFF0891B2),
       ),
       body: SingleChildScrollView(
         child: Padding(
@@ -209,8 +212,8 @@ class _ParentDetailPageState extends State<ParentDetailPage> {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
-                                builder: (context) => ShowChildDetail(
-                                    childId: child['id']),
+                                builder: (context) =>
+                                    ShowChildDetail(childId: child['id']),
                               ),
                             );
                           },

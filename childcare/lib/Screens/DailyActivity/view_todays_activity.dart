@@ -33,7 +33,7 @@ class _ViewTodaysActivityPageState extends State<ViewTodaysActivityPage> {
     try {
       final response = await http.get(
         Uri.parse(
-          "https://daycare.codingindia.co.in/student/api/daily-activity/${widget.childId}/",
+          "https://child.codingindia.co.in/student/api/daily-activity/${widget.childId}/",
         ),
       );
 
@@ -86,7 +86,7 @@ class _ViewTodaysActivityPageState extends State<ViewTodaysActivityPage> {
             fontWeight: FontWeight.bold,
           ),
         ),
-        backgroundColor: Colors.purple,
+        backgroundColor: Color(0xFF0891B2),
         foregroundColor: Colors.white,
         elevation: 4,
       ),
@@ -176,7 +176,7 @@ class _ViewTodaysActivityPageState extends State<ViewTodaysActivityPage> {
   Widget buildCircleAvatar() {
     return CircleAvatar(
       radius: 80,
-      backgroundColor: Colors.purple,
+      backgroundColor: Color(0xFF0891B2),
       child: CircleAvatar(
         radius: 75,
         child: ClipOval(
@@ -206,7 +206,7 @@ class _ViewTodaysActivityPageState extends State<ViewTodaysActivityPage> {
           style: TextStyle(
             fontSize: 28,
             fontWeight: FontWeight.bold,
-            color: Colors.purple,
+            color: Color(0xFF0891B2),
           ),
         ),
         // Add other child information widgets here
@@ -221,14 +221,14 @@ class _ViewTodaysActivityPageState extends State<ViewTodaysActivityPage> {
         style: TextStyle(
           fontSize: 18,
           fontWeight: FontWeight.bold,
-          color: Colors.purple,
+          color: Color(0xFF0891B2),
         ),
       ),
       subtitle: Row(
         children: [
           Icon(
             icon,
-            color: Colors.purple,
+            color: Color(0xFF0891B2),
             size: 20,
           ),
           SizedBox(width: 8),

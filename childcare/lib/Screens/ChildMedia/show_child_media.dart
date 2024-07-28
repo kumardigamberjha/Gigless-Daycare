@@ -23,7 +23,8 @@ class _ChildMediaDetailPageState extends State<ChildMediaDetailPage> {
   }
 
   Future<void> _fetchChildMedia() async {
-    final url = 'https://daycare.codingindia.co.in/student/child-media/${widget.childId}/';
+    final url =
+        'https://child.codingindia.co.in/student/child-media/${widget.childId}/';
     final response = await http.get(Uri.parse(url));
 
     if (response.statusCode == 200) {
@@ -41,10 +42,10 @@ class _ChildMediaDetailPageState extends State<ChildMediaDetailPage> {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          'Child Media Detail',
+          'Child Pictures Detail',
           style: TextStyle(color: Colors.white),
         ),
-        backgroundColor: Colors.purple,
+        backgroundColor: Color(0xFF0891B2),
       ),
       body: _isLoading
           ? Center(child: CircularProgressIndicator())
@@ -60,14 +61,16 @@ class _ChildMediaDetailPageState extends State<ChildMediaDetailPage> {
                   itemBuilder: (context, index) {
                     final childMedia = _childMediaList[index];
                     return GestureDetector(
-                      onTap: () => _showMedia(childMedia['file'], childMedia['media_type']),
+                      onTap: () => _showMedia(
+                          childMedia['file'], childMedia['media_type']),
                       child: Card(
                         elevation: 4,
                         margin: EdgeInsets.all(8),
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.stretch,
                           children: [
-                            _buildMediaWidget(childMedia['file'], childMedia['media_type']),
+                            _buildMediaWidget(
+                                childMedia['file'], childMedia['media_type']),
                             Padding(
                               padding: EdgeInsets.all(8),
                               child: Column(

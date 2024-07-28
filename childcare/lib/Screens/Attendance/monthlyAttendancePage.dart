@@ -22,10 +22,21 @@ class _TrackAttendancePageState extends State<TrackAttendancePage> {
   }
 
   Future<Map<String, dynamic>> fetchAttendanceStats() async {
-    final response = await http.get(Uri.parse('https://daycare.codingindia.co.in/student/attendance/stats/${widget.childId}/'));
+    final response = await http.get(Uri.parse(
+        'https://child.codingindia.co.in/student/attendance/stats/${widget.childId}/'));
 
     if (response.statusCode == 200) {
-      return json.decode(response.body);
+      Map<String, dynamic> data = json.decode(response.body);
+
+      // Sorting the dates
+      data['present_dates']
+          ?.sort((a, b) => DateTime.parse(a).compareTo(DateTime.parse(b)));
+      data['absent_dates']
+          ?.sort((a, b) => DateTime.parse(a).compareTo(DateTime.parse(b)));
+      data['holiday_dates']
+          ?.sort((a, b) => DateTime.parse(a).compareTo(DateTime.parse(b)));
+
+      return data;
     } else {
       throw Exception('Failed to load attendance stats');
     }
@@ -39,7 +50,7 @@ class _TrackAttendancePageState extends State<TrackAttendancePage> {
           'Attendance Stats',
           style: TextStyle(color: Colors.white),
         ),
-        backgroundColor: Colors.purple,
+        backgroundColor: Color(0xFF0891B2),
       ),
       body: FutureBuilder<Map<String, dynamic>>(
         future: _attendanceStatsFuture,
@@ -74,11 +85,23 @@ class _TrackAttendancePageState extends State<TrackAttendancePage> {
                       value2: attendanceStats['num_days_in_month'].toString(),
                     ),
                     SizedBox(height: 20),
-                    _buildDateListExpansionTile('Present Dates', attendanceStats['present_dates'], Icons.check_circle_outline, Colors.green),
+                    _buildDateListExpansionTile(
+                        'Present Dates',
+                        attendanceStats['present_dates'],
+                        Icons.check_circle_outline,
+                        Colors.green),
                     SizedBox(height: 10),
-                    _buildDateListExpansionTile('Leaves Dates', attendanceStats['absent_dates'], Icons.cancel, Colors.red),
+                    _buildDateListExpansionTile(
+                        'Leaves Dates',
+                        attendanceStats['absent_dates'],
+                        Icons.cancel,
+                        Colors.red),
                     SizedBox(height: 10),
-                    _buildDateListExpansionTile('Holidays Dates', attendanceStats['holiday_dates'], Icons.calendar_today, Colors.purple),
+                    _buildDateListExpansionTile(
+                        'Holidays Dates',
+                        attendanceStats['holiday_dates'],
+                        Icons.calendar_today,
+                        Colors.lightBlue),
                   ],
                 ),
               ),
@@ -117,7 +140,8 @@ class _TrackAttendancePageState extends State<TrackAttendancePage> {
         children: [
           Text(
             title,
-            style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: color),
+            style: TextStyle(
+                fontSize: 20, fontWeight: FontWeight.bold, color: color),
           ),
           SizedBox(height: 5),
           Text(
@@ -129,13 +153,24 @@ class _TrackAttendancePageState extends State<TrackAttendancePage> {
     );
   }
 
-  Widget _buildDateListExpansionTile(String title, List<dynamic>? dates, IconData iconData, Color iconColor) {
+  Widget _buildDateListExpansionTile(
+      String title, List<dynamic>? dates, IconData iconData, Color iconColor) {
     return Card(
       elevation: 4,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(10),
+      ),
       child: ExpansionTile(
-        title: Text(
-          title,
-          style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: iconColor),
+        title: Row(
+          children: [
+            Icon(iconData, color: iconColor),
+            SizedBox(width: 8),
+            Text(
+              title,
+              style: TextStyle(
+                  fontSize: 18, fontWeight: FontWeight.bold, color: iconColor),
+            ),
+          ],
         ),
         children: [
           Padding(
@@ -143,7 +178,10 @@ class _TrackAttendancePageState extends State<TrackAttendancePage> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: dates != null && dates.isNotEmpty
-                  ? dates.map<Widget>((date) => _buildDateItem(date, iconData, iconColor)).toList()
+                  ? dates
+                      .map<Widget>(
+                          (date) => _buildDateItem(date, iconData, iconColor))
+                      .toList()
                   : [Text('No dates')],
             ),
           ),

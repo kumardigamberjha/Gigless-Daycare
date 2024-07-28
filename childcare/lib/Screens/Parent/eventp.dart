@@ -47,8 +47,8 @@ class _CalendarScreenForParentState extends State<CalendarScreenForParent> {
 
   void _fetchEvents() async {
     // Make an HTTP GET request to your backend API endpoint
-    var response = await http
-        .get(Uri.parse('https://daycare.codingindia.co.in/CalendarEvent/api/events/'));
+    var response = await http.get(
+        Uri.parse('https://child.codingindia.co.in/CalendarEvent/api/events/'));
 
     // Check if the request was successful (HTTP 200 OK)
     if (response.statusCode == 200) {
@@ -98,7 +98,7 @@ class _CalendarScreenForParentState extends State<CalendarScreenForParent> {
           'Event Calendar',
           style: TextStyle(color: Colors.white),
         ),
-        backgroundColor: Colors.purple,
+        backgroundColor: Color(0xFF0891B2),
       ),
       body: SingleChildScrollView(
         child: Column(

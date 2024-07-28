@@ -34,7 +34,8 @@ class _ParentChildPageState extends State<ParentChildPage> {
       SharedPreferences prefs = await SharedPreferences.getInstance();
       String? accessToken = prefs.getString('accessToken');
       final response = await http.get(
-        Uri.parse('https://daycare.codingindia.co.in/Parent/childtodaysattendancep/'),
+        Uri.parse(
+            'https://child.codingindia.co.in/Parent/childtodaysattendancep/'),
         headers: {
           'Authorization': 'Bearer $accessToken',
         },
@@ -59,7 +60,7 @@ class _ParentChildPageState extends State<ParentChildPage> {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String? accessToken = prefs.getString('accessToken');
     final response = await http.get(
-      Uri.parse("https://daycare.codingindia.co.in/Parent/"),
+      Uri.parse("https://child.codingindia.co.in/Parent/"),
       headers: {
         'Authorization': 'Bearer $accessToken',
       },
@@ -88,7 +89,7 @@ class _ParentChildPageState extends State<ParentChildPage> {
           'Child Records',
           style: TextStyle(color: Colors.white),
         ),
-        backgroundColor: Colors.purple,
+        backgroundColor: Color(0xFF0891B2),
       ),
       body: isLoading
           ? Center(child: CircularProgressIndicator())
@@ -142,7 +143,8 @@ class _ParentChildPageState extends State<ParentChildPage> {
                                         decoration: BoxDecoration(
                                           shape: BoxShape.circle,
                                           border: Border.all(
-                                              color: Colors.purple, width: 4),
+                                              color: Color(0xFF0891B2),
+                                              width: 4),
                                           image: DecorationImage(
                                             image: NetworkImage(
                                               childRecords[index]['image'] ??

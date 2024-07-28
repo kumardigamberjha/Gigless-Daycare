@@ -27,15 +27,15 @@ class _ShowChildActivityMediaPageState
 
   Future<void> fetchData() async {
     try {
-      final response = await http
-          .get(Uri.parse("https://daycare.codingindia.co.in/student/child-list/"));
+      final response = await http.get(
+          Uri.parse("https://child.codingindia.co.in/student/child-list/"));
 
       if (response.statusCode == 200) {
         final List<dynamic> data = json.decode(response.body);
 
         for (var child in data) {
           final statusResponse = await http.get(Uri.parse(
-              "https://daycare.codingindia.co.in/student/api/daily-activity/${child['id']}"));
+              "https://child.codingindia.co.in/student/api/daily-activity/${child['id']}"));
 
           if (statusResponse.statusCode == 200) {
             final Map<String, dynamic> statusData =
@@ -118,7 +118,7 @@ class _ShowChildActivityMediaPageState
             fontWeight: FontWeight.bold,
           ),
         ),
-        backgroundColor: Colors.purple,
+        backgroundColor: Color(0xFF0891B2),
         foregroundColor: Colors.white,
         elevation: 4,
       ),
@@ -194,8 +194,8 @@ class _ShowChildActivityMediaPageState
                                             label: Text('Add Activity'),
                                             style: ElevatedButton.styleFrom(
                                               foregroundColor: Colors.white,
-                                              backgroundColor:
-                                                  Colors.purple, // Text color
+                                              backgroundColor: Color(
+                                                  0xFF0891B2), // Text color
                                             ),
                                           ),
                                           SizedBox(

@@ -34,7 +34,7 @@ class _SelectedMonthlyPaymentsPageState
     try {
       final response = await http.get(
         Uri.parse(
-            'https://daycare.codingindia.co.in/Accounts/total-payments-selected-month/?month=$month&year=$year'),
+            'https://child.codingindia.co.in/Accounts/total-payments-selected-month/?month=$month&year=$year'),
       );
 
       if (response.statusCode == 200) {
@@ -71,9 +71,8 @@ class _SelectedMonthlyPaymentsPageState
             fontWeight: FontWeight.bold,
           ),
         ),
-        backgroundColor: Colors.purple,
+        backgroundColor: Color(0xFF0891B2),
         foregroundColor: Colors.white,
-
         elevation: 2,
         centerTitle: true,
       ),
@@ -201,7 +200,7 @@ class _SelectedMonthlyPaymentsPageState
             SizedBox(height: 20),
             Container(
               decoration: BoxDecoration(
-                color: Colors.purple,
+                color: Color(0xFF0891B2),
                 borderRadius: BorderRadius.circular(8),
               ),
               padding: EdgeInsets.all(16),

@@ -24,7 +24,7 @@ class _AppointmentStatusPageState extends State<AppointmentStatusPage> {
     String? accessToken = prefs.getString('accessToken');
     try {
       final response = await http.get(
-        Uri.parse('https://daycare.codingindia.co.in/Parent/appointmentstatus/'),
+        Uri.parse('https://child.codingindia.co.in/Parent/appointmentstatus/'),
         headers: {
           'Authorization': 'Bearer $accessToken',
         },
@@ -45,7 +45,8 @@ class _AppointmentStatusPageState extends State<AppointmentStatusPage> {
       String? storedAppointments = prefs.getString('appointments');
       if (storedAppointments != null) {
         setState(() {
-          appointments = List<Map<String, dynamic>>.from(json.decode(storedAppointments));
+          appointments =
+              List<Map<String, dynamic>>.from(json.decode(storedAppointments));
           _isLoading = false;
         });
       } else {
@@ -58,7 +59,8 @@ class _AppointmentStatusPageState extends State<AppointmentStatusPage> {
           builder: (BuildContext context) {
             return AlertDialog(
               title: Text('Error'),
-              content: Text('Failed to load appointments. Please check your internet connection.'),
+              content: Text(
+                  'Failed to load appointments. Please check your internet connection.'),
               actions: <Widget>[
                 TextButton(
                   child: Text('OK'),
@@ -95,7 +97,7 @@ class _AppointmentStatusPageState extends State<AppointmentStatusPage> {
           'Appointment Status',
           style: TextStyle(color: Colors.white),
         ),
-        backgroundColor: Colors.purple,
+        backgroundColor: Color(0xFF0891B2),
         foregroundColor: Colors.white,
       ),
       body: _isLoading
@@ -113,72 +115,87 @@ class _AppointmentStatusPageState extends State<AppointmentStatusPage> {
                       final int index = entry.key + 1;
                       final appointment = entry.value;
                       return Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 16, vertical: 8),
                         child: Card(
                           elevation: 3,
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(12),
                           ),
-                          
-                            child: Padding(
-                              padding: const EdgeInsets.all(16.0),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    'Appointment $index',
-                                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+                          child: Padding(
+                            padding: const EdgeInsets.all(16.0),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  'Appointment $index',
+                                  style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 18),
+                                ),
+                                SizedBox(height: 12),
+                                Divider(),
+                                SizedBox(height: 12),
+                                Text(
+                                  appointment['appointment_type'],
+                                  style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 18),
+                                ),
+                                SizedBox(height: 12),
+                                Divider(),
+                                SizedBox(height: 12),
+                                Text(
+                                  'Scheduled Time:',
+                                  style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 14,
+                                      color: Colors.grey),
+                                ),
+                                SizedBox(height: 4),
+                                Text(
+                                  appointment['scheduled_time'],
+                                  style: TextStyle(fontSize: 14),
+                                ),
+                                SizedBox(height: 12),
+                                Divider(),
+                                SizedBox(height: 12),
+                                Text(
+                                  'Notes:',
+                                  style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 14,
+                                      color: Colors.grey),
+                                ),
+                                SizedBox(height: 4),
+                                Text(
+                                  appointment['notes'],
+                                  style: TextStyle(fontSize: 14),
+                                ),
+                                SizedBox(height: 12),
+                                Divider(),
+                                SizedBox(height: 12),
+                                Text(
+                                  'Status:',
+                                  style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 14,
+                                      color: Colors.grey),
+                                ),
+                                SizedBox(height: 4),
+                                Container(
+                                  color: _getStatusColor(appointment['status']),
+                                  padding: EdgeInsets.symmetric(
+                                      horizontal: 8, vertical: 4),
+                                  child: Text(
+                                    appointment['status'],
+                                    style: TextStyle(
+                                        fontSize: 14, color: Colors.white),
                                   ),
-                                  SizedBox(height: 12),
-                                  Divider(),
-                                  SizedBox(height: 12),
-                                  Text(
-                                    appointment['appointment_type'],
-                                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
-                                  ),
-                                  SizedBox(height: 12),
-                                  Divider(),
-                                  SizedBox(height: 12),
-                                  Text(
-                                    'Scheduled Time:',
-                                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14, color: Colors.grey),
-                                  ),
-                                  SizedBox(height: 4),
-                                  Text(
-                                    appointment['scheduled_time'],
-                                    style: TextStyle(fontSize: 14),
-                                  ),
-                                  SizedBox(height: 12),
-                                  Divider(),
-                                  SizedBox(height: 12),
-                                  Text(
-                                    'Notes:',
-                                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14, color: Colors.grey),
-                                  ),
-                                  SizedBox(height: 4),
-                                  Text(
-                                    appointment['notes'],
-                                    style: TextStyle(fontSize: 14),
-                                  ),
-                                  SizedBox(height: 12),
-                                  Divider(),
-                                  SizedBox(height: 12),
-                                  Text(
-                                    'Status:',
-                                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14, color: Colors.grey),
-                                  ),
-                                  SizedBox(height: 4),
-                                  Container(
-                                    color: _getStatusColor(appointment['status']),
-                                    padding: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                                    child: Text(
-                                      appointment['status'],
-                                      style: TextStyle(fontSize: 14, color: Colors.white),
-                                    ),
-                                  ),
-                                ],
-                              ),
+                                ),
+                              ],
                             ),
+                          ),
                         ),
                       );
                     }).toList(),

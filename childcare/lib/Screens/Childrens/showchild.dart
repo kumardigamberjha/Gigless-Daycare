@@ -15,8 +15,6 @@ class ShowChildDetail extends StatefulWidget {
 class _ShowChildDetailState extends State<ShowChildDetail> {
   Map<String, dynamic> childData = {};
 
-
-
   @override
   void initState() {
     super.initState();
@@ -27,7 +25,7 @@ class _ShowChildDetailState extends State<ShowChildDetail> {
     try {
       final response = await http.get(
         Uri.parse(
-          "https://daycare.codingindia.co.in/student/children/${widget.childId}/",
+          "https://child.codingindia.co.in/student/children/${widget.childId}/",
         ),
       );
 
@@ -72,7 +70,6 @@ class _ShowChildDetailState extends State<ShowChildDetail> {
       throw 'Could not launch ${_phoneLaunchUri.toString()}';
     }
   }
-  
 
   @override
   Widget build(BuildContext context) {
@@ -86,7 +83,7 @@ class _ShowChildDetailState extends State<ShowChildDetail> {
           ),
         ),
         foregroundColor: Colors.white,
-        backgroundColor: Colors.purple,
+        backgroundColor: Color(0xFF0891B2),
         elevation: 4,
       ),
       body: SingleChildScrollView(
@@ -97,7 +94,7 @@ class _ShowChildDetailState extends State<ShowChildDetail> {
             children: [
               CircleAvatar(
                 radius: 80,
-                backgroundColor: Colors.purple,
+                backgroundColor: Color(0xFF0891B2),
                 child: CircleAvatar(
                     radius: 75,
                     backgroundImage: childData['image'] != null
@@ -111,67 +108,67 @@ class _ShowChildDetailState extends State<ShowChildDetail> {
                 style: TextStyle(
                   fontSize: 16,
                   fontWeight: FontWeight.bold,
-                  color: Colors.purple,
+                  color: Color(0xFF0891B2),
                 ),
               ),
               SizedBox(height: 20),
-              buildInfoTile(
+              buildInfoCard(
                 'Name',
                 '${childData['first_name'] ?? ''} ${childData['last_name'] ?? ''}',
                 Icons.person,
-                
               ),
-              buildInfoTile(
+              buildInfoCard(
                 'Date of Birth',
                 '${childData['date_of_birth'] ?? ''}',
                 Icons.cake,
               ),
-              buildInfoTile(
+              buildInfoCard(
                 'Gender',
                 '${childData['gender'] ?? ''}',
                 Icons.person,
               ),
-              buildInfoTile(
+              buildInfoCard(
                 'Age',
                 '${childData['date_of_birth'] != null ? calculateAge(DateTime.parse(childData['date_of_birth'])) : ''} years',
                 Icons.access_time,
               ),
               SizedBox(height: 20),
-              buildInfoTile(
+              buildInfoCard(
                 'Emergency Contact',
                 'Name: ${childData['emergency_contact_name'] ?? ''}\nNumber: ${childData['emergency_contact_number'] ?? ''}',
                 Icons.phone,
                 button: ElevatedButton(
                   onPressed: () async {
-
                     final Uri url = Uri(
-                      scheme: "tel",
-                      path: "${childData['emergency_contact_number']}"
-                    );
+                        scheme: "tel",
+                        path: "${childData['emergency_contact_number']}");
 
-                    if (await canLaunchUrl(url)){
-                      
-                    }
-                      await launchUrl(url);
-
+                    if (await canLaunchUrl(url)) {}
+                    await launchUrl(url);
                   },
                   child: Text('Call Now'),
+                  style: ElevatedButton.styleFrom(
+                    foregroundColor: Color(0xFF0891B2),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(20),
+                    ),
+                  ),
                 ),
               ),
               SizedBox(height: 20),
-              buildInfoTile(
+              buildInfoCard(
                 'Medical History',
                 childData['medical_history'] ?? '',
                 Icons.local_hospital,
               ),
               SizedBox(height: 20),
-              buildInfoTile(
+              buildInfoCard(
                 'Address',
                 '${childData['address'] ?? ''}\n${childData['city'] ?? ''}, ${childData['state'] ?? ''}, ${childData['zip_code'] ?? ''}',
                 Icons.location_on,
               ),
               SizedBox(height: 20),
-              buildInfoTile(
+              buildInfoCard(
                 'Parents',
                 'Parent 1: ${childData['parent1_name'] ?? ''} - ${childData['parent1_contact_number'] ?? ''}\nParent 2: ${childData['parent2_name'] ?? ''} - ${childData['parent2_contact_number'] ?? ''}',
                 Icons.people,
@@ -183,48 +180,54 @@ class _ShowChildDetailState extends State<ShowChildDetail> {
     );
   }
 
-  Widget buildInfoTile(String title, String subtitle, IconData icon,
+  Widget buildInfoCard(String title, String subtitle, IconData icon,
       {Widget? button}) {
     return Container(
       margin: EdgeInsets.symmetric(vertical: 8),
+      padding: EdgeInsets.all(16),
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.circular(10),
+        borderRadius: BorderRadius.circular(15),
         boxShadow: [
           BoxShadow(
-            color: Colors.grey.withOpacity(0.5),
+            color: Colors.grey.withOpacity(0.2),
             spreadRadius: 2,
             blurRadius: 5,
             offset: Offset(0, 3),
           ),
         ],
       ),
-      child: ListTile(
-        title: Text(
-          title,
-          style: TextStyle(
-            fontSize: 18,
-            fontWeight: FontWeight.bold,
-            color: Colors.purple,
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Icon(
+            icon,
+            color: Color(0xFF0891B2),
+            size: 24,
           ),
-        ),
-        subtitle: Row(
-          children: [
-            Icon(
-              icon,
-              color: Colors.purple,
-              size: 20,
+          SizedBox(width: 12),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  title,
+                  style: TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                    color: Color(0xFF0891B2),
+                  ),
+                ),
+                SizedBox(height: 4),
+                Text(
+                  subtitle,
+                  style: TextStyle(fontSize: 16, color: Colors.black),
+                ),
+              ],
             ),
-            SizedBox(width: 8),
-            Expanded(
-              child: Text(
-                subtitle,
-                style: TextStyle(fontSize: 16, color: Colors.black),
-              ),
-            ),
-          ],
-        ),
-        trailing: button,
+          ),
+          if (button != null) button,
+        ],
       ),
     );
   }

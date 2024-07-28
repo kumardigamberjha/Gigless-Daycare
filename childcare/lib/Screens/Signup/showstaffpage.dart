@@ -11,7 +11,8 @@ class _UserListPageState extends State<UserListPage> {
   List<dynamic> users = [];
 
   Future<void> fetchUsers() async {
-    final response = await http.get(Uri.parse('https://daycare.codingindia.co.in/userslist/'));
+    final response =
+        await http.get(Uri.parse('https://child.codingindia.co.in/userslist/'));
     if (response.statusCode == 200) {
       setState(() {
         users = json.decode(response.body);
@@ -35,7 +36,7 @@ class _UserListPageState extends State<UserListPage> {
           'Staff List',
           style: TextStyle(color: Colors.white),
         ),
-        backgroundColor: Colors.purple,
+        backgroundColor: Color(0xFF0891B2),
         foregroundColor: Colors.white,
       ),
       body: ListView.builder(
@@ -98,9 +99,8 @@ class UserDetailsPage extends StatelessWidget {
           "Staff's Detail",
           style: TextStyle(color: Colors.white),
         ),
-        backgroundColor: Colors.purple,
+        backgroundColor: Color(0xFF0891B2),
         foregroundColor: Colors.white,
-
       ),
       body: Padding(
         padding: EdgeInsets.all(16.0),
@@ -156,7 +156,7 @@ class UserDetailsPage extends StatelessWidget {
               subtitle: Text(user['email']),
             ),
             Divider(),
-            
+
             // Add more ListTile widgets for additional user details
           ],
         ),
@@ -164,4 +164,3 @@ class UserDetailsPage extends StatelessWidget {
     );
   }
 }
-

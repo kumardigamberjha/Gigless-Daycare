@@ -19,7 +19,7 @@ class PaymentDetailPage extends StatelessWidget {
           'Payment Details',
           style: TextStyle(color: Colors.white),
         ),
-        backgroundColor: Colors.purple,
+        backgroundColor: Color(0xFF0891B2),
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(20.0),
@@ -107,7 +107,7 @@ class PaymentDetailPage extends StatelessWidget {
               child: Icon(
                 icon,
                 size: 24,
-                color: Colors.purple,
+                color: Color(0xFF0891B2),
               ),
             ),
             SizedBox(width: 20),

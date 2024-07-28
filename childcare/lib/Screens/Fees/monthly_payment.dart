@@ -22,7 +22,7 @@ class _TotalPaymentsCurrentMonthPageState
   Future<void> fetchTotalPaymentsCurrentMonth() async {
     try {
       final response = await http.get(Uri.parse(
-          'https://daycare.codingindia.co.in/Accounts/total-payments-current-month/'));
+          'https://child.codingindia.co.in/Accounts/total-payments-current-month/'));
 
       if (response.statusCode == 200) {
         final data = json.decode(response.body);
@@ -53,7 +53,7 @@ class _TotalPaymentsCurrentMonthPageState
           'Monthly Revenue',
           style: TextStyle(color: Colors.white),
         ),
-        backgroundColor: Colors.purple,
+        backgroundColor: Color(0xFF0891B2),
       ),
       body: Container(
         padding: EdgeInsets.all(20),

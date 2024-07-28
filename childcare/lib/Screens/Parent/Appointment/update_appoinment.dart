@@ -17,7 +17,8 @@ class UpdateAppointmentPage extends StatefulWidget {
 }
 
 class _UpdateAppointmentPageState extends State<UpdateAppointmentPage> {
-  AppointmentStatus _status = AppointmentStatus.pending; // Set initial value for _status
+  AppointmentStatus _status =
+      AppointmentStatus.pending; // Set initial value for _status
   DateTime _scheduledTime = DateTime.now();
   bool _isLoading = false;
 
@@ -30,13 +31,16 @@ class _UpdateAppointmentPageState extends State<UpdateAppointmentPage> {
     String? accessToken = prefs.getString('accessToken');
     try {
       final response = await http.put(
-        Uri.parse('https://daycare.codingindia.co.in/Parent/updateappointment/${widget.appointmentId}/'),
+        Uri.parse(
+            'https://child.codingindia.co.in/Parent/updateappointment/${widget.appointmentId}/'),
         headers: {
           'Authorization': 'Bearer $accessToken',
         },
         body: {
-          'status': _status.toString().split('.').last, // Convert enum to string
-          'scheduled_time': DateFormat('yyyy-MM-dd HH:mm:ss').format(_scheduledTime),
+          'status':
+              _status.toString().split('.').last, // Convert enum to string
+          'scheduled_time':
+              DateFormat('yyyy-MM-dd HH:mm:ss').format(_scheduledTime),
         },
       );
 
@@ -80,7 +84,7 @@ class _UpdateAppointmentPageState extends State<UpdateAppointmentPage> {
           'Update Appointment',
           style: TextStyle(color: Colors.white),
         ),
-        backgroundColor: Colors.purple,
+        backgroundColor: Color(0xFF0891B2),
         foregroundColor: Colors.white,
       ),
       body: _isLoading
@@ -92,19 +96,27 @@ class _UpdateAppointmentPageState extends State<UpdateAppointmentPage> {
                 children: [
                   SizedBox(height: 20.0),
                   DropdownButtonFormField(
-                    value: _status.toString().split('.').last, // Convert enum to string
+                    value: _status
+                        .toString()
+                        .split('.')
+                        .last, // Convert enum to string
                     onChanged: (value) {
                       setState(() {
-                        _status = AppointmentStatus.values.firstWhere((e) => e.toString().split('.').last == value);
+                        _status = AppointmentStatus.values.firstWhere(
+                            (e) => e.toString().split('.').last == value);
                       });
                     },
                     items: AppointmentStatus.values.map((status) {
-                      return DropdownMenuItem(child: Text(status.toString().split('.').last.capitalize()), value: status.toString().split('.').last);
+                      return DropdownMenuItem(
+                          child: Text(
+                              status.toString().split('.').last.capitalize()),
+                          value: status.toString().split('.').last);
                     }).toList(),
                     decoration: InputDecoration(
                       labelText: 'Status',
                       border: OutlineInputBorder(),
-                      contentPadding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+                      contentPadding:
+                          EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
                     ),
                   ),
                   SizedBox(height: 20.0),
@@ -118,7 +130,8 @@ class _UpdateAppointmentPageState extends State<UpdateAppointmentPage> {
                     decoration: InputDecoration(
                       labelText: 'Scheduled Time',
                       border: OutlineInputBorder(),
-                      contentPadding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+                      contentPadding:
+                          EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
                     ),
                   ),
                   SizedBox(height: 20.0),
@@ -128,7 +141,8 @@ class _UpdateAppointmentPageState extends State<UpdateAppointmentPage> {
                     },
                     style: ElevatedButton.styleFrom(
                       padding: EdgeInsets.symmetric(vertical: 16.0),
-                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10.0)),
                     ),
                     child: Text(
                       'Update Appointment',
@@ -147,13 +161,17 @@ class DateTimePicker extends StatelessWidget {
   final ValueChanged<DateTime> onChanged;
   final InputDecoration decoration;
 
-  DateTimePicker({required this.initialValue, required this.onChanged, required this.decoration});
+  DateTimePicker(
+      {required this.initialValue,
+      required this.onChanged,
+      required this.decoration});
 
   @override
   Widget build(BuildContext context) {
     return TextFormField(
       readOnly: true,
-      controller: TextEditingController(text: DateFormat('yyyy-MM-dd HH:mm').format(initialValue)),
+      controller: TextEditingController(
+          text: DateFormat('yyyy-MM-dd HH:mm').format(initialValue)),
       onTap: () async {
         DateTime? picked = await showDatePicker(
           context: context,
@@ -167,7 +185,8 @@ class DateTimePicker extends StatelessWidget {
             initialTime: TimeOfDay.now(),
           );
           if (selectedTime != null) {
-            onChanged(DateTime(picked.year, picked.month, picked.day, selectedTime.hour, selectedTime.minute));
+            onChanged(DateTime(picked.year, picked.month, picked.day,
+                selectedTime.hour, selectedTime.minute));
           }
         }
       },
@@ -182,5 +201,3 @@ extension StringExtension on String {
     return "${this[0].toUpperCase()}${this.substring(1)}";
   }
 }
-
-

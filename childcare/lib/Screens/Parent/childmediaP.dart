@@ -24,8 +24,9 @@ class _ChildMediaPageState extends State<ChildMediaPage> {
   Future<void> fetchChildMedia() async {
     try {
       final response = await http.get(
-        Uri.parse('https://daycare.codingindia.co.in/Parent/dailyactivitymediaforparent/${widget.childId}'),
-        // Replace 'https://daycare.codingindia.co.in/ChildMediaForParent/${widget.childId}' with your actual API endpoint
+        Uri.parse(
+            'https://child.codingindia.co.in/Parent/dailyactivitymediaforparent/${widget.childId}'),
+        // Replace 'https://child.codingindia.co.in/ChildMediaForParent/${widget.childId}' with your actual API endpoint
         headers: {
           'Content-Type': 'application/json',
           // Add any required headers
@@ -35,7 +36,8 @@ class _ChildMediaPageState extends State<ChildMediaPage> {
       if (response.statusCode == 200) {
         final List<dynamic> responseData = json.decode(response.body)['data'];
         setState(() {
-          childMediaList = responseData.map((data) => ChildMedia.fromJson(data)).toList();
+          childMediaList =
+              responseData.map((data) => ChildMedia.fromJson(data)).toList();
           isLoading = false;
         });
       } else {
@@ -54,10 +56,10 @@ class _ChildMediaPageState extends State<ChildMediaPage> {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          'Child Media',
+          'Child Pictures',
           style: TextStyle(color: Colors.white),
         ),
-        backgroundColor: Colors.purple,
+        backgroundColor: Color(0xFF0891B2),
       ),
       body: isLoading
           ? Center(child: CircularProgressIndicator())

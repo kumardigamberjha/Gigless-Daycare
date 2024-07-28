@@ -26,7 +26,7 @@ class _CreateParentAppointmentViewState
     String? accessToken = prefs.getString('accessToken');
 
     final response = await http.post(
-      Uri.parse('https://daycare.codingindia.co.in/Parent/createappointments/'),
+      Uri.parse('https://child.codingindia.co.in/Parent/createappointments/'),
       headers: {
         'Authorization': 'Bearer $accessToken',
       },
@@ -53,7 +53,7 @@ class _CreateParentAppointmentViewState
           'Request Appointment',
           style: TextStyle(color: Colors.white),
         ),
-        backgroundColor: Colors.purple,
+        backgroundColor: Color(0xFF0891B2),
         foregroundColor: Colors.white,
       ),
       body: SingleChildScrollView(
@@ -121,7 +121,8 @@ class _CreateParentAppointmentViewState
               },
               child: Text('Create Appointment'),
               style: ElevatedButton.styleFrom(
-                foregroundColor: Colors.white, backgroundColor: Colors.purple, // Text color
+                foregroundColor: Colors.white,
+                backgroundColor: Color(0xFF0891B2), // Text color
                 elevation: 3, // Elevation
                 padding: EdgeInsets.symmetric(vertical: 15, horizontal: 30),
                 shape: RoundedRectangleBorder(

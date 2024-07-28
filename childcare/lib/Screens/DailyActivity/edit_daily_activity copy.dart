@@ -50,7 +50,7 @@ class _EditDailyActivityPageState extends State<EditDailyActivityPage> {
     try {
       final response = await http.get(
         Uri.parse(
-          "https://daycare.codingindia.co.in/student/api/daily-activity/${widget.childId}/",
+          "https://child.codingindia.co.in/student/api/daily-activity/${widget.childId}/",
         ),
       );
 
@@ -93,8 +93,7 @@ class _EditDailyActivityPageState extends State<EditDailyActivityPage> {
   }
 
   void updateControllers() {
-    mealDescriptionController.text =
-        dailyActivities['meal_description'] ?? '';
+    mealDescriptionController.text = dailyActivities['meal_description'] ?? '';
     napDurationController.text = dailyActivities['nap_duration'] ?? '';
     playtimeActivitiesController.text =
         dailyActivities['playtime_activities'] ?? '';
@@ -103,8 +102,7 @@ class _EditDailyActivityPageState extends State<EditDailyActivityPage> {
     moodController.text = dailyActivities['mood'] ?? '';
     temperatureController.text =
         dailyActivities['temperature']?.toString() ?? '';
-    medicationGivenController.text =
-        dailyActivities['medication_given'] ?? '';
+    medicationGivenController.text = dailyActivities['medication_given'] ?? '';
   }
 
   Future<void> saveDailyActivity() async {
@@ -116,7 +114,7 @@ class _EditDailyActivityPageState extends State<EditDailyActivityPage> {
       var request = http.MultipartRequest(
         'POST',
         Uri.parse(
-            'https://daycare.codingindia.co.in/student/api/edit-daily-activity/${widget.childId}/'),
+            'https://child.codingindia.co.in/student/api/edit-daily-activity/${widget.childId}/'),
       );
       request.fields['child'] = widget.childId.toString();
       request.fields['meal_description'] = mealDescriptionController.text;

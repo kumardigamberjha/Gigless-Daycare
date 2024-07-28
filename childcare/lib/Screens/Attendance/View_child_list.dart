@@ -2,12 +2,8 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:childcare/Screens/Attendance/monthlyAttendancePage.dart';
-import 'package:childcare/Screens/Childrens/showchild.dart';
 import 'package:childcare/Screens/DailyActivity/create_daily_activity.dart';
 import 'package:childcare/Screens/ChildMedia/add_child_media.dart';
-import 'package:childcare/Screens/Fees/fee_form.dart';
-import 'package:childcare/Screens/Fees/GetFeesmonthly.dart';
-import 'package:childcare/Screens/Fees/monthly_payment.dart';
 
 class AttendanceChildRecordsPage extends StatefulWidget {
   @override
@@ -26,8 +22,8 @@ class _AttendanceChildRecordsPageState
   }
 
   Future<void> fetchData() async {
-    final response =
-        await http.get(Uri.parse("https://daycare.codingindia.co.in/student/child-list/"));
+    final response = await http
+        .get(Uri.parse("https://child.codingindia.co.in/student/child-list/"));
 
     if (response.statusCode == 200) {
       final List<dynamic> data = json.decode(response.body);
@@ -66,7 +62,7 @@ class _AttendanceChildRecordsPageState
           'Track Attendance',
           style: TextStyle(color: Colors.white),
         ),
-        backgroundColor: Colors.purple,
+        backgroundColor: Color(0xFF0891B2),
         foregroundColor: Colors.white,
       ),
       body: childRecords.isEmpty
@@ -84,7 +80,7 @@ class _AttendanceChildRecordsPageState
                   padding:
                       const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                   child: GestureDetector(
-                    onTap: () => (),
+                    onTap: () => {},
                     child: Card(
                       elevation: 4,
                       shape: RoundedRectangleBorder(
@@ -114,9 +110,7 @@ class _AttendanceChildRecordsPageState
                                       decoration: BoxDecoration(
                                         shape: BoxShape.circle,
                                         border: Border.all(
-                                            color: const Color.fromARGB(
-                                                255, 12, 14, 15),
-                                            width: 2),
+                                            color: Color(0xFF0891B2), width: 2),
                                         image: DecorationImage(
                                           image: NetworkImage(
                                             childRecords[index]['image'] ??
@@ -147,39 +141,53 @@ class _AttendanceChildRecordsPageState
                                         color: Colors.black,
                                       ),
                                     ),
-                                  ],
-                                ),
-                              ),
-                              SizedBox(width: 16),
-                              Column(children: [
-                                Column(
-                                  children: [
-                                    IconButton(
-                                      icon: Icon(Icons.calendar_today),
-                                      onPressed: () {
-                                        Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                            builder: (context) =>
-                                                TrackAttendancePage(
-                                              childRecords[index]['id'],
-                                            ),
-                                          ),
-                                        );
-                                      },
-                                      color: Colors.purple,
-                                    ),
+                                    SizedBox(height: 8),
                                     Text(
-                                      'Track\nAttendance',
-                                      textAlign: TextAlign.center,
+                                      'Age: $age',
                                       style: TextStyle(
-                                        fontSize: 12,
-                                        color: Colors.purple,
+                                        fontSize: 14,
+                                        color: Colors.black54,
+                                      ),
+                                    ),
+                                    SizedBox(height: 8),
+                                    Text(
+                                      'Gender: ${childRecords[index]['gender'] ?? ''}',
+                                      style: TextStyle(
+                                        fontSize: 14,
+                                        color: Colors.black54,
                                       ),
                                     ),
                                   ],
                                 ),
-                              ])
+                              ),
+                              SizedBox(width: 16),
+                              Column(
+                                children: [
+                                  IconButton(
+                                    icon: Icon(Icons.calendar_today),
+                                    onPressed: () {
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) =>
+                                              TrackAttendancePage(
+                                            childRecords[index]['id'],
+                                          ),
+                                        ),
+                                      );
+                                    },
+                                    color: Color(0xFF0891B2),
+                                  ),
+                                  Text(
+                                    'Track\nAttendance',
+                                    textAlign: TextAlign.center,
+                                    style: TextStyle(
+                                      fontSize: 12,
+                                      color: Color(0xFF0891B2),
+                                    ),
+                                  ),
+                                ],
+                              ),
                             ],
                           ),
                         ),

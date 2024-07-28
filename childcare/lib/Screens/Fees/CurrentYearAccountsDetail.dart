@@ -27,7 +27,8 @@ class _CurrentYearAccountDetailPageState
     });
     try {
       final response = await http.get(
-        Uri.parse('https://daycare.codingindia.co.in/Accounts/current-year-payments/'),
+        Uri.parse(
+            'https://child.codingindia.co.in/Accounts/current-year-payments/'),
       );
 
       if (response.statusCode == 200) {
@@ -65,7 +66,7 @@ class _CurrentYearAccountDetailPageState
           'Current Year Revenue',
           style: TextStyle(color: Colors.white),
         ),
-        backgroundColor: Colors.purple,
+        backgroundColor: Color(0xFF0891B2),
       ),
       body: Padding(
         padding: const EdgeInsets.all(20.0),
@@ -106,7 +107,7 @@ class _CurrentYearAccountDetailPageState
     return Container(
       padding: EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: Colors.purple,
+        color: Color(0xFF0891B2),
         borderRadius: BorderRadius.circular(8),
         boxShadow: [
           BoxShadow(
