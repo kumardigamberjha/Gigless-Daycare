@@ -9,7 +9,9 @@ from rest_framework import serializers, status
 from rest_framework.views import APIView
 from django.utils import timezone
 from django.db.models import Sum
-
+from django.core.mail import send_mail
+from .tasks import SendEmail
+from Backend.settings import EMAIL_HOST_USER
 #'''
 from .models import ParentAppointment, ParentModel
 from .serializers  import ParentAppointmentSerializer
@@ -59,6 +61,7 @@ class CurrentAttendanceStatusP(APIView):
         return Response(serializer.data, status=200)
 
 
+import smtplib
 
 """ Appointment Schedule """
 @api_view(['POST'])
@@ -77,6 +80,7 @@ def create_parent_appointment(request):
         notes = request.data.get('notes')
         status = request.data.get('status')
 
+
         try:
             instance = ParentAppointment.objects.create(
                 parent=CustomUser.objects.get(id=current_user.id),
@@ -85,13 +89,17 @@ def create_parent_appointment(request):
                 notes=notes,
                 status = status
             )
-            print("Form Saved")
+            print("Saved")
+            send_mail("Appointment Request Sent", "Your appointment request has been successfully submitted. We will contact you soon.", EMAIL_HOST_USER, ["kumardigamberjha7@gmail.com"], fail_silently=True)
+            
+            print("Mail Sent")
+
             return Response("Form Saved", status=200)
 
         except Exception as e:
             print("Error: ", e)
 
-            return Response("Error", status=status.HTTP_400_BAD_REQUEST)
+            return Response("Error", status=400)
         
 
 

@@ -200,17 +200,24 @@ STATIC_ROOT = BASE_DIR / 'staticfiles'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 
-# #############  AWS S3 Bucket Setting  #####################
+# *******************************************
+#                                           Email Setup 
+# **************************************************************************************************************
+REDIS_HOST = 'localhost'
+REDIS_PORT = 6379
+REDIS_DB = 0
 
-AWS_SECRET_ACCESS_KEY = 'aoYN52R6dXTXiDRsfZvgC4MD+MS/3ETbfMMEj2AB'
+CELERY_BROKER_URL = f'redis://{REDIS_HOST}:{REDIS_PORT}/{REDIS_DB}'
+CELERY_RESULT_BACKEND = CELERY_BROKER_URL
 
-AWS_ACCESS_KEY_ID = 'AKIAZMTLT3R3GS3IKKJB'
+CELERY_ACCEPT_CONTENT = ['json']
+CELERY_TASK_SERIALIZER = 'json'
+CELERY_RESULT_SERIALIZER = 'json'
 
-#AWS_SECRET_ACCESS_KEY = 'GoN6VWZxP4X2yc6QySDIquS5Bo1A1gO1BWlqBKPA'
-AWS_STORAGE_BUCKET_NAME = 'codingindiastorage'
-AWS_S3_CUSTOM_DOMAIN = f'{AWS_STORAGE_BUCKET_NAME}.s3.amazonaws.com'
-AWS_S3_REGION_NAME = 'ap-south-1' 
-
-# Use S3 for static and media files
-DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
-STATICFILES_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_HOST_USER = "gigglescare01@gmail.com"
+EMAIL_HOST_PASSWORD = "vrvxfwkptnzlflra"
+EMAIL_USE_TLS = True
+EMAIL_USE_SSL = False

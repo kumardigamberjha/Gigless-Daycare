@@ -20,6 +20,8 @@ from students.serializers import ChildSerializer
 from rest_framework_simplejwt.tokens import AccessToken
 from rest_framework_simplejwt.exceptions import InvalidToken, TokenError
 from django.db.models import Q
+from django.contrib.auth.hashers import make_password
+
 
 class TokenValidationView(APIView):
     @authentication_classes([])  # Use an empty list to disable authentication for this view
@@ -60,29 +62,34 @@ class CustomTokenObtainPairView(TokenObtainPairView):
         return Response(serializer.errors, status=status.HTTP_401_UNAUTHORIZED)
     
 
-
-
 @api_view(['POST'])
 def register_user(request):
     if request.method == 'POST':
-        serializer = CustomUserSerializer(data=request.data)
-        print("Username: ", request.data.get('username'))
-        print("UserType: ", request.data.get('usertype'))
-        
-        if serializer.is_valid():
-            print("Serializer data:", serializer.validated_data)
-            user = serializer.save()
+        username = request.data.get('username')
+        password = request.data.get('password')
+        email = request.data.get('email')
+        mobile = request.data.get('mobile_number')
+        usertype = request.data.get('usertype')
 
-            # Log in the user after successful registration
-            login(request, user)
-            print("Login Done")
+        print("Username: ", username)
+        print("Password: ", password)
 
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-        else:
-            print("Serializer errors:", serializer.errors)
-            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+        try:    
+            create = CustomUser.objects.create(
+                username = username,
+                password = make_password(password),
+                email = email,
+                mobile_number = mobile,
+                usertype = usertype,
+                is_active=True,
+            )
+            print("User Created")
+            return Response("User Created", status=status.HTTP_201_CREATED)
+        except Exception as e:
+            print("Serializer errors:", e)
+            return Response(e, status=status.HTTP_400_BAD_REQUEST)
     
-
 
 @api_view(['GET'])
 # @authentication_classes([])  # Disable authentication for this view

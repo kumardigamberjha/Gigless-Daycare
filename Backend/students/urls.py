@@ -28,4 +28,8 @@ urlpatterns = [
     path('rooms/create/', views.room_create, name='room-create'),
     path('rooms/update/<int:pk>/', views.room_update, name='room-update'),
     path('rooms/delete/<int:pk>/', views.room_delete, name='room-delete'),
+
+    # AllChildOfSelectedRoom
+    path('rooms/children/<int:id>/', views.AllChildOfSelectedRoom, name='room-children'),
+
 ]

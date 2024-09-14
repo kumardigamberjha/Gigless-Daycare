@@ -48,22 +48,20 @@ class Child(models.Model):
     parent2_contact_number = models.CharField(max_length=15, blank=True, null=True)
     is_active = models.BooleanField(default=True, blank=True)
 
-    def save(self, *args, **kwargs):
-        print("Self Image: ", self.unique_id)
-        self.unique_id = self.generate_unique_id()
+    # def save(self, *args, **kwargs):
+    #     print("Self Image: ", self.unique_id)
+    #     self.unique_id = self.generate_unique_id()
 
-        if self.image:
-            # Open the image using Pillow
-            img = Image.open(self.image)
-            # Compress the image
-            output = io.BytesIO()
-            img.save(output, format='JPEG', quality=60)  # Adjust quality as needed
-            output.seek(0)
-            # Save the compressed image data to the image field
-            self.image.save(self.image.name, InMemoryUploadedFile(output, None, self.image.name, 'image/jpeg', output.tell(), None), save=False)
-
-
-        super().save(*args, **kwargs)
+    #     if self.image:
+    #         # Open the image using Pillow
+    #         img = Image.open(self.image)
+    #         # Compress the image
+    #         output = io.BytesIO()
+    #         img.save(output, format='JPEG', quality=60)  # Adjust quality as needed
+    #         output.seek(0)
+    #         # Save the compressed image data to the image field
+    #         self.image.save(self.image.name, InMemoryUploadedFile(output, None, self.image.name, 'image/jpeg', output.tell(), None), save=False)
+    #     super().save(*args, **kwargs)
 
     def generate_unique_id(self):
         # Generate a unique ID using a random string

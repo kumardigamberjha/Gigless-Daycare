@@ -65,6 +65,73 @@ class ChildDetailView(generics.RetrieveUpdateDestroyAPIView):
     queryset = Child.objects.all()
     serializer_class = ChildSerializerGet
 
+    def update(self, request, *args, **kwargs):
+        try:
+            id = request.data.get('id')
+
+            first_name = request.data.get('first_name')
+            last_name = request.data.get('last_name')
+            date_of_birth = request.data.get('date_of_birth')
+            gender = request.data.get('gender')
+            blood_group = request.data.get('blood_group')
+            medical_history = request.data.get('medical_history')
+            emergency_contact_name = request.data.get('emergency_contact_name')
+            emergency_contact_number = request.data.get('emergency_contact_number')
+            image = request.data.get('image')
+            child_fees = request.data.get('child_fees')
+            address = request.data.get('address')
+            unique_id = request.data.get('unique_id')
+
+            city = request.data.get('city')
+            state = request.data.get('state')
+            zip_code = request.data.get('zip_code')
+            parent1_name = request.data.get('parent1_name')
+            parent1_contact_number = request.data.get('parent1_contact_number')
+            parent2_name = request.data.get('parent2_name')
+            parent2_contact_number = request.data.get('parent2_contact_number')
+            is_active = request.data.get('is_active')
+            room = request.data.get('room')
+
+            data = Child.objects.get(id=id)
+            data.first_name = first_name
+            data.last_name = last_name
+            data.date_of_birth = date_of_birth
+            data.gender = gender
+            data.blood_group = blood_group
+            data.medical_history = medical_history
+            data.emergency_contact_name = emergency_contact_name
+            data.emergency_contact_number = emergency_contact_number
+            print("Image: ", image)
+            try:
+                if image.startswith('/media') or image.startswith('http'):
+                    pass
+                else:
+                    data.image = image
+            except:
+                data.image = image
+            data.unique_id = unique_id
+            roomdata = Rooms.objects.get(id=room)
+            data.room = roomdata
+            data.child_fees = child_fees
+            data.address = address
+            data.city = city
+            data.state = state
+            data.zip_code = zip_code
+            data.parent1_name = parent1_name
+            data.parent1_contact_number = parent1_contact_number
+            data.parent2_name = parent2_name
+            data.parent2_contact_number = data.parent2_contact_number
+            data.is_active = is_active.capitalize()
+            data.save()
+            print("Data: ", data)
+            return Response("Saved")
+        except serializers.ValidationError as ve:
+            return Response({"detail": str(ve)}, status=status.HTTP_400_BAD_REQUEST)
+        except Child.DoesNotExist:
+            return Response({"detail": "Child not found."}, status=status.HTTP_404_NOT_FOUND)
+        except Exception as e:
+            print("Error: ", e)
+            return Response({"detail": "An unexpected error occurred."}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 
 
@@ -147,7 +214,6 @@ def toggle_attendance(request):
 
 class AttendanceStatsView(View):
     def get(self, request, child_id):
-        print("Hello View")
         # Get the current month
         current_month = datetime.now().month
         current_year = datetime.now().year
@@ -351,45 +417,57 @@ def create_learning_resource(request):
             return Response({"message": "Failed to create learning resource"}, status=status.HTTP_400_BAD_REQUEST)
 
 
-
-
 @api_view(['GET'])
 def room_list(request):
-    if request.method == 'GET':
-        rooms = Rooms.objects.all()
-        serializer = RoomSerializer(rooms, many=True)
-        return Response(serializer.data)
+    rooms = Rooms.objects.all()
+    serializer = RoomSerializer(rooms, many=True)
+    return Response(serializer.data)
 
 @api_view(['POST'])
 def room_create(request):
-    if request.method == 'POST':
-        serializer = RoomSerializer(data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    serializer = RoomSerializer(data=request.data)
+    if serializer.is_valid():
+        serializer.save()
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
+    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 @api_view(['PUT'])
 def room_update(request, pk):
     try:
         room = Rooms.objects.get(pk=pk)
     except Rooms.DoesNotExist:
-        return Response(status=status.HTTP_404_NOT_FOUND)
+        return Response({'error': 'Room not found'}, status=status.HTTP_404_NOT_FOUND)
 
-    if request.method == 'PUT':
-        serializer = RoomSerializer(room, data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    serializer = RoomSerializer(room, data=request.data)
+    if serializer.is_valid():
+        serializer.save()
+        return Response(serializer.data)
+    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 @api_view(['DELETE'])
 def room_delete(request, pk):
     try:
         room = Rooms.objects.get(pk=pk)
     except Rooms.DoesNotExist:
-        return Response(status=status.HTTP_404_NOT_FOUND)
+        return Response({'error': 'Room not found'}, status=status.HTTP_404_NOT_FOUND)
 
-    if request.method == 'DELETE':
-        room.delete()
-        return Response(status=status.HTTP_204_NO_CONTENT)
+    room.delete()
+    return Response(status=status.HTTP_204_NO_CONTENT)
+
+
+from rest_framework.decorators import api_view
+from rest_framework.response import Response
+from .models import Child
+
+@api_view(['GET'])
+def AllChildOfSelectedRoom(request, id):
+    try:
+        filter_children = Child.objects.filter(room=id).values('room_id', 'id','first_name', 'last_name', 'image', 'gender', 'parent1_contact_number', 'unique_id')
+        
+        # Convert the QuerySet to a list of dictionaries
+        children_list = list(filter_children)
+        
+        return Response({'data': children_list}, status=200)
+    except Exception as e:
+        print("Error: ", e)
+        return Response({'Error': f"{e}"}, status=400)
