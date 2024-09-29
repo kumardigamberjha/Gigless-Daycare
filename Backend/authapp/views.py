@@ -21,7 +21,8 @@ from rest_framework_simplejwt.tokens import AccessToken
 from rest_framework_simplejwt.exceptions import InvalidToken, TokenError
 from django.db.models import Q
 from django.contrib.auth.hashers import make_password
-
+from django.core.mail import send_mail
+from Backend.settings import EMAIL_HOST_USER
 
 class TokenValidationView(APIView):
     @authentication_classes([])  # Use an empty list to disable authentication for this view
@@ -84,7 +85,10 @@ def register_user(request):
                 usertype = usertype,
                 is_active=True,
             )
-            print("User Created")
+
+            send_mail("User Credentisals", f'Hey! your credentials for the Giggles Daycare App is \n \n Username: {username} \n Password: {password} \n Your Registered Mobile Number is: {mobile} \n Your Registered Email is: {email}.\n\n Thanks For the Valuable Member at Giggles Daycare.', EMAIL_HOST_USER, [email], fail_silently=False)
+            
+            print("User Created and Mail Sent ")
             return Response("User Created", status=status.HTTP_201_CREATED)
         except Exception as e:
             print("Serializer errors:", e)

@@ -420,8 +420,9 @@ def create_learning_resource(request):
 @api_view(['GET'])
 def room_list(request):
     rooms = Rooms.objects.all()
+    no_of_rooms = rooms.count()
     serializer = RoomSerializer(rooms, many=True)
-    return Response(serializer.data)
+    return Response({'data':serializer.data, 'no_of_rooms':no_of_rooms})
 
 @api_view(['POST'])
 def room_create(request):
