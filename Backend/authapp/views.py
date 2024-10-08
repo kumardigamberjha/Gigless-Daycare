@@ -75,24 +75,42 @@ def register_user(request):
         print("Username: ", username)
         print("Password: ", password)
 
+        # Check if a user with the same username, email, or mobile number exists
+        if CustomUser.objects.filter(username=username).exists():
+            return Response({"error": "Username already registered"}, status=status.HTTP_400_BAD_REQUEST)
+        
+        if CustomUser.objects.filter(email=email).exists():
+            return Response({"error": "Email already registered"}, status=status.HTTP_400_BAD_REQUEST)
+        
+        if CustomUser.objects.filter(mobile_number=mobile).exists():
+            return Response({"error": "Mobile number already registered"}, status=status.HTTP_400_BAD_REQUEST)
 
-        try:    
+        try:
+            # Create the new user
             create = CustomUser.objects.create(
-                username = username,
-                password = make_password(password),
-                email = email,
-                mobile_number = mobile,
-                usertype = usertype,
+                username=username,
+                # password=make_password(password),
+                email=email,
+                mobile_number=mobile,
+                usertype=usertype,
                 is_active=True,
             )
-
-            send_mail("User Credentisals", f'Hey! your credentials for the Giggles Daycare App is \n \n Username: {username} \n Password: {password} \n Your Registered Mobile Number is: {mobile} \n Your Registered Email is: {email}.\n\n Thanks For the Valuable Member at Giggles Daycare.', EMAIL_HOST_USER, [email], fail_silently=False)
+            create.set_password(password)
+            create.save()
+            # Send confirmation email
+            send_mail(
+                "User Credentials", 
+                f'Hey! Your credentials for the Giggles Daycare App are:\n\nUsername: {username}\nPassword: {password}\nRegistered Mobile Number: {mobile}\nRegistered Email: {email}.\n\nThanks for being a valuable member at Giggles Daycare.', 
+                EMAIL_HOST_USER, 
+                [email], 
+                fail_silently=False
+            )
             
-            print("User Created and Mail Sent ")
+            print("User Created and Mail Sent")
             return Response("User Created", status=status.HTTP_201_CREATED)
         except Exception as e:
-            print("Serializer errors:", e)
-            return Response(e, status=status.HTTP_400_BAD_REQUEST)
+            print("Error:", e)
+            return Response({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
     
 
 @api_view(['GET'])
