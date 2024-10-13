@@ -20,8 +20,6 @@ class Rooms(models.Model):
     def __str__(self):
         return self.name
 
-
-# Create your models here.
 class Child(models.Model):
     first_name = models.CharField(max_length=100)
     last_name = models.CharField(max_length=100)
@@ -32,45 +30,47 @@ class Child(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     image = models.ImageField(blank=True, null=True)
-    unique_id = models.CharField(max_length=30, unique=True)
-    room = models.ForeignKey(Rooms, on_delete=models.SET_NULL, null=True, blank=True) 
+    unique_id = models.CharField(max_length=30, unique=True, blank=True)  # Ensure blank=True so it can be set programmatically
+    room = models.ForeignKey('Rooms', on_delete=models.SET_NULL, null=True, blank=True) 
     child_fees = models.FloatField(default=0)
+    
     # Address Information
     address = models.CharField(max_length=255, blank=True, null=True)
     city = models.CharField(max_length=100, blank=True, null=True)
     state = models.CharField(max_length=100, blank=True, null=True)
     zip_code = models.CharField(max_length=10, blank=True, null=True)
+    
     parent1_name = models.CharField(max_length=100)
     parent1_contact_number = models.CharField(max_length=15)
     parent2_name = models.CharField(max_length=100, blank=True, null=True)
     parent2_contact_number = models.CharField(max_length=15, blank=True, null=True)
+    
     is_active = models.BooleanField(default=True, blank=True)
 
-    # def save(self, *args, **kwargs):
-    #     print("Self Image: ", self.unique_id)
-    #     self.unique_id = self.generate_unique_id()
+    class Meta:
+        unique_together = ['first_name', 'last_name', 'date_of_birth', 'parent1_contact_number']
 
-    #     if self.image:
-    #         # Open the image using Pillow
-    #         img = Image.open(self.image)
-    #         # Compress the image
-    #         output = io.BytesIO()
-    #         img.save(output, format='JPEG', quality=60)  # Adjust quality as needed
-    #         output.seek(0)
-    #         # Save the compressed image data to the image field
-    #         self.image.save(self.image.name, InMemoryUploadedFile(output, None, self.image.name, 'image/jpeg', output.tell(), None), save=False)
-    #     super().save(*args, **kwargs)
+    def save(self, *args, **kwargs):
+        # Generate a unique ID if it hasn't been set
+        if not self.unique_id:
+            self.unique_id = self.generate_unique_id()
+
+        # Optionally compress image if one is uploaded
+        if self.image:
+            img = Image.open(self.image)
+            output = io.BytesIO()
+            img.save(output, format='JPEG', quality=60)  # Adjust quality for compression
+            output.seek(0)
+            self.image = InMemoryUploadedFile(output, 'ImageField', self.image.name, 'image/jpeg', output.getbuffer().nbytes, None)
+        
+        super().save(*args, **kwargs)
 
     def generate_unique_id(self):
-        # Generate a unique ID using a random string
+        # Generate a unique 10-character alphanumeric string
         return get_random_string(length=10)
 
     def __str__(self):
         return f"{self.first_name} {self.last_name}"
-    
-    class Meta:
-        # Enforce uniqueness based on the combination of these fields
-        unique_together = ['first_name', 'last_name', 'date_of_birth', 'parent1_contact_number']
 
 
 

@@ -155,8 +155,7 @@ def parent_detail_list(request, parent_id):
         user = CustomUser.objects.get(id=parent_id)
         print("User: ", user)
         childs = Child.objects.filter(Q(parent1_contact_number=user.mobile_number) | 
-                                       Q(parent2_contact_number=user.mobile_number) | 
-                                       Q(emergency_contact_number=user.mobile_number))
+                                       Q(parent2_contact_number=user.mobile_number))
         print("Children: ", childs)
         
         user_serializer = CustomUserSerializer(user)

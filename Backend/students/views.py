@@ -21,43 +21,45 @@ from django.views import View
 from .tasks import save_images_and_videos_to_s3
 
 class ChildListCreateView(generics.ListCreateAPIView):
-    queryset = Child.objects.filter(is_active=True)
+    queryset = Child.objects.all()
     serializer_class = ChildSerializer
 
     def create(self, request, *args, **kwargs):
         try:
             serializer = self.get_serializer(data=request.data)
             serializer.is_valid(raise_exception=True)
-            
+
             # Save the child instance to the database
             self.perform_create(serializer)
 
             return Response({'message': 'Child created successfully'}, status=201)
+        
         except serializers.ValidationError as e:
+            # Extract validation errors
             errors_dict = {}
             for field, errors in e.detail.items():
+                # Check for required field errors
                 if 'This field may not be blank.' in errors:
                     errors_dict[field] = f"{field.capitalize()} is required."
-                    print(errors_dict[field])
-                    return Response({'error':errors_dict[field]}, status=400)
                 else:
-                    print("No")
+                    # For other types of errors, just show the first error in the list
                     errors_dict[field] = errors[0]
-            if 'unique' in str(e).lower():
-                print(f"{errors_dict['name']} already exists.", e)
-                return Response({'error': 'An unexpected error occurred while creating the child.'}, status=400)
-            
-            return Response({'error': str(e)}, status=400)
+
+            return Response({'error': errors_dict}, status=400)
+        
         except IntegrityError as e:
-                return Response({'error': 'An unexpected error occurred while creating the child.'}, status=500)
+            print("Error: ", e)
+            # Handle unique constraint or database integrity issues
+            return Response({'error': 'An integrity error occurred while creating the child.'}, status=400)
+        
         except Exception as e:
-            print("Sp")
+            print("Error: ", e)
+            # Generic exception handler for unexpected errors
             return Response({'error': str(e)}, status=500)
 
 
-
 class ChildListView(generics.ListAPIView):
-    queryset = Child.objects.filter(is_active=True)
+    queryset = Child.objects.all()
     serializer_class = ChildSerializerGet
 
 
@@ -75,8 +77,6 @@ class ChildDetailView(generics.RetrieveUpdateDestroyAPIView):
             gender = request.data.get('gender')
             blood_group = request.data.get('blood_group')
             medical_history = request.data.get('medical_history')
-            emergency_contact_name = request.data.get('emergency_contact_name')
-            emergency_contact_number = request.data.get('emergency_contact_number')
             image = request.data.get('image')
             child_fees = request.data.get('child_fees')
             address = request.data.get('address')
@@ -99,8 +99,6 @@ class ChildDetailView(generics.RetrieveUpdateDestroyAPIView):
             data.gender = gender
             data.blood_group = blood_group
             data.medical_history = medical_history
-            data.emergency_contact_name = emergency_contact_name
-            data.emergency_contact_number = emergency_contact_number
             print("Image: ", image)
             try:
                 if image.startswith('/media') or image.startswith('http'):
