@@ -134,7 +134,7 @@ class ChildDetailView(generics.RetrieveUpdateDestroyAPIView):
             return Response({"detail": "An unexpected error occurred."}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
         
 
-@api_view(['GET'])
+@api_view(['DELETE'])
 def DeleteChildData(request, id):
     child = Child.objects.get(id = id)
     child.delete()

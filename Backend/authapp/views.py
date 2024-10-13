@@ -133,7 +133,7 @@ def DeleteUserRecord(request, id):
         # Attempt to retrieve and delete the user
         user = get_object_or_404(CustomUser, id=id)
         user.delete()
-        return Response({"message": "User deleted successfully"}, status=status.HTTP_204_NO_CONTENT)
+        return Response({"message": "User deleted successfully"}, status=200)
 
 
 @api_view(['GET'])

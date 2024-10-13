@@ -29,8 +29,6 @@ class Child(models.Model):
     gender = models.CharField(max_length=10)
     blood_group = models.CharField(max_length=5, blank=True, null=True)
     medical_history = models.TextField(blank=True)
-    emergency_contact_name = models.CharField(max_length=100)
-    emergency_contact_number = models.CharField(max_length=15)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     image = models.ImageField(blank=True, null=True)
@@ -42,8 +40,8 @@ class Child(models.Model):
     city = models.CharField(max_length=100, blank=True, null=True)
     state = models.CharField(max_length=100, blank=True, null=True)
     zip_code = models.CharField(max_length=10, blank=True, null=True)
-    parent1_name = models.CharField(max_length=100, blank=True, null=True)
-    parent1_contact_number = models.CharField(max_length=15, blank=True, null=True)
+    parent1_name = models.CharField(max_length=100)
+    parent1_contact_number = models.CharField(max_length=15)
     parent2_name = models.CharField(max_length=100, blank=True, null=True)
     parent2_contact_number = models.CharField(max_length=15, blank=True, null=True)
     is_active = models.BooleanField(default=True, blank=True)
@@ -72,7 +70,7 @@ class Child(models.Model):
     
     class Meta:
         # Enforce uniqueness based on the combination of these fields
-        unique_together = ['first_name', 'last_name', 'date_of_birth', 'emergency_contact_number']
+        unique_together = ['first_name', 'last_name', 'date_of_birth', 'parent1_contact_number']
 
 
 
