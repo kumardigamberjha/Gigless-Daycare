@@ -1,3 +1,4 @@
+from django.shortcuts import get_object_or_404
 from rest_framework.authtoken.views import ObtainAuthToken
 from rest_framework.authtoken.models import Token
 from rest_framework.response import Response
@@ -114,13 +115,25 @@ def register_user(request):
     
 
 @api_view(['GET'])
-# @authentication_classes([])  # Disable authentication for this view
-@permission_classes([]) 
+@permission_classes([])  # No permission classes applied for this example
 def user_list(request):
+    # Handle GET request - retrieve user list
     if request.method == 'GET':
         users = CustomUser.objects.filter(usertype="Staff")
         serializer = CustomUserSerializer(users, many=True)
         return Response(serializer.data)
+
+
+@api_view(['DELETE'])
+def DeleteUserRecord(request, id):
+    if request.method == 'DELETE':
+        if not id:
+            return Response({"error": "User ID is required"}, status=status.HTTP_400_BAD_REQUEST)
+
+        # Attempt to retrieve and delete the user
+        user = get_object_or_404(CustomUser, id=id)
+        user.delete()
+        return Response({"message": "User deleted successfully"}, status=status.HTTP_204_NO_CONTENT)
 
 
 @api_view(['GET'])
@@ -131,6 +144,7 @@ def parent_list(request):
         users = CustomUser.objects.filter(usertype="Parent")
         serializer = CustomUserSerializer(users, many=True)
         return Response(serializer.data)
+
 
 
 @api_view(['GET'])

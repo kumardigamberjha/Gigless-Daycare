@@ -21,7 +21,7 @@ from django.views import View
 from .tasks import save_images_and_videos_to_s3
 
 class ChildListCreateView(generics.ListCreateAPIView):
-    queryset = Child.objects.all()
+    queryset = Child.objects.filter(is_active=True)
     serializer_class = ChildSerializer
 
     def create(self, request, *args, **kwargs):
@@ -57,7 +57,7 @@ class ChildListCreateView(generics.ListCreateAPIView):
 
 
 class ChildListView(generics.ListAPIView):
-    queryset = Child.objects.all()
+    queryset = Child.objects.filter(is_active=True)
     serializer_class = ChildSerializerGet
 
 
@@ -132,6 +132,13 @@ class ChildDetailView(generics.RetrieveUpdateDestroyAPIView):
         except Exception as e:
             print("Error: ", e)
             return Response({"detail": "An unexpected error occurred."}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        
+
+@api_view(['GET'])
+def DeleteChildData(request, id):
+    child = Child.objects.get(id = id)
+    child.delete()
+    return Response({'Status': "Success"}, status=200)
 
 
 
@@ -166,7 +173,7 @@ class MarkAttendanceView(generics.CreateAPIView):
 class CurrentAttendanceStatus(APIView):
     def get(self, request, format=None):
         current_date = date.today()
-        children = Child.objects.all()
+        children = Child.objects.filter(is_active=True)
 
         attendance_status_dict = {}
 

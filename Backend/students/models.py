@@ -76,6 +76,8 @@ class Child(models.Model):
 
 
 
+
+
 ############################# Attendance ###############################
 class Attendance(models.Model):
     child = models.ForeignKey('Child', on_delete=models.CASCADE)
