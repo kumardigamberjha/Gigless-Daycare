@@ -93,209 +93,221 @@ class _ParentChildPageState extends State<ParentChildPage> {
       ),
       body: isLoading
           ? Center(child: CircularProgressIndicator())
-          : ListView.builder(
-              itemCount: childRecords.length,
-              itemBuilder: (context, index) {
-                DateTime birthDate =
-                    DateTime.parse(childRecords[index]['date_of_birth'] ?? '');
-                int age = DateTime.now().year - birthDate.year;
+          : childRecords.isEmpty
+              ? Center(
+                  child: Text(
+                    'No record available',
+                    style: TextStyle(fontSize: 18, color: Colors.grey),
+                  ),
+                )
+              : ListView.builder(
+                  itemCount: childRecords.length,
+                  itemBuilder: (context, index) {
+                    DateTime birthDate = DateTime.parse(
+                        childRecords[index]['date_of_birth'] ?? '');
+                    int age = DateTime.now().year - birthDate.year;
 
-                var todayAttendance = attendanceData.firstWhere(
-                  (attendance) =>
-                      attendance['child_id'] == childRecords[index]['id'],
-                  orElse: () => Map<String,
-                      dynamic>(), // Return an empty map if no attendance found
-                );
-                bool isPresent = todayAttendance.isNotEmpty
-                    ? todayAttendance['is_present'] ?? false
-                    : false;
+                    var todayAttendance = attendanceData.firstWhere(
+                      (attendance) =>
+                          attendance['child_id'] == childRecords[index]['id'],
+                      orElse: () => Map<String, dynamic>(),
+                    );
+                    bool isPresent = todayAttendance.isNotEmpty
+                        ? todayAttendance['is_present'] ?? false
+                        : false;
 
-                Color cardColor =
-                    isPresent ? Colors.lightGreen : Color(0xFFEF9A9A);
+                    Color cardColor =
+                        isPresent ? Colors.lightGreen : Color(0xFFEF9A9A);
 
-                return Padding(
-                  padding: const EdgeInsets.all(16.0),
-                  child: Card(
-                    elevation: 4,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(15),
-                    ),
-                    color: Colors.white,
-                    child: InkWell(
-                      onTap: () => viewChildDetail(childRecords[index]['id']),
-                      child: Container(
-                        decoration: BoxDecoration(
+                    return Padding(
+                      padding: const EdgeInsets.all(16.0),
+                      child: Card(
+                        elevation: 4,
+                        shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(15),
                         ),
-                        child: Padding(
-                          padding: const EdgeInsets.all(16.0),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Row(
+                        color: Colors.white,
+                        child: InkWell(
+                          onTap: () =>
+                              viewChildDetail(childRecords[index]['id']),
+                          child: Container(
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(15),
+                            ),
+                            child: Padding(
+                              padding: const EdgeInsets.all(16.0),
+                              child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  Column(
+                                  Row(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
                                     children: [
-                                      Container(
-                                        width: 80,
-                                        height: 80,
-                                        decoration: BoxDecoration(
-                                          shape: BoxShape.circle,
-                                          border: Border.all(
-                                              color: Color(0xFF0891B2),
-                                              width: 4),
-                                          image: DecorationImage(
-                                            image: NetworkImage(
-                                              childRecords[index]['image'] ??
-                                                  'https://via.placeholder.com/150',
+                                      Column(
+                                        children: [
+                                          Container(
+                                            width: 80,
+                                            height: 80,
+                                            decoration: BoxDecoration(
+                                              shape: BoxShape.circle,
+                                              border: Border.all(
+                                                  color: Color(0xFF0891B2),
+                                                  width: 4),
+                                              image: DecorationImage(
+                                                image: NetworkImage(
+                                                  childRecords[index]
+                                                          ['image'] ??
+                                                      'https://via.placeholder.com/150',
+                                                ),
+                                                fit: BoxFit.cover,
+                                              ),
                                             ),
-                                            fit: BoxFit.cover,
                                           ),
-                                        ),
+                                          Text(
+                                            '#${childRecords[index]['unique_id'] ?? ''}',
+                                            style: TextStyle(
+                                                fontSize: 16,
+                                                color: Colors.black),
+                                          ),
+                                        ],
                                       ),
-                                      Text(
-                                        '#${childRecords[index]['unique_id'] ?? ''}',
-                                        style: TextStyle(
-                                            fontSize: 16, color: Colors.black),
+                                      SizedBox(width: 16),
+                                      Expanded(
+                                        child: Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            Text(
+                                              '${childRecords[index]['first_name'] ?? ''}\n${childRecords[index]['last_name'] ?? ''}',
+                                              style: TextStyle(
+                                                fontSize: 16,
+                                                fontWeight: FontWeight.bold,
+                                                color: Colors.black,
+                                              ),
+                                            ),
+                                            SizedBox(height: 8),
+                                            Text(
+                                              'Age: $age',
+                                              style: TextStyle(
+                                                  fontSize: 16,
+                                                  color: Colors.black),
+                                            ),
+                                            SizedBox(height: 4),
+                                            Text(
+                                              'Gender: ${childRecords[index]['gender'] ?? ''}',
+                                              style: TextStyle(
+                                                  fontSize: 16,
+                                                  color: Colors.black),
+                                            ),
+                                            SizedBox(height: 4),
+                                            Text(
+                                              'Fees: \$${childRecords[index]['child_fees'] ?? ''}',
+                                              style: TextStyle(
+                                                  fontSize: 16,
+                                                  color: Colors.black),
+                                            ),
+                                            Text(
+                                              isPresent ? 'Present' : 'Absent',
+                                              style: TextStyle(
+                                                color: isPresent
+                                                    ? Colors.green
+                                                    : Colors.red,
+                                                fontWeight: FontWeight.bold,
+                                                fontSize: 16,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
                                       ),
                                     ],
                                   ),
-                                  SizedBox(width: 16),
-                                  Expanded(
-                                    child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Text(
-                                          '${childRecords[index]['first_name'] ?? ''}\n${childRecords[index]['last_name'] ?? ''}',
-                                          style: TextStyle(
-                                            fontSize: 16,
-                                            fontWeight: FontWeight.bold,
-                                            color: Colors.black,
+                                  SizedBox(height: 16),
+                                  Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceEvenly,
+                                    children: [
+                                      Expanded(
+                                        child: ElevatedButton.icon(
+                                          onPressed: () {
+                                            Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                builder: (context) =>
+                                                    ViewTodaysActivityPage(
+                                                        childId:
+                                                            childRecords[index]
+                                                                ['id']),
+                                              ),
+                                            );
+                                          },
+                                          icon: Icon(Icons.remove_red_eye),
+                                          label: Text(
+                                            "Today's Activity",
+                                            style: TextStyle(
+                                              fontWeight: FontWeight.bold,
+                                              fontSize: 16,
+                                              color: Colors.white,
+                                            ),
+                                          ),
+                                          style: ElevatedButton.styleFrom(
+                                            shape: RoundedRectangleBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(8.0),
+                                            ),
+                                            padding: EdgeInsets.symmetric(
+                                                horizontal: 16, vertical: 8),
+                                            backgroundColor: Colors
+                                                .purple, // Button background color
                                           ),
                                         ),
-                                        SizedBox(height: 8),
-                                        Text(
-                                          'Age: $age',
-                                          style: TextStyle(
+                                      ),
+                                      SizedBox(width: 16),
+                                      Expanded(
+                                        child: ElevatedButton.icon(
+                                          onPressed: () {
+                                            Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                builder: (context) =>
+                                                    ChildMediaDetailPage(
+                                                        childId:
+                                                            childRecords[index]
+                                                                ['id']),
+                                              ),
+                                            );
+                                          },
+                                          icon: Icon(Icons.remove_red_eye),
+                                          label: Text(
+                                            "Child Media",
+                                            style: TextStyle(
+                                              fontWeight: FontWeight.bold,
                                               fontSize: 16,
-                                              color: Colors.black),
-                                        ),
-                                        SizedBox(height: 4),
-                                        Text(
-                                          'Gender: ${childRecords[index]['gender'] ?? ''}',
-                                          style: TextStyle(
-                                              fontSize: 16,
-                                              color: Colors.black),
-                                        ),
-                                        SizedBox(height: 4),
-                                        Text(
-                                          'Fees: \$${childRecords[index]['child_fees'] ?? ''}',
-                                          style: TextStyle(
-                                              fontSize: 16,
-                                              color: Colors.black),
-                                        ),
-                                        Text(
-                                          isPresent ? 'Present' : 'Absent',
-                                          style: TextStyle(
-                                            color: isPresent
-                                                ? Colors.green
-                                                : Colors.red,
-                                            fontWeight: FontWeight.bold,
-                                            fontSize: 16,
+                                              color: Colors.white,
+                                            ),
+                                          ),
+                                          style: ElevatedButton.styleFrom(
+                                            shape: RoundedRectangleBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(8.0),
+                                            ),
+                                            padding: EdgeInsets.symmetric(
+                                                horizontal: 16, vertical: 8),
+                                            backgroundColor: Colors
+                                                .purple, // Button background color
                                           ),
                                         ),
-                                      ],
-                                    ),
+                                      ),
+                                    ],
                                   ),
                                 ],
                               ),
-                              SizedBox(height: 16),
-                              Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceEvenly,
-                                children: [
-                                  Expanded(
-                                    child: ElevatedButton.icon(
-                                      onPressed: () {
-                                        Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                            builder: (context) =>
-                                                ViewTodaysActivityPage(
-                                                    childId: childRecords[index]
-                                                        ['id']),
-                                          ),
-                                        );
-                                      },
-                                      icon: Icon(Icons.remove_red_eye),
-                                      label: Text(
-                                        "Today's Activity",
-                                        style: TextStyle(
-                                          fontWeight: FontWeight.bold,
-                                          fontSize: 16,
-                                          color: Colors.white,
-                                        ),
-                                      ),
-                                      style: ElevatedButton.styleFrom(
-                                        shape: RoundedRectangleBorder(
-                                          borderRadius:
-                                              BorderRadius.circular(8.0),
-                                        ),
-                                        padding: EdgeInsets.symmetric(
-                                            horizontal: 16, vertical: 8),
-                                        backgroundColor: Colors
-                                            .purple, // Button background color
-                                      ),
-                                    ),
-                                  ),
-                                  SizedBox(width: 16),
-                                  Expanded(
-                                    child: ElevatedButton.icon(
-                                      onPressed: () {
-                                        Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                            builder: (context) =>
-                                                ChildMediaDetailPage(
-                                                    childId: childRecords[index]
-                                                        ['id']),
-                                          ),
-                                        );
-                                      },
-                                      icon: Icon(Icons.remove_red_eye),
-                                      label: Text(
-                                        "Today's Activity",
-                                        style: TextStyle(
-                                          fontWeight: FontWeight.bold,
-                                          fontSize: 16,
-                                          color: Colors.white,
-                                        ),
-                                      ),
-                                      style: ElevatedButton.styleFrom(
-                                        shape: RoundedRectangleBorder(
-                                          borderRadius:
-                                              BorderRadius.circular(8.0),
-                                        ),
-                                        padding: EdgeInsets.symmetric(
-                                            horizontal: 16, vertical: 8),
-                                        backgroundColor: Colors
-                                            .purple, // Button background color
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ],
+                            ),
                           ),
                         ),
                       ),
-                    ),
-                  ),
-                );
-              },
-            ),
+                    );
+                  },
+                ),
     );
   }
 
@@ -324,5 +336,4 @@ class _ParentChildPageState extends State<ParentChildPage> {
       ),
     );
   }
-  //
 }

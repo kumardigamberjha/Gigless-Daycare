@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:childcare/Screens/Parent/ChildInformation/childinfo.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:childcare/Screens/Childrens/showchild.dart';
@@ -119,12 +120,61 @@ class _ParentDetailPageState extends State<ParentDetailPage> {
     }
   }
 
+  Future<void> deleteParent(BuildContext context) async {
+    final response = await http.delete(
+      Uri.parse(
+          'https://child.codingindia.co.in/deleteusersrecord/${widget.parentId}/'),
+    );
+
+    if (response.statusCode == 204) {
+      // If the server returns 204 No Content, navigate back to the parent list
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: Text('Parent deleted successfully!'),
+      ));
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(
+            builder: (context) =>
+                ParentListPage()), // Navigate to ParentChildPage
+      ); // Return true to indicate the parent was deleted
+    } else {
+      throw Exception('Failed to delete parent');
+    }
+  }
+
+  void _confirmDelete(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text("Delete Parent"),
+          content: Text("Are you sure you want to delete this parent?"),
+          actions: <Widget>[
+            TextButton(
+              child: Text("Cancel"),
+              onPressed: () {
+                Navigator.of(context).pop(); // Dismiss the dialog
+              },
+            ),
+            TextButton(
+              child: Text("Delete"),
+              onPressed: () {
+                Navigator.of(context).pop(); // Dismiss the dialog
+                deleteParent(context); // Call the deleteParent function
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          'Parents List',
+          'Parent Details',
           style: TextStyle(color: Colors.white),
         ),
         backgroundColor: Color(0xFF0891B2),
@@ -223,14 +273,27 @@ class _ParentDetailPageState extends State<ParentDetailPage> {
                               style: TextStyle(fontWeight: FontWeight.bold),
                             ),
                             subtitle: Text(child['date_of_birth']),
-                            // Add more child details as needed
                           ),
                         ),
-                        Divider(), // Add a divider after each ListTile
-                        SizedBox(height: 16), // Add spacing between list tiles
+                        Divider(),
+                        SizedBox(height: 16),
                       ],
                     );
                   }).toList(),
+                ),
+              ),
+              // Delete Button
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: 16.0),
+                child: ElevatedButton(
+                  onPressed: () {
+                    _confirmDelete(context); // Show confirmation dialog
+                  },
+                  style: ElevatedButton.styleFrom(
+                      backgroundColor:
+                          Colors.red, // Red color for delete action
+                      foregroundColor: Colors.white),
+                  child: Text("Delete Parent"),
                 ),
               ),
             ],

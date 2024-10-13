@@ -53,6 +53,27 @@ class _ChildRecordsPageState extends State<ChildRecordsPage>
     }
   }
 
+  Future<void> deleteChildRecord(int childId) async {
+    final response = await http.get(
+      Uri.parse(
+          'https://child.codingindia.co.in/student/delete-child-data/$childId/'),
+    );
+
+    if (response.statusCode == 200) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Child record deleted successfully.')),
+      );
+      setState(() {
+        // Remove the child record from the list after successful deletion
+        childRecords.removeWhere((child) => child['id'] == childId);
+      });
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Failed to delete child record.')),
+      );
+    }
+  }
+
   void viewChildDetail(int childId) {
     Navigator.push(
       context,
@@ -177,6 +198,11 @@ class _ChildRecordsPageState extends State<ChildRecordsPage>
                                 icon: Icon(Icons.edit, color: Colors.lightBlue),
                                 onPressed: () =>
                                     viewChildDetail(childRecords[index]['id']),
+                              ),
+                              IconButton(
+                                icon: Icon(Icons.delete, color: Colors.red),
+                                onPressed: () => deleteChildRecord(
+                                    childRecords[index]['id']),
                               ),
                             ],
                           ),

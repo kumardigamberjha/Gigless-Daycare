@@ -2,12 +2,12 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
-class StaffRegistrationPage extends StatefulWidget {
+class ParentRegistrationPage extends StatefulWidget {
   @override
-  _StaffRegistrationPageState createState() => _StaffRegistrationPageState();
+  _ParentRegistrationPageState createState() => _ParentRegistrationPageState();
 }
 
-class _StaffRegistrationPageState extends State<StaffRegistrationPage> {
+class _ParentRegistrationPageState extends State<ParentRegistrationPage> {
   final _formKey = GlobalKey<FormState>();
   final TextEditingController _usernameController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
@@ -16,8 +16,9 @@ class _StaffRegistrationPageState extends State<StaffRegistrationPage> {
   bool _passwordVisible = false;
   bool _isLoading = false;
 
-  Future<void> _registerStaff() async {
+  Future<void> _registerParent() async {
     if (_formKey.currentState!.validate()) {
+      // Show loading indicator
       setState(() {
         _isLoading = true;
       });
@@ -31,21 +32,23 @@ class _StaffRegistrationPageState extends State<StaffRegistrationPage> {
             'email': _emailController.text,
             'mobile_number': _mobileNumberController.text,
             'password': _passwordController.text,
-            'usertype': "Staff",
+            'usertype': "Parent", // Parent user type
           }),
         );
 
         final responseData = json.decode(response.body);
 
         if (response.statusCode == 201) {
+          // Hide loading indicator and show success message
           setState(() {
             _isLoading = false;
           });
           ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text('Staff registration successful!')),
+            SnackBar(content: Text('Parent registration successful!')),
           );
           Navigator.pop(context); // Close the registration page
         } else if (response.statusCode == 400) {
+          // Hide loading indicator and show error message
           setState(() {
             _isLoading = false;
           });
@@ -55,6 +58,7 @@ class _StaffRegistrationPageState extends State<StaffRegistrationPage> {
             SnackBar(content: Text(errorMessage)),
           );
         } else {
+          // Hide loading indicator and handle other errors
           setState(() {
             _isLoading = false;
           });
@@ -65,6 +69,7 @@ class _StaffRegistrationPageState extends State<StaffRegistrationPage> {
           );
         }
       } catch (e) {
+        // Hide loading indicator and handle exceptions
         setState(() {
           _isLoading = false;
         });
@@ -81,7 +86,7 @@ class _StaffRegistrationPageState extends State<StaffRegistrationPage> {
       backgroundColor: Color(0xFFF2F2F2),
       appBar: AppBar(
         title: Text(
-          'Staff Registration',
+          'Parent Registration',
           style: TextStyle(color: Colors.white),
         ),
         backgroundColor: Color(0xFF0891B2),
@@ -95,7 +100,7 @@ class _StaffRegistrationPageState extends State<StaffRegistrationPage> {
             children: [
               Center(
                 child: Text(
-                  'Create Staff Account',
+                  'Create Your Account',
                   style: TextStyle(
                     fontSize: 24,
                     fontWeight: FontWeight.bold,
@@ -215,14 +220,14 @@ class _StaffRegistrationPageState extends State<StaffRegistrationPage> {
                       },
                     ),
                     SizedBox(height: 24),
-                    // Register Button or Loading Indicator
+                    // Register Button
                     _isLoading
                         ? CircularProgressIndicator() // Show loading indicator while registering
                         : SizedBox(
                             width: double.infinity,
                             height: 50,
                             child: ElevatedButton(
-                              onPressed: _registerStaff,
+                              onPressed: _registerParent,
                               style: ElevatedButton.styleFrom(
                                 backgroundColor: Color(0xFF0891B2),
                                 shape: RoundedRectangleBorder(
@@ -251,6 +256,6 @@ class _StaffRegistrationPageState extends State<StaffRegistrationPage> {
 
 void main() {
   runApp(MaterialApp(
-    home: StaffRegistrationPage(),
+    home: ParentRegistrationPage(),
   ));
 }

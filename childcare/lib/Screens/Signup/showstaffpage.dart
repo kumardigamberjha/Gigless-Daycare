@@ -43,13 +43,16 @@ class _UserListPageState extends State<UserListPage> {
         itemCount: users.length,
         itemBuilder: (context, index) {
           return GestureDetector(
-            onTap: () {
-              Navigator.push(
+            onTap: () async {
+              final result = await Navigator.push(
                 context,
                 MaterialPageRoute(
                   builder: (context) => UserDetailsPage(user: users[index]),
                 ),
               );
+              if (result == true) {
+                fetchUsers(); // Refresh the list after deletion
+              }
             },
             child: Card(
               elevation: 3,
@@ -90,6 +93,55 @@ class UserDetailsPage extends StatelessWidget {
   final dynamic user;
 
   UserDetailsPage({required this.user});
+
+  Future<void> deleteUser(BuildContext context) async {
+    final response = await http.delete(
+      Uri.parse(
+          'https://child.codingindia.co.in/deleteusersrecord/${user['id']}/'),
+    );
+
+    if (response.statusCode == 204) {
+      // If the server returns 204 No Content, navigate back to the user list
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: Text('User deleted successfully!'),
+      ));
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(
+            builder: (context) =>
+                UserListPage()), // Navigate to ParentChildPage
+      );
+    } else {
+      throw Exception('Failed to delete user');
+    }
+  }
+
+  void _confirmDelete(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text("Delete User"),
+          content: Text("Are you sure you want to delete this user?"),
+          actions: <Widget>[
+            TextButton(
+              child: Text("Cancel"),
+              onPressed: () {
+                Navigator.of(context).pop(); // Dismiss the dialog
+              },
+            ),
+            TextButton(
+              child: Text("Delete"),
+              onPressed: () {
+                Navigator.of(context).pop(); // Dismiss the dialog
+                deleteUser(context); // Call the deleteUser function
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -158,6 +210,20 @@ class UserDetailsPage extends StatelessWidget {
             Divider(),
 
             // Add more ListTile widgets for additional user details
+
+            // Delete Button
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 16.0),
+              child: ElevatedButton(
+                onPressed: () {
+                  _confirmDelete(context); // Show confirmation dialog
+                },
+                style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.red, // Red color for delete action
+                    foregroundColor: Colors.white),
+                child: Text("Delete User"),
+              ),
+            ),
           ],
         ),
       ),

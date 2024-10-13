@@ -40,8 +40,9 @@ class _ChildCreateViewState extends State<ChildCreateView>
   int _currentStep = 0;
   late AnimationController _animationController;
   late Animation<double> _animation;
-  List<dynamic> rooms = [];
   int? selectedRoom;
+  List<dynamic> _rooms = [];
+  int _noOfRooms = 0;
 
   @override
   void initState() {
@@ -61,11 +62,11 @@ class _ChildCreateViewState extends State<ChildCreateView>
     final response = await http
         .get(Uri.parse('https://child.codingindia.co.in/student/rooms/'));
     if (response.statusCode == 200) {
+      final data = json.decode(response.body);
+
       setState(() {
-        rooms = json.decode(response.body);
-        if (rooms.isNotEmpty) {
-          selectedRoom = rooms[0]['id']; // Set initial value for the dropdown
-        }
+        _rooms = data['data']; // List of rooms
+        _noOfRooms = data['no_of_rooms']; // Number of rooms
       });
     } else {
       throw Exception('Failed to load rooms');
@@ -206,7 +207,7 @@ class _ChildCreateViewState extends State<ChildCreateView>
           ? Center(
               child: CircularProgressIndicator(),
             )
-          : rooms.isEmpty
+          : _rooms.isEmpty
               ? Center(
                   child:
                       CircularProgressIndicator(), // Show loader while fetching rooms
@@ -435,7 +436,8 @@ class _ChildCreateViewState extends State<ChildCreateView>
                                   labelText: 'Room',
                                   border: OutlineInputBorder(),
                                 ),
-                                items: rooms.map<DropdownMenuItem<int>>((room) {
+                                items:
+                                    _rooms.map<DropdownMenuItem<int>>((room) {
                                   return DropdownMenuItem<int>(
                                     value: room['id'],
                                     child: Text(room['name']),

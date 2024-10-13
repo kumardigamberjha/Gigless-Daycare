@@ -11,6 +11,7 @@ class _RoomPageState extends State<RoomPage> {
   final _formKey = GlobalKey<FormState>();
   String _name = '';
   List<dynamic> _rooms = [];
+  int _noOfRooms = 0;
 
   @override
   void initState() {
@@ -22,9 +23,14 @@ class _RoomPageState extends State<RoomPage> {
     final response = await http
         .get(Uri.parse('https://child.codingindia.co.in/student/rooms/'));
     if (response.statusCode == 200) {
+      final data = json.decode(response.body);
+
       setState(() {
-        _rooms = json.decode(response.body);
+        _rooms = data['data']; // List of rooms
+        _noOfRooms = data['no_of_rooms']; // Number of rooms
       });
+    } else {
+      throw Exception('Failed to load rooms');
     }
   }
 
