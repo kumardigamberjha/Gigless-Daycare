@@ -28,7 +28,7 @@ class Child(models.Model):
     date_of_birth = models.DateField()
     gender = models.CharField(max_length=10)
     blood_group = models.CharField(max_length=5, blank=True, null=True)
-    medical_history = models.TextField(blank=True)
+    medical_history = models.TextField(blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     image = models.ImageField(blank=True, null=True)
