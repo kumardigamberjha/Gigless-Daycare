@@ -1,7 +1,7 @@
 
 from rest_framework import generics
-from .models import Child, Attendance, DailyActivity, ChildMedia, LearningResource, Rooms
-from .serializers import ChildSerializer, ChildSerializerGet, AttendanceSerializer,  DailyActivitySerializer, ChildMediaSerializer, RoomSerializer
+from .models import Child, Attendance, DailyActivity, ChildMedia, LearningResource, Rooms, RoomMedia
+from .serializers import ChildSerializer, ChildSerializerGet, AttendanceSerializer,  DailyActivitySerializer, ChildMediaSerializer, RoomSerializer, RoomMediaSerializer, MultipleRoomMediaUploadSerializer
 from rest_framework import serializers
 from rest_framework.response import Response
 from django.db import IntegrityError
@@ -477,3 +477,79 @@ def AllChildOfSelectedRoom(request, id):
     except Exception as e:
         print("Error: ", e)
         return Response({'Error': f"{e}"}, status=400)
+
+
+
+# ******************************************* 
+
+@api_view(['POST'])
+def upload_multiple_media_files(request, room_id):
+    try:
+        room = Rooms.objects.get(id=room_id)
+    except Rooms.DoesNotExist:
+        return Response({'error': 'Room not found'}, status=status.HTTP_404_NOT_FOUND)
+
+    serializer = MultipleRoomMediaUploadSerializer(data=request.data, context={'room': room})
+    
+    if serializer.is_valid():
+        media_instances = serializer.save()
+        return Response({'success': 'Files uploaded successfully', 'media': [RoomMediaSerializer(media).data for media in media_instances]}, status=status.HTTP_201_CREATED)
+    
+    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+# READ: Get all media for a room
+@api_view(['GET'])
+def get_room_media(request, room_id):
+    try:
+        room = Rooms.objects.get(id=room_id)
+    except Rooms.DoesNotExist:
+        return Response({'error': 'Room not found'}, status=status.HTTP_404_NOT_FOUND)
+
+    last_media_date = RoomMedia.objects.filter(room=room).last()
+    print("Last Media Date: ", last_media_date)
+    media = RoomMedia.objects.filter(room=room, uploaded_at=last_media_date.uploaded_at)
+    serializer = RoomMediaSerializer(media, many=True)
+    return Response(serializer.data, status=status.HTTP_200_OK)
+
+
+# READ: Get a specific media file by ID
+@api_view(['GET'])
+def get_media_file(request, room_id, media_id):
+    try:
+        # last_item = RoomMedia.objects.filter()
+        media = RoomMedia.objects.get(room_id=room_id, id=media_id)
+    except RoomMedia.DoesNotExist:
+        return Response({'error': 'Media not found'}, status=status.HTTP_404_NOT_FOUND)
+
+    serializer = RoomMediaSerializer(media)
+    return Response(serializer.data, status=status.HTTP_200_OK)
+
+
+# UPDATE: Update a specific media file
+@api_view(['PUT'])
+def update_media_file(request, room_id, media_id):
+    try:
+        media = RoomMedia.objects.get(room_id=room_id, id=media_id)
+    except RoomMedia.DoesNotExist:
+        return Response({'error': 'Media not found'}, status=status.HTTP_404_NOT_FOUND)
+
+    serializer = RoomMediaSerializer(media, data=request.data)
+
+    if serializer.is_valid():
+        serializer.save()
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+# DELETE: Delete a specific media file
+@api_view(['DELETE'])
+def delete_media_file(request, room_id, media_id):
+    try:
+        media = RoomMedia.objects.get(room_id=room_id, id=media_id)
+    except RoomMedia.DoesNotExist:
+        return Response({'error': 'Media not found'}, status=status.HTTP_404_NOT_FOUND)
+
+    media.delete()
+    return Response({'success': 'Media deleted'}, status=status.HTTP_204_NO_CONTENT)

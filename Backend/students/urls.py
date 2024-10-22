@@ -34,4 +34,11 @@ urlpatterns = [
     # AllChildOfSelectedRoom
     path('rooms/children/<int:id>/', views.AllChildOfSelectedRoom, name='room-children'),
 
+    # Room Media 
+    path('rooms/<int:room_id>/upload/', views.upload_multiple_media_files, name='upload_multiple_media_files'),
+    path('rooms/<int:room_id>/media/', views.get_room_media, name='get_room_media'),
+    path('rooms/<int:room_id>/media/<int:media_id>/', views.get_media_file, name='get_media_file'),
+    path('rooms/<int:room_id>/media/<int:media_id>/update/', views.update_media_file, name='update_media_file'),
+    path('rooms/<int:room_id>/media/<int:media_id>/delete/', views.delete_media_file, name='delete_media_file'),
+
 ]

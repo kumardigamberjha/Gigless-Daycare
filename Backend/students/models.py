@@ -20,6 +20,16 @@ class Rooms(models.Model):
     def __str__(self):
         return self.name
 
+
+class RoomMedia(models.Model):
+    room = models.ForeignKey(Rooms, on_delete=models.CASCADE, related_name='media')
+    media_file = models.FileField(upload_to='room_media/')
+    uploaded_at = models.DateField(auto_now_add=True)  # Automatically saves the current date when the media is uploaded
+
+    def __str__(self):
+        return f'{self.room.name} - {self.media_file.name}'
+
+
 class Child(models.Model):
     first_name = models.CharField(max_length=100)
     last_name = models.CharField(max_length=100)
