@@ -100,7 +100,7 @@ class UserDetailsPage extends StatelessWidget {
           'https://child.codingindia.co.in/deleteusersrecord/${user['id']}/'),
     );
 
-    if (response.statusCode == 204) {
+    if (response.statusCode == 200) {
       // If the server returns 204 No Content, navigate back to the user list
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
         content: Text('User deleted successfully!'),

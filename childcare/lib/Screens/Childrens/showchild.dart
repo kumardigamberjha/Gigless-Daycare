@@ -1,3 +1,4 @@
+import 'package:childcare/Screens/Childrens/child_record.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
@@ -47,6 +48,62 @@ class _ShowChildDetailState extends State<ShowChildDetail> {
     } catch (error) {
       print('Error fetching data: $error');
     }
+  }
+
+  Future<void> deleteChild(BuildContext context) async {
+    try {
+      final response = await http.delete(
+        Uri.parse(
+            'https://child.codingindia.co.in/student/delete-child-data/${widget.childId}/'),
+      );
+
+      if (response.statusCode == 200) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Child deleted successfully!')),
+        );
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+              builder: (context) =>
+                  ChildRecordsPage()), // Navigate to ParentChildPage
+        ); // Go back to the previous screen
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Failed to delete child.')),
+        );
+      }
+    } catch (error) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Error: $error')),
+      );
+    }
+  }
+
+  void _confirmDelete(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text("Delete Child"),
+          content: Text("Are you sure you want to delete this child's data?"),
+          actions: <Widget>[
+            TextButton(
+              child: Text("Cancel"),
+              onPressed: () {
+                Navigator.of(context).pop(); // Dismiss the dialog
+              },
+            ),
+            TextButton(
+              child: Text("Delete"),
+              onPressed: () {
+                Navigator.of(context).pop(); // Dismiss the dialog
+                deleteChild(context); // Call the delete function
+              },
+            ),
+          ],
+        );
+      },
+    );
   }
 
   int calculateAge(DateTime birthDate) {
@@ -172,6 +229,18 @@ class _ShowChildDetailState extends State<ShowChildDetail> {
                 'Parents',
                 'Parent 1: ${childData['parent1_name'] ?? ''} - ${childData['parent1_contact_number'] ?? ''}\nParent 2: ${childData['parent2_name'] ?? ''} - ${childData['parent2_contact_number'] ?? ''}',
                 Icons.people,
+              ),
+              SizedBox(height: 20),
+              // Delete Button
+              ElevatedButton(
+                onPressed: () {
+                  _confirmDelete(context); // Show confirmation dialog
+                },
+                style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.red,
+                    foregroundColor: Colors.white // Red color for delete action
+                    ),
+                child: Text("Delete Child"),
               ),
             ],
           ),

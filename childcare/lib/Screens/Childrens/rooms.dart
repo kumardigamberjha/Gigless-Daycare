@@ -1,3 +1,5 @@
+import 'package:childcare/Screens/RoomMedia/uploadRoomMedia.dart';
+import 'package:childcare/Screens/RoomMedia/viewRoomMedia.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
@@ -136,6 +138,36 @@ class _RoomPageState extends State<RoomPage> {
                           icon: Icon(Icons.delete),
                           onPressed: () {
                             _deleteRoom(room['id']);
+                          },
+                        ),
+                        // New icon button to view media files
+                        IconButton(
+                          icon: Icon(Icons.visibility),
+                          onPressed: () {
+                            // Navigate to ViewMediaPage and pass roomId
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => ViewMediaPage(
+                                  roomId: room['id'],
+                                ),
+                              ),
+                            );
+                          },
+                        ),
+                        // Add Media button
+                        IconButton(
+                          icon: Icon(Icons.add_a_photo),
+                          onPressed: () {
+                            // Navigate to UploadMediaPage and pass roomId
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => UploadMediaPage(
+                                  roomId: room['id'],
+                                ),
+                              ),
+                            );
                           },
                         ),
                       ],

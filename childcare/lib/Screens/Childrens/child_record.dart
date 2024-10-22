@@ -16,6 +16,7 @@ class _ChildRecordsPageState extends State<ChildRecordsPage>
   List<Map<String, dynamic>> childRecords = [];
   late AnimationController _animationController;
   late Animation<double> _animation;
+  bool isLoading = true; // To track the loading state
 
   @override
   void initState() {
@@ -46,9 +47,13 @@ class _ChildRecordsPageState extends State<ChildRecordsPage>
 
       setState(() {
         childRecords = data.cast<Map<String, dynamic>>();
+        isLoading = false; // Set loading to false after data is fetched
         _animationController.forward();
       });
     } else {
+      setState(() {
+        isLoading = false; // Set loading to false if fetching fails
+      });
       print('Failed to load child records. Error: ${response.statusCode}');
     }
   }
@@ -110,109 +115,113 @@ class _ChildRecordsPageState extends State<ChildRecordsPage>
         ),
         backgroundColor: Color(0xFF0891B2),
       ),
-      body: childRecords.isEmpty
+      body: isLoading
           ? Center(
-              child: CircularProgressIndicator(),
+              child: CircularProgressIndicator(), // Show loading indicator
             )
-          : ListView.builder(
-              itemCount: childRecords.length,
-              itemBuilder: (context, index) {
-                DateTime birthDate =
-                    DateTime.parse(childRecords[index]['date_of_birth'] ?? '');
-                int age = DateTime.now().year - birthDate.year;
+          : childRecords.isEmpty
+              ? Center(
+                  child: Text(
+                    'No records available', // Show "No Record" message
+                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                  ),
+                )
+              : ListView.builder(
+                  itemCount: childRecords.length,
+                  itemBuilder: (context, index) {
+                    DateTime birthDate = DateTime.parse(
+                        childRecords[index]['date_of_birth'] ?? '');
+                    int age = DateTime.now().year - birthDate.year;
 
-                return Padding(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                  child: GestureDetector(
-                    onTap: () => viewChildDetail(childRecords[index]['id']),
-                    child: ScaleTransition(
-                      scale: _animation,
-                      child: Card(
-                        elevation: 2,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(15),
-                        ),
-                        child: Padding(
-                          padding: const EdgeInsets.all(16.0),
-                          child: Row(
-                            children: [
-                              ClipRRect(
-                                borderRadius: BorderRadius.circular(50),
-                                child: Image.network(
-                                  childRecords[index]['image'] ??
-                                      'https://via.placeholder.com/150',
-                                  width: 100,
-                                  height: 100,
-                                  fit: BoxFit.cover,
-                                ),
+                    return Padding(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 16, vertical: 8),
+                      child: GestureDetector(
+                        onTap: () => viewChildDetail(childRecords[index]['id']),
+                        child: ScaleTransition(
+                          scale: _animation,
+                          child: Card(
+                            elevation: 2,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(15),
+                            ),
+                            child: Padding(
+                              padding: const EdgeInsets.all(16.0),
+                              child: Row(
+                                children: [
+                                  ClipRRect(
+                                    borderRadius: BorderRadius.circular(50),
+                                    child: Image.network(
+                                      childRecords[index]['image'] ??
+                                          'https://via.placeholder.com/150',
+                                      width: 100,
+                                      height: 100,
+                                      fit: BoxFit.cover,
+                                    ),
+                                  ),
+                                  SizedBox(width: 16),
+                                  Expanded(
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                          '${childRecords[index]['first_name'] ?? ''} ${childRecords[index]['last_name'] ?? ''}',
+                                          style: TextStyle(
+                                            fontSize: 18,
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                        ),
+                                        SizedBox(height: 4),
+                                        Text(
+                                          'ID: ${childRecords[index]['unique_id'] ?? ''}',
+                                          style: TextStyle(
+                                            fontSize: 14,
+                                            color: Colors.grey,
+                                          ),
+                                        ),
+                                        SizedBox(height: 4),
+                                        Text(
+                                          'Age: $age',
+                                          style: TextStyle(
+                                            fontSize: 14,
+                                            color: Colors.grey,
+                                          ),
+                                        ),
+                                        SizedBox(height: 4),
+                                        Text(
+                                          'Gender: ${childRecords[index]['gender'] ?? ''}',
+                                          style: TextStyle(
+                                            fontSize: 14,
+                                            color: Colors.grey,
+                                          ),
+                                        ),
+                                        SizedBox(height: 4),
+                                        Text(
+                                          'Fees: \$${childRecords[index]['child_fees'] ?? ''}',
+                                          style: TextStyle(
+                                            fontSize: 14,
+                                            color: Colors.grey,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                  IconButton(
+                                    icon: Icon(Icons.edit,
+                                        color: Colors.lightBlue),
+                                    onPressed: () => viewChildDetail(
+                                        childRecords[index]['id']),
+                                  ),
+                                ],
                               ),
-                              SizedBox(width: 16),
-                              Expanded(
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      '${childRecords[index]['first_name'] ?? ''} ${childRecords[index]['last_name'] ?? ''}',
-                                      style: TextStyle(
-                                        fontSize: 18,
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                    ),
-                                    SizedBox(height: 4),
-                                    Text(
-                                      'ID: ${childRecords[index]['unique_id'] ?? ''}',
-                                      style: TextStyle(
-                                        fontSize: 14,
-                                        color: Colors.grey,
-                                      ),
-                                    ),
-                                    SizedBox(height: 4),
-                                    Text(
-                                      'Age: $age',
-                                      style: TextStyle(
-                                        fontSize: 14,
-                                        color: Colors.grey,
-                                      ),
-                                    ),
-                                    SizedBox(height: 4),
-                                    Text(
-                                      'Gender: ${childRecords[index]['gender'] ?? ''}',
-                                      style: TextStyle(
-                                        fontSize: 14,
-                                        color: Colors.grey,
-                                      ),
-                                    ),
-                                    SizedBox(height: 4),
-                                    Text(
-                                      'Fees: \$${childRecords[index]['child_fees'] ?? ''}',
-                                      style: TextStyle(
-                                        fontSize: 14,
-                                        color: Colors.grey,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                              IconButton(
-                                icon: Icon(Icons.edit, color: Colors.lightBlue),
-                                onPressed: () =>
-                                    viewChildDetail(childRecords[index]['id']),
-                              ),
-                              IconButton(
-                                icon: Icon(Icons.delete, color: Colors.red),
-                                onPressed: () => deleteChildRecord(
-                                    childRecords[index]['id']),
-                              ),
-                            ],
+                            ),
                           ),
                         ),
                       ),
-                    ),
-                  ),
-                );
-              },
-            ),
+                    );
+                  },
+                ),
     );
   }
 }

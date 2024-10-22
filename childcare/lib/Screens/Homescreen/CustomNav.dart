@@ -87,7 +87,6 @@ class CustomDrawer extends StatelessWidget {
                 );
               },
             ),
-            
           if (user != null &&
               (user!.userType != "Parent" && user!.userType == "Staff"))
             ListTile(

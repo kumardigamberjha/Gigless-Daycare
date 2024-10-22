@@ -19,7 +19,7 @@ class _ChildCreateViewState extends State<ChildCreateView>
   final TextEditingController dateOfBirthController = TextEditingController();
   final TextEditingController childFeesController = TextEditingController();
   final TextEditingController medicalHistoryController =
-      TextEditingController();
+      TextEditingController(); // Optional
   final TextEditingController emergencyContactNameController =
       TextEditingController();
   final TextEditingController emergencyContactNumberController =
@@ -31,11 +31,13 @@ class _ChildCreateViewState extends State<ChildCreateView>
   final TextEditingController parent1NameController = TextEditingController();
   final TextEditingController parent1ContactNumberController =
       TextEditingController();
-  final TextEditingController parent2NameController = TextEditingController();
+  final TextEditingController parent2NameController =
+      TextEditingController(); // Optional
   final TextEditingController parent2ContactNumberController =
-      TextEditingController();
+      TextEditingController(); // Optional
   bool isSubmitting = false;
   String selectedGender = 'Boy';
+  String? selectedBloodGroup;
   File? _selectedImage;
   int _currentStep = 0;
   late AnimationController _animationController;
@@ -65,8 +67,8 @@ class _ChildCreateViewState extends State<ChildCreateView>
       final data = json.decode(response.body);
 
       setState(() {
-        _rooms = data['data']; // List of rooms
-        _noOfRooms = data['no_of_rooms']; // Number of rooms
+        _rooms = data['data'];
+        _noOfRooms = data['no_of_rooms'];
       });
     } else {
       throw Exception('Failed to load rooms');
@@ -108,9 +110,8 @@ class _ChildCreateViewState extends State<ChildCreateView>
           'first_name': firstNameController.text,
           'last_name': lastNameController.text,
           'date_of_birth': formattedDateOfBirth,
-          'medical_history': medicalHistoryController.text,
-          'emergency_contact_name': emergencyContactNameController.text,
-          'emergency_contact_number': emergencyContactNumberController.text,
+          'blood_group': selectedBloodGroup ?? '',
+          'medical_history': medicalHistoryController.text, // Optional field
           'gender': selectedGender,
           'child_fees': childFeesController.text,
           'address': addressController.text,
@@ -122,6 +123,7 @@ class _ChildCreateViewState extends State<ChildCreateView>
           'parent2_name': parent2NameController.text,
           'parent2_contact_number': parent2ContactNumberController.text,
           'room': selectedRoom.toString(),
+          'is_active': 'true', // Ensure is_active is set to true
         });
 
       if (_selectedImage != null) {
@@ -209,8 +211,7 @@ class _ChildCreateViewState extends State<ChildCreateView>
             )
           : _rooms.isEmpty
               ? Center(
-                  child:
-                      CircularProgressIndicator(), // Show loader while fetching rooms
+                  child: CircularProgressIndicator(),
                 )
               : Padding(
                   padding: const EdgeInsets.all(16.0),
@@ -367,18 +368,47 @@ class _ChildCreateViewState extends State<ChildCreateView>
                                 },
                               ),
                               SizedBox(height: 10),
+                              DropdownButtonFormField<String>(
+                                value: selectedBloodGroup,
+                                onChanged: (String? value) {
+                                  setState(() {
+                                    selectedBloodGroup = value;
+                                  });
+                                },
+                                decoration: InputDecoration(
+                                  labelText: 'Blood Group',
+                                  border: OutlineInputBorder(),
+                                ),
+                                items: [
+                                  'A+',
+                                  'A-',
+                                  'B+',
+                                  'B-',
+                                  'AB+',
+                                  'AB-',
+                                  'O+',
+                                  'O-'
+                                ].map<DropdownMenuItem<String>>((String value) {
+                                  return DropdownMenuItem<String>(
+                                    value: value,
+                                    child: Text(value),
+                                  );
+                                }).toList(),
+                                validator: (value) {
+                                  if (value == null || value.isEmpty) {
+                                    return 'Please select blood group';
+                                  }
+                                  return null;
+                                },
+                              ),
+                              SizedBox(height: 10),
                               TextFormField(
                                 controller: medicalHistoryController,
                                 decoration: InputDecoration(
                                   labelText: 'Medical History',
                                   border: OutlineInputBorder(),
                                 ),
-                                validator: (value) {
-                                  if (value == null || value.isEmpty) {
-                                    return 'Please enter medical history';
-                                  }
-                                  return null;
-                                },
+                                // Removed validation as it's optional
                               ),
                               SizedBox(height: 10),
                               TextFormField(
@@ -391,35 +421,6 @@ class _ChildCreateViewState extends State<ChildCreateView>
                                 validator: (value) {
                                   if (value == null || value.isEmpty) {
                                     return 'Please enter fees';
-                                  }
-                                  return null;
-                                },
-                              ),
-                              SizedBox(height: 10),
-                              TextFormField(
-                                controller: emergencyContactNameController,
-                                decoration: InputDecoration(
-                                  labelText: 'Emergency Contact Name',
-                                  border: OutlineInputBorder(),
-                                ),
-                                validator: (value) {
-                                  if (value == null || value.isEmpty) {
-                                    return 'Please enter emergency contact name';
-                                  }
-                                  return null;
-                                },
-                              ),
-                              SizedBox(height: 10),
-                              TextFormField(
-                                controller: emergencyContactNumberController,
-                                decoration: InputDecoration(
-                                  labelText: 'Emergency Contact Number',
-                                  border: OutlineInputBorder(),
-                                ),
-                                keyboardType: TextInputType.phone,
-                                validator: (value) {
-                                  if (value == null || value.isEmpty) {
-                                    return 'Please enter emergency contact number';
                                   }
                                   return null;
                                 },
@@ -550,12 +551,6 @@ class _ChildCreateViewState extends State<ChildCreateView>
                                   labelText: 'Parent 2 Name',
                                   border: OutlineInputBorder(),
                                 ),
-                                validator: (value) {
-                                  if (value == null || value.isEmpty) {
-                                    return 'Please enter parent 2 name';
-                                  }
-                                  return null;
-                                },
                               ),
                               SizedBox(height: 10),
                               TextFormField(
@@ -565,12 +560,6 @@ class _ChildCreateViewState extends State<ChildCreateView>
                                   border: OutlineInputBorder(),
                                 ),
                                 keyboardType: TextInputType.phone,
-                                validator: (value) {
-                                  if (value == null || value.isEmpty) {
-                                    return 'Please enter parent 2 contact number';
-                                  }
-                                  return null;
-                                },
                               ),
                             ],
                           ),
