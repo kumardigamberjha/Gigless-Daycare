@@ -3,6 +3,8 @@ from . import views
 
 urlpatterns = [
     path('', views.ChildDetailForParent, name='index'),  
+    path('childroomforparents/<int:id>/', views.ChildRoomForParent, name='childroomforparents'),  
+
     path('childtodaysattendancep/', views.CurrentAttendanceStatusP.as_view(), name='childtodaysattendancep'),  
     path('createappointments/', views.create_parent_appointment, name='create-parent-appointment'),
     path('appointmentstatus/', views.parent_appointment_status, name='parent_appointment_status'),

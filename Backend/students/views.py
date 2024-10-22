@@ -493,7 +493,7 @@ def upload_multiple_media_files(request, room_id):
     
     if serializer.is_valid():
         media_instances = serializer.save()
-        return Response({'success': 'Files uploaded successfully', 'media': [RoomMediaSerializer(media).data for media in media_instances]}, status=status.HTTP_201_CREATED)
+        return Response({'success': 'Files uploaded successfully', 'message': 'New media has been uploaded to the room.', 'media': [RoomMediaSerializer(media).data for media in media_instances]}, status=status.HTTP_201_CREATED)
     
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 

@@ -16,8 +16,8 @@ from Backend.settings import EMAIL_HOST_USER
 from .models import ParentAppointment, ParentModel
 from .serializers  import ParentAppointmentSerializer
 from authapp.models import CustomUser
-from students.models import Child, Attendance, DailyActivity, ChildMedia
-from students.serializers import ChildSerializerGet, AttendanceStatusSerializer, DailyActivitySerializer, ChildSerializer, ChildMediaSerializer
+from students.models import Child, Attendance, DailyActivity, ChildMedia, Rooms, RoomMedia
+from students.serializers import ChildSerializerGet, AttendanceStatusSerializer, DailyActivitySerializer, ChildSerializer, ChildMediaSerializer, RoomSerializer, RoomMediaSerializer
 
 from Accounts.models import Fee
 from Accounts.serializers import FeeSerializer
@@ -33,6 +33,27 @@ def ChildDetailForParent(request):
     childinfo = Child.objects.filter(parent1_contact_number__icontains=user.mobile_number)
     childser = ChildSerializerGet(childinfo, many=True)
     return Response({'error': childser.data}, status=200)
+
+
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def ChildRoomForParent(request, id):
+    try:
+        childinfo = Child.objects.get(id=id).room  # Make sure this gets the room object
+        last_media_date = RoomMedia.objects.filter(room=childinfo).last()
+
+        if last_media_date:
+            media = RoomMedia.objects.filter(room=childinfo, uploaded_at=last_media_date.uploaded_at)
+            serializer = RoomMediaSerializer(media, many=True)
+            return Response({'media': serializer.data}, status=200)
+
+        return Response({'media': []}, status=200)
+
+    except Child.DoesNotExist:
+        return Response({'error': 'Child not found'}, status=404)
+    except Exception as e:
+        return Response({'error': str(e)}, status=500)
 
 
 @permission_classes([IsAuthenticated])

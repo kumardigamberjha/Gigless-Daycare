@@ -67,23 +67,32 @@ class Child(models.Model):
 
         # Optionally compress image if one is uploaded
         if self.image:
-            img = Image.open(self.image)
-            output = io.BytesIO()
-            img.save(output, format='JPEG', quality=60)  # Adjust quality for compression
-            output.seek(0)
-            self.image = InMemoryUploadedFile(output, 'ImageField', self.image.name, 'image/jpeg', output.getbuffer().nbytes, None)
-        
+            self.image = self.compress_image(self.image)
+
         super().save(*args, **kwargs)
 
     def generate_unique_id(self):
         # Generate a unique 10-character alphanumeric string
         return get_random_string(length=10)
 
+    def compress_image(self, image):
+        # Open the image using Pillow
+        img = Image.open(image)
+
+        # Check if image mode is not 'RGB' and convert it
+        if img.mode != 'RGB':
+            img = img.convert('RGB')
+
+        output = io.BytesIO()
+        # Save the image into output with JPEG format and 60% quality
+        img.save(output, format='JPEG', quality=60)
+        output.seek(0)
+
+        # Return a compressed image as an InMemoryUploadedFile
+        return InMemoryUploadedFile(output, 'ImageField', image.name, 'image/jpeg', output.getbuffer().nbytes, None)
+
     def __str__(self):
         return f"{self.first_name} {self.last_name}"
-
-
-
 
 
 ############################# Attendance ###############################
