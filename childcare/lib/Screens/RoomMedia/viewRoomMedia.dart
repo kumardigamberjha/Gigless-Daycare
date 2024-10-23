@@ -31,7 +31,7 @@ class _ViewMediaPageState extends State<ViewMediaPage> {
 
   Future<void> _deleteMediaFile(int mediaId) async {
     final response = await http.delete(Uri.parse(
-        'https://child.codingindia.co.in/student/rooms/media/$mediaId/'));
+        'https://child.codingindia.co.in/student/rooms/${widget.roomId}/media/$mediaId/delete/'));
 
     if (response.statusCode == 204) {
       setState(() {

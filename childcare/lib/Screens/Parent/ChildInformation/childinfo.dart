@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:childcare/Screens/ChildMedia/show_child_media.dart';
 import 'package:childcare/Screens/Childrens/showchild.dart';
 import 'package:childcare/Screens/DailyActivity/view_todays_activity.dart';
+import 'package:childcare/Screens/Parent/ChildInformation/roomMedia.dart';
 import 'package:childcare/Screens/Parent/FeesList/fee.dart';
 import 'package:childcare/Screens/Parent/childmediaP.dart';
 import 'package:flutter/material.dart';
@@ -223,8 +224,8 @@ class _ParentChildPageState extends State<ParentChildPage> {
                                   ),
                                   SizedBox(height: 16),
                                   Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceEvenly,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
                                     children: [
                                       Expanded(
                                         child: ElevatedButton.icon(
@@ -255,7 +256,7 @@ class _ParentChildPageState extends State<ParentChildPage> {
                                                   BorderRadius.circular(8.0),
                                             ),
                                             padding: EdgeInsets.symmetric(
-                                                horizontal: 16, vertical: 8),
+                                                horizontal: 16, vertical: 12),
                                             backgroundColor: Colors
                                                 .purple, // Button background color
                                           ),
@@ -263,38 +264,82 @@ class _ParentChildPageState extends State<ParentChildPage> {
                                       ),
                                       SizedBox(width: 16),
                                       Expanded(
-                                        child: ElevatedButton.icon(
-                                          onPressed: () {
-                                            Navigator.push(
-                                              context,
-                                              MaterialPageRoute(
-                                                builder: (context) =>
-                                                    ChildMediaDetailPage(
-                                                        childId:
-                                                            childRecords[index]
-                                                                ['id']),
+                                        child: Column(
+                                          children: [
+                                            ElevatedButton.icon(
+                                              onPressed: () {
+                                                Navigator.push(
+                                                  context,
+                                                  MaterialPageRoute(
+                                                    builder: (context) =>
+                                                        ChildMediaDetailPage(
+                                                            childId:
+                                                                childRecords[
+                                                                        index]
+                                                                    ['id']),
+                                                  ),
+                                                );
+                                              },
+                                              icon: Icon(Icons.photo),
+                                              label: Text(
+                                                "Child Media",
+                                                style: TextStyle(
+                                                  fontWeight: FontWeight.bold,
+                                                  fontSize: 16,
+                                                  color: Colors.white,
+                                                ),
                                               ),
-                                            );
-                                          },
-                                          icon: Icon(Icons.remove_red_eye),
-                                          label: Text(
-                                            "Child Media",
-                                            style: TextStyle(
-                                              fontWeight: FontWeight.bold,
-                                              fontSize: 16,
-                                              color: Colors.white,
+                                              style: ElevatedButton.styleFrom(
+                                                shape: RoundedRectangleBorder(
+                                                  borderRadius:
+                                                      BorderRadius.circular(
+                                                          8.0),
+                                                ),
+                                                padding: EdgeInsets.symmetric(
+                                                    horizontal: 16,
+                                                    vertical: 12),
+                                                backgroundColor: Colors
+                                                    .purple, // Button background color
+                                              ),
                                             ),
-                                          ),
-                                          style: ElevatedButton.styleFrom(
-                                            shape: RoundedRectangleBorder(
-                                              borderRadius:
-                                                  BorderRadius.circular(8.0),
+                                            SizedBox(height: 8),
+                                            ElevatedButton.icon(
+                                              onPressed: () {
+                                                Navigator.push(
+                                                  context,
+                                                  MaterialPageRoute(
+                                                    builder: (context) =>
+                                                        ChildRoomMedia(
+                                                            childId:
+                                                                childRecords[
+                                                                        index]
+                                                                    ['id']),
+                                                  ),
+                                                );
+                                              },
+                                              icon: Icon(Icons.video_library),
+                                              label: Text(
+                                                "Room Media",
+                                                style: TextStyle(
+                                                  fontWeight: FontWeight.bold,
+                                                  fontSize: 16,
+                                                  color: Colors.white,
+                                                ),
+                                              ),
+                                              style: ElevatedButton.styleFrom(
+                                                shape: RoundedRectangleBorder(
+                                                  borderRadius:
+                                                      BorderRadius.circular(
+                                                          8.0),
+                                                ),
+                                                padding: EdgeInsets.symmetric(
+                                                    horizontal: 16,
+                                                    vertical: 12),
+                                                backgroundColor: Colors
+                                                    .purple, // Button background color
+                                              ),
                                             ),
-                                            padding: EdgeInsets.symmetric(
-                                                horizontal: 16, vertical: 8),
-                                            backgroundColor: Colors
-                                                .purple, // Button background color
-                                          ),
+                                          ],
                                         ),
                                       ),
                                     ],
