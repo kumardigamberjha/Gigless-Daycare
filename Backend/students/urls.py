@@ -5,6 +5,8 @@ urlpatterns = [
     path('children/', views.ChildListCreateView.as_view(), name='child-list-create'),
     path('children/<int:pk>/', views.ChildDetailView.as_view(), name='child-detail'),
     path('child-list/', views.ChildListView.as_view(), name='child-list'),
+    path('delete-child-data/<int:id>/', views.DeleteChildData, name='delete-child-data'),
+
     path('mark_attendance/', views.MarkAttendanceView.as_view(), name='mark-attendance'),
     # path('get-student-status/', views.get_student_status_on_date, name='get_student_status'),
     path('api/current-attendance/', views.CurrentAttendanceStatus.as_view(), name='current_attendance_status_api'),
@@ -31,5 +33,12 @@ urlpatterns = [
 
     # AllChildOfSelectedRoom
     path('rooms/children/<int:id>/', views.AllChildOfSelectedRoom, name='room-children'),
+
+    # Room Media 
+    path('rooms/<int:room_id>/upload/', views.upload_multiple_media_files, name='upload_multiple_media_files'),
+    path('rooms/<int:room_id>/media/', views.get_room_media, name='get_room_media'),
+    path('rooms/<int:room_id>/media/<int:media_id>/', views.get_media_file, name='get_media_file'),
+    path('rooms/<int:room_id>/media/<int:media_id>/update/', views.update_media_file, name='update_media_file'),
+    path('rooms/<int:room_id>/media/<int:media_id>/delete/', views.delete_media_file, name='delete_media_file'),
 
 ]

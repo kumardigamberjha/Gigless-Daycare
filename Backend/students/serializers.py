@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Child, Attendance, DailyActivity, ChildMedia, LearningResource, Rooms
+from .models import Child, Attendance, DailyActivity, ChildMedia, LearningResource, Rooms, RoomMedia
 
 
 class ChildSerializer(serializers.ModelSerializer):
@@ -66,3 +66,27 @@ class RoomSerializer(serializers.ModelSerializer):
     class Meta:
         model = Rooms
         fields = '__all__'
+
+
+class RoomMediaSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = RoomMedia
+        fields = '__all__'
+
+
+class MultipleRoomMediaUploadSerializer(serializers.Serializer):
+    media_files = serializers.ListField(
+        child=serializers.FileField(),
+        write_only=True
+    )
+
+    def create(self, validated_data):
+        room = self.context['room']
+        media_files = validated_data.pop('media_files')
+        media_instances = []
+        
+        for media_file in media_files:
+            media_instance = RoomMedia.objects.create(room=room, media_file=media_file)
+            media_instances.append(media_instance)
+
+        return media_instances

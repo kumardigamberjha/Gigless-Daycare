@@ -1,7 +1,7 @@
 
 from rest_framework import generics
-from .models import Child, Attendance, DailyActivity, ChildMedia, LearningResource, Rooms
-from .serializers import ChildSerializer, ChildSerializerGet, AttendanceSerializer,  DailyActivitySerializer, ChildMediaSerializer, RoomSerializer
+from .models import Child, Attendance, DailyActivity, ChildMedia, LearningResource, Rooms, RoomMedia
+from .serializers import ChildSerializer, ChildSerializerGet, AttendanceSerializer,  DailyActivitySerializer, ChildMediaSerializer, RoomSerializer, RoomMediaSerializer, MultipleRoomMediaUploadSerializer
 from rest_framework import serializers
 from rest_framework.response import Response
 from django.db import IntegrityError
@@ -28,32 +28,34 @@ class ChildListCreateView(generics.ListCreateAPIView):
         try:
             serializer = self.get_serializer(data=request.data)
             serializer.is_valid(raise_exception=True)
-            
+
             # Save the child instance to the database
             self.perform_create(serializer)
 
             return Response({'message': 'Child created successfully'}, status=201)
+        
         except serializers.ValidationError as e:
+            # Extract validation errors
             errors_dict = {}
             for field, errors in e.detail.items():
+                # Check for required field errors
                 if 'This field may not be blank.' in errors:
                     errors_dict[field] = f"{field.capitalize()} is required."
-                    print(errors_dict[field])
-                    return Response({'error':errors_dict[field]}, status=400)
                 else:
-                    print("No")
+                    # For other types of errors, just show the first error in the list
                     errors_dict[field] = errors[0]
-            if 'unique' in str(e).lower():
-                print(f"{errors_dict['name']} already exists.", e)
-                return Response({'error': 'An unexpected error occurred while creating the child.'}, status=400)
-            
-            return Response({'error': str(e)}, status=400)
-        except IntegrityError as e:
-                return Response({'error': 'An unexpected error occurred while creating the child.'}, status=500)
-        except Exception as e:
-            print("Sp")
-            return Response({'error': str(e)}, status=500)
 
+            return Response({'error': errors_dict}, status=400)
+        
+        except IntegrityError as e:
+            print("Error: ", e)
+            # Handle unique constraint or database integrity issues
+            return Response({'error': 'An integrity error occurred while creating the child.'}, status=400)
+        
+        except Exception as e:
+            print("Error: ", e)
+            # Generic exception handler for unexpected errors
+            return Response({'error': str(e)}, status=500)
 
 
 class ChildListView(generics.ListAPIView):
@@ -75,8 +77,6 @@ class ChildDetailView(generics.RetrieveUpdateDestroyAPIView):
             gender = request.data.get('gender')
             blood_group = request.data.get('blood_group')
             medical_history = request.data.get('medical_history')
-            emergency_contact_name = request.data.get('emergency_contact_name')
-            emergency_contact_number = request.data.get('emergency_contact_number')
             image = request.data.get('image')
             child_fees = request.data.get('child_fees')
             address = request.data.get('address')
@@ -99,8 +99,6 @@ class ChildDetailView(generics.RetrieveUpdateDestroyAPIView):
             data.gender = gender
             data.blood_group = blood_group
             data.medical_history = medical_history
-            data.emergency_contact_name = emergency_contact_name
-            data.emergency_contact_number = emergency_contact_number
             print("Image: ", image)
             try:
                 if image.startswith('/media') or image.startswith('http'):
@@ -132,6 +130,13 @@ class ChildDetailView(generics.RetrieveUpdateDestroyAPIView):
         except Exception as e:
             print("Error: ", e)
             return Response({"detail": "An unexpected error occurred."}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        
+
+@api_view(['DELETE'])
+def DeleteChildData(request, id):
+    child = Child.objects.get(id = id)
+    child.delete()
+    return Response({'Status': "Success"}, status=200)
 
 
 
@@ -166,7 +171,7 @@ class MarkAttendanceView(generics.CreateAPIView):
 class CurrentAttendanceStatus(APIView):
     def get(self, request, format=None):
         current_date = date.today()
-        children = Child.objects.all()
+        children = Child.objects.filter(is_active=True)
 
         attendance_status_dict = {}
 
@@ -420,8 +425,9 @@ def create_learning_resource(request):
 @api_view(['GET'])
 def room_list(request):
     rooms = Rooms.objects.all()
+    no_of_rooms = rooms.count()
     serializer = RoomSerializer(rooms, many=True)
-    return Response(serializer.data)
+    return Response({'data':serializer.data, 'no_of_rooms':no_of_rooms})
 
 @api_view(['POST'])
 def room_create(request):
@@ -471,3 +477,79 @@ def AllChildOfSelectedRoom(request, id):
     except Exception as e:
         print("Error: ", e)
         return Response({'Error': f"{e}"}, status=400)
+
+
+
+# ******************************************* 
+
+@api_view(['POST'])
+def upload_multiple_media_files(request, room_id):
+    try:
+        room = Rooms.objects.get(id=room_id)
+    except Rooms.DoesNotExist:
+        return Response({'error': 'Room not found'}, status=status.HTTP_404_NOT_FOUND)
+
+    serializer = MultipleRoomMediaUploadSerializer(data=request.data, context={'room': room})
+    
+    if serializer.is_valid():
+        media_instances = serializer.save()
+        return Response({'success': 'Files uploaded successfully', 'message': 'New media has been uploaded to the room.', 'media': [RoomMediaSerializer(media).data for media in media_instances]}, status=status.HTTP_201_CREATED)
+    
+    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+# READ: Get all media for a room
+@api_view(['GET'])
+def get_room_media(request, room_id):
+    try:
+        room = Rooms.objects.get(id=room_id)
+    except Rooms.DoesNotExist:
+        return Response({'error': 'Room not found'}, status=status.HTTP_404_NOT_FOUND)
+
+    last_media_date = RoomMedia.objects.filter(room=room).last()
+    print("Last Media Date: ", last_media_date)
+    media = RoomMedia.objects.filter(room=room, uploaded_at=last_media_date.uploaded_at)
+    serializer = RoomMediaSerializer(media, many=True)
+    return Response(serializer.data, status=status.HTTP_200_OK)
+
+
+# READ: Get a specific media file by ID
+@api_view(['GET'])
+def get_media_file(request, room_id, media_id):
+    try:
+        # last_item = RoomMedia.objects.filter()
+        media = RoomMedia.objects.get(room_id=room_id, id=media_id)
+    except RoomMedia.DoesNotExist:
+        return Response({'error': 'Media not found'}, status=status.HTTP_404_NOT_FOUND)
+
+    serializer = RoomMediaSerializer(media)
+    return Response(serializer.data, status=status.HTTP_200_OK)
+
+
+# UPDATE: Update a specific media file
+@api_view(['PUT'])
+def update_media_file(request, room_id, media_id):
+    try:
+        media = RoomMedia.objects.get(room_id=room_id, id=media_id)
+    except RoomMedia.DoesNotExist:
+        return Response({'error': 'Media not found'}, status=status.HTTP_404_NOT_FOUND)
+
+    serializer = RoomMediaSerializer(media, data=request.data)
+
+    if serializer.is_valid():
+        serializer.save()
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+# DELETE: Delete a specific media file
+@api_view(['DELETE'])
+def delete_media_file(request, room_id, media_id):
+    try:
+        media = RoomMedia.objects.get(room_id=room_id, id=media_id)
+    except RoomMedia.DoesNotExist:
+        return Response({'error': 'Media not found'}, status=status.HTTP_404_NOT_FOUND)
+
+    media.delete()
+    return Response({'success': 'Media deleted'}, status=status.HTTP_204_NO_CONTENT)
