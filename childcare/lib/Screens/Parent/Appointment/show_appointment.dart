@@ -35,6 +35,10 @@ class _AppointmentStatusPageState extends State<AppointmentStatusPage> {
           appointments = List<Map<String, dynamic>>.from(responseData);
           _isLoading = false;
         });
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => AppointmentStatusPage()),
+        );
         // Store appointments locally
         prefs.setString('appointments', json.encode(responseData));
       } else {

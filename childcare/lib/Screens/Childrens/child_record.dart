@@ -5,6 +5,9 @@ import 'package:childcare/Screens/Attendance/monthlyAttendancePage.dart';
 import 'package:childcare/Screens/Childrens/showchild.dart';
 import 'package:childcare/Screens/DailyActivity/create_daily_activity.dart';
 import 'package:childcare/Screens/ChildMedia/add_child_media.dart';
+import 'package:childcare/Screens/Childrens/edit_child_page.dart';
+
+import 'edit_child_page.dart'; // Import the new page
 
 class ChildRecordsPage extends StatefulWidget {
   @override
@@ -77,6 +80,19 @@ class _ChildRecordsPageState extends State<ChildRecordsPage>
         builder: (context) => AddChildMediaPage(childId: childId),
       ),
     );
+  }
+
+  void editChildDetail(int childId) async {
+    bool? result = await Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => EditChildPage(childId: childId),
+      ),
+    );
+
+    if (result == true) {
+      fetchData(); // Refresh the list after editing
+    }
   }
 
   @override
@@ -176,7 +192,7 @@ class _ChildRecordsPageState extends State<ChildRecordsPage>
                               IconButton(
                                 icon: Icon(Icons.edit, color: Colors.lightBlue),
                                 onPressed: () =>
-                                    viewChildDetail(childRecords[index]['id']),
+                                    editChildDetail(childRecords[index]['id']),
                               ),
                             ],
                           ),

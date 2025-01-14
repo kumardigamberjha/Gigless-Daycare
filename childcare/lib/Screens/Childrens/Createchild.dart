@@ -58,17 +58,28 @@ class _ChildCreateViewState extends State<ChildCreateView>
   }
 
   Future<void> _fetchRooms() async {
-    final response = await http
-        .get(Uri.parse('https://child.codingindia.co.in/student/rooms/'));
-    if (response.statusCode == 200) {
-      setState(() {
-        rooms = json.decode(response.body);
-        if (rooms.isNotEmpty) {
-          selectedRoom = rooms[0]['id']; // Set initial value for the dropdown
+    try {
+      final response = await http
+          .get(Uri.parse('https://child.codingindia.co.in/student/rooms/'));
+
+      if (response.statusCode == 200) {
+        final data = json.decode(response.body);
+
+        if (data is Map && data.containsKey('data')) {
+          setState(() {
+            rooms = data['data'];
+            if (rooms.isNotEmpty) {
+              selectedRoom = rooms[0]['id']; // Set initial value for the dropdown
+            }
+          });
+        } else {
+          throw Exception('Unexpected response format');
         }
-      });
-    } else {
-      throw Exception('Failed to load rooms');
+      } else {
+        throw Exception('Failed to load rooms');
+      }
+    } catch (error) {
+      _showErrorDialog('Error', 'Failed to fetch rooms: $error');
     }
   }
 

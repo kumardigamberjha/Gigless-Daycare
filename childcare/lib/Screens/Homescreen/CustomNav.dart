@@ -20,6 +20,7 @@ import 'package:childcare/Screens/Parent/ChildInformation/childinfo.dart';
 import 'package:childcare/Screens/Parent/FeesList/feelist.dart';
 import 'package:childcare/Screens/Parent/eventp.dart';
 import 'package:childcare/Screens/Signup/CreateSatff.dart';
+import 'package:childcare/Screens/Signup/CreateparentByUser.dart';
 import 'package:childcare/Screens/Signup/ParentSignUpScreen.dart';
 import 'package:childcare/Screens/Signup/showParentpage.dart';
 import 'package:childcare/Screens/Signup/showstaffpage.dart';
@@ -203,6 +204,20 @@ class CustomDrawer extends StatelessWidget {
                         context,
                         MaterialPageRoute(
                           builder: (context) => StaffRegistrationPage(),
+                        ),
+                      );
+                    },
+                  ),
+                ),
+                Padding(
+                  padding: EdgeInsets.only(left: 16.0),
+                  child: ListTile(
+                    title: Text('Add Parent'),
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => ParentRegistrationPage(),
                         ),
                       );
                     },
