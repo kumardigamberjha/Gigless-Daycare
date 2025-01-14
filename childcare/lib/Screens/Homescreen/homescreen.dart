@@ -4,6 +4,7 @@ import 'package:childcare/Screens/Events/eventcal.dart';
 import 'package:childcare/Screens/Homescreen/CustomNav.dart';
 import 'package:childcare/Screens/Login/login_screen.dart';
 import 'package:childcare/Screens/Parent/Appointment/create_appointment.dart';
+import 'package:childcare/Screens/Parent/ChildInformation/childinfo.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
@@ -13,6 +14,7 @@ class CustomUser {
   final String email;
   final String mobileNumber;
   final String userType;
+  int _noOfRooms = 0;
 
   CustomUser({
     required this.username,
@@ -128,118 +130,153 @@ class _HomeScreenState extends State<HomeScreen> {
     return Scaffold(
       appBar: AppBar(
         title: Text('Giggles Daycare', style: TextStyle(color: Colors.white)),
-        backgroundColor: Color(0xFF0891B2),
+        backgroundColor: Color(0xFF0891B2), // Custom app bar color
       ),
       backgroundColor: Colors.white,
       body: ListView(
         padding: EdgeInsets.all(16.0),
         children: [
-          GridView.count(
-            crossAxisCount: 2,
-            shrinkWrap: true,
-            physics: NeverScrollableScrollPhysics(),
-            children: [
-              _buildDashboardCard(
-                'Rooms',
-                '0 rooms',
-                Icons.meeting_room,
-                Colors.teal,
-                () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => RoomPage(),
-                    ),
-                  );
-                },
-              ),
-              _buildDashboardCard(
-                'Messages',
-                '0 unread',
-                Icons.message,
-                Colors.blue,
-                () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => CreateParentAppointmentView(),
-                    ),
-                  );
-                },
-              ),
-              _buildDashboardCard(
-                'Reminders',
-                '0 set',
-                Icons.alarm,
-                Colors.red,
-                () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => CalendarScreen(),
-                    ),
-                  );
-                },
-              ),
-            ],
-          ),
+          if (_user != null &&
+              (_user!.userType != "Parent" && _user!.userType == "Staff"))
+            GridView.count(
+              crossAxisCount: 2,
+              shrinkWrap: true,
+              physics: NeverScrollableScrollPhysics(),
+              children: [
+                _buildDashboardCard(
+                  'Rooms',
+                  ' ',
+                  Icons.meeting_room,
+                  Colors.teal,
+                  () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => RoomPage(),
+                      ),
+                    );
+                  },
+                ),
+                _buildDashboardCard(
+                  'Messages',
+                  ' ',
+                  Icons.message,
+                  Colors.blue,
+                  () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => CreateParentAppointmentView(),
+                      ),
+                    );
+                  },
+                ),
+                _buildDashboardCard(
+                  'Reminders',
+                  ' ',
+                  Icons.alarm,
+                  Colors.red,
+                  () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => CalendarScreen(),
+                      ),
+                    );
+                  },
+                ),
+              ],
+            ),
           SizedBox(height: 24),
-          _buildSection(
-            'Revenue Overview',
-            Icons.attach_money,
-            Color(0xFF388E3C),
-            [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  _buildCard(
-                      'Yearly Revenue',
-                      "\$${dashboardData?['year_amount'] ?? '0'}",
-                      Color(0xFF388E3C),
-                      Colors.white),
-                  _buildCard(
-                      'Monthly Revenue',
-                      "\$${dashboardData?['total_payments'] ?? '0'}",
-                      Color(0xFF388E3C),
-                      Colors.white),
-                ],
-              ),
-            ],
-          ),
+          if (_user != null &&
+              (_user!.userType != "Parent" && _user!.userType == "Staff"))
+            _buildSection(
+              'Revenue Overview',
+              Icons.attach_money,
+              Color(0xFF388E3C),
+              [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    _buildCard(
+                        'Yearly Revenue',
+                        "\$${dashboardData?['year_amount'] ?? '0'}",
+                        Color(0xFF388E3C),
+                        Colors.white),
+                    _buildCard(
+                        'Monthly Revenue',
+                        "\$${dashboardData?['total_payments'] ?? '0'}",
+                        Color(0xFF388E3C),
+                        Colors.white),
+                  ],
+                ),
+              ],
+            ),
           SizedBox(height: 24),
-          _buildSection(
-            'Student Statistics',
-            Icons.school,
-            Color(0xFFFF9800),
-            [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  _buildCard(
-                      'Total Students',
-                      "${dashboardData?['students'] ?? '0'}",
-                      Color(0xFF388E3C),
-                      Colors.white),
-                  _buildCard(
-                      'Present Today',
-                      '${dashboardData?['present'] ?? '0'}',
-                      Color(0xFF388E3C),
-                      Colors.white),
-                ],
-              ),
-              SizedBox(height: 16),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  _buildCard(
-                      'Absent Today',
-                      '${dashboardData?['absent'] ?? '0'}',
-                      Color(0xFFD32F2F),
-                      Colors.white),
-                ],
-              ),
-            ],
-          ),
+          if (_user != null)
+            (_user!.userType != "Parent" && _user!.userType == "Staff")
+                ? _buildSection(
+                    'Revenue Overview',
+                    Icons.attach_money,
+                    Color(0xFF388E3C),
+                    [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: [
+                          _buildCard(
+                              'Yearly Revenue',
+                              "\$${dashboardData?['year_amount'] ?? '0'}",
+                              Color(0xFF388E3C),
+                              Colors.white),
+                          _buildCard(
+                              'Monthly Revenue',
+                              "\$${dashboardData?['total_payments'] ?? '0'}",
+                              Color(0xFF388E3C),
+                              Colors.white),
+                        ],
+                      ),
+                    ],
+                  )
+                : Column(
+                    children: [
+                      GridView.count(
+                        crossAxisCount: 2,
+                        shrinkWrap: true,
+                        physics: NeverScrollableScrollPhysics(),
+                        children: [
+                          _buildDashboardCard(
+                            'Child Data',
+                            ' ',
+                            Icons.meeting_room,
+                            const Color.fromARGB(255, 18, 163, 149),
+                            () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => ParentChildPage(),
+                                ),
+                              );
+                            },
+                          ),
+                          _buildDashboardCard(
+                            'Appointment',
+                            ' ',
+                            Icons.message,
+                            Colors.blue,
+                            () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) =>
+                                      CreateParentAppointmentView(),
+                                ),
+                              );
+                            },
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
         ],
       ),
       drawer: CustomDrawer(user: _user),

@@ -1,3 +1,5 @@
+import 'package:childcare/Screens/RoomMedia/uploadRoomMedia.dart';
+import 'package:childcare/Screens/RoomMedia/viewRoomMedia.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
@@ -12,7 +14,11 @@ class _RoomPageState extends State<RoomPage> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   String _name = '';
   List<dynamic> _rooms = [];
+<<<<<<< HEAD
   bool _isLoading = false;
+=======
+  int _noOfRooms = 0;
+>>>>>>> origin/master
 
   @override
   void initState() {
@@ -21,6 +27,7 @@ class _RoomPageState extends State<RoomPage> {
   }
 
   Future<void> _fetchRooms() async {
+<<<<<<< HEAD
     setState(() => _isLoading = true);
     try {
       final response = await http.get(
@@ -41,6 +48,19 @@ class _RoomPageState extends State<RoomPage> {
       _showErrorDialog("An error occurred: $error");
     } finally {
       setState(() => _isLoading = false);
+=======
+    final response = await http
+        .get(Uri.parse('https://child.codingindia.co.in/student/rooms/'));
+    if (response.statusCode == 200) {
+      final data = json.decode(response.body);
+
+      setState(() {
+        _rooms = data['data']; // List of rooms
+        _noOfRooms = data['no_of_rooms']; // Number of rooms
+      });
+    } else {
+      throw Exception('Failed to load rooms');
+>>>>>>> origin/master
     }
   }
 
@@ -218,6 +238,7 @@ class _RoomPageState extends State<RoomPage> {
             ),
             SizedBox(height: 20),
             Expanded(
+<<<<<<< HEAD
               child: _isLoading
                   ? Center(child: CircularProgressIndicator())
                   : ListView.builder(
@@ -263,6 +284,61 @@ class _RoomPageState extends State<RoomPage> {
                           ),
                         );
                       },
+=======
+              child: ListView.builder(
+                itemCount: _rooms.length,
+                itemBuilder: (context, index) {
+                  final room = _rooms[index];
+                  return ListTile(
+                    title: Text(room['name']),
+                    trailing: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: <Widget>[
+                        IconButton(
+                          icon: Icon(Icons.edit),
+                          onPressed: () {
+                            _name = room['name'];
+                            _updateRoom(room['id']);
+                          },
+                        ),
+                        IconButton(
+                          icon: Icon(Icons.delete),
+                          onPressed: () {
+                            _deleteRoom(room['id']);
+                          },
+                        ),
+                        // New icon button to view media files
+                        IconButton(
+                          icon: Icon(Icons.visibility),
+                          onPressed: () {
+                            // Navigate to ViewMediaPage and pass roomId
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => ViewMediaPage(
+                                  roomId: room['id'],
+                                ),
+                              ),
+                            );
+                          },
+                        ),
+                        // Add Media button
+                        IconButton(
+                          icon: Icon(Icons.add_a_photo),
+                          onPressed: () {
+                            // Navigate to UploadMediaPage and pass roomId
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => UploadMediaPage(
+                                  roomId: room['id'],
+                                ),
+                              ),
+                            );
+                          },
+                        ),
+                      ],
+>>>>>>> origin/master
                     ),
             ),
           ],

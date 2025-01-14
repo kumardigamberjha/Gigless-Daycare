@@ -1,4 +1,6 @@
 import 'package:childcare/Screens/Homescreen/homescreen.dart';
+import 'package:childcare/Screens/Parent/ChildInformation/roomMedia.dart';
+import 'package:childcare/Screens/Signup/components/CreateparentByUser.dart';
 import 'package:flutter/material.dart';
 import 'package:childcare/Screens/ChildMedia/childlisr.dart';
 import 'package:childcare/Screens/LearningResources/create_learning_resources.dart';
@@ -232,6 +234,20 @@ class CustomDrawer extends StatelessWidget {
                         context,
                         MaterialPageRoute(
                           builder: (context) => UserListPage(),
+                        ),
+                      );
+                    },
+                  ),
+                ),
+                Padding(
+                  padding: EdgeInsets.only(left: 16.0),
+                  child: ListTile(
+                    title: Text('Add Parent'),
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => ParentRegistrationPage(),
                         ),
                       );
                     },
