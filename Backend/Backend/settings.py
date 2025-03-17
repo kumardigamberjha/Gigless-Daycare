@@ -28,7 +28,7 @@ SECRET_KEY = 'django-insecure-gt&n0vos84=bp%l^a)nlubm2#ht3_fwt9%z=@xl3j%ef+oukdq
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['127.0.0.1', 'localhost', '192.168.97.81', '192.168.224.81']
+ALLOWED_HOSTS = ['127.0.0.1', 'localhost', '192.168.97.81', '192.168.224.81', 'daycare.codingindia.co.in']
 
 AUTH_USER_MODEL = 'authapp.CustomUser'
 
@@ -79,7 +79,7 @@ CORS_ALLOW_METHODS = [
     'PUT',
 ]
 
-# CSRF_TRUSTED_ORIGINS = ['https://leaderboard.codingindia.co.in']
+CSRF_TRUSTED_ORIGINS = ['https://daycare.codingindia.co.in']
 
 
 REST_FRAMEWORK = {
@@ -140,8 +140,8 @@ WSGI_APPLICATION = 'Backend.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'daycare',
-        'USER': 'postgres',
+        'NAME': 'ubauntu',
+        'USER': 'ubauntu',
         'PASSWORD': 'dj@jha1011',
         'HOST': '127.0.0.1',  # Replace with your host machine's IP address
         'PORT': '5432',

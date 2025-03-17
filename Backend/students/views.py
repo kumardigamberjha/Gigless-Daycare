@@ -1,4 +1,3 @@
-
 from rest_framework import generics
 from .models import Child, Attendance, DailyActivity, ChildMedia, LearningResource, Rooms, RoomMedia
 from .serializers import ChildSerializer, ChildSerializerGet, AttendanceSerializer,  DailyActivitySerializer, ChildMediaSerializer, RoomSerializer, RoomMediaSerializer, MultipleRoomMediaUploadSerializer
@@ -101,12 +100,16 @@ class ChildDetailView(generics.RetrieveUpdateDestroyAPIView):
             data.medical_history = medical_history
             print("Image: ", image)
             try:
-                if image.startswith('/media') or image.startswith('http'):
-                    pass
-                else:
+                #if image and not image.startswith('/media'):
+                    #data.image = image
+                #    pass
+                if image:
                     data.image = image
+                    #pass
             except:
-                data.image = image
+                #data.image = image
+                pass
+            
             data.unique_id = unique_id
             roomdata = Rooms.objects.get(id=room)
             data.room = roomdata
@@ -119,7 +122,7 @@ class ChildDetailView(generics.RetrieveUpdateDestroyAPIView):
             data.parent1_contact_number = parent1_contact_number
             data.parent2_name = parent2_name
             data.parent2_contact_number = data.parent2_contact_number
-            data.is_active = is_active.capitalize()
+            data.is_active = is_active
             data.save()
             print("Data: ", data)
             return Response("Saved")
@@ -129,7 +132,7 @@ class ChildDetailView(generics.RetrieveUpdateDestroyAPIView):
             return Response({"detail": "Child not found."}, status=status.HTTP_404_NOT_FOUND)
         except Exception as e:
             print("Error: ", e)
-            return Response({"detail": "An unexpected error occurred."}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+            return Response({"detail": f"An unexpected error occurred: {e}"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
         
 
 @api_view(['DELETE'])
@@ -383,10 +386,17 @@ class CustomUserAPIView(APIView):
         print("CUstom User: ", request.user)
         try:
             try:
-                current_user = request.user.unique_id
-                user = CustomUser.objects.get(unique_id=current_user)
-                serializer = CustomUserSerializer(user)
-                return Response(serializer.data)
+                #current_user = request.user.unique_id
+                #user = CustomUser.objects.get(unique_id=current_user)
+                #serializer = CustomUserSerializer(user)
+                #return Response(serializer.data)
+                current_user = request.user.unique_id  # Fetch the unique ID of the current user
+                superuserstatus = request.user.is_superuser  # Check if the user is a superuser
+                user = CustomUser.objects.get(unique_id=current_user)  # Get the user object using unique_id
+                serializer = CustomUserSerializer(user)  # Serialize the user object
+                response_data = serializer.data
+                response_data['is_superuser'] = superuserstatus
+                return Response(response_data)
             except:
                 return Response("Sign in First")
         except CustomUser.DoesNotExist:

@@ -10,6 +10,7 @@ class ChildSerializer(serializers.ModelSerializer):
 
 
 class ChildSerializerGet(serializers.ModelSerializer):
+    roomname = serializers.CharField(source='room.name', required=False, allow_blank=True, allow_null=True)
     class Meta:
         model = Child
         fields = '__all__'
