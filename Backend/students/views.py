@@ -434,10 +434,33 @@ def create_learning_resource(request):
 
 @api_view(['GET'])
 def room_list(request):
-    rooms = Rooms.objects.all()
+    # Check if the user is authenticated
+    print('User: ', request.user)
+    if not request.user.is_authenticated:
+        return Response({"detail": "Authentication required."}, status=401)
+
+    # Check if the user is a superuser
+    if request.user.is_superuser:
+        # Superusers can see all rooms
+        rooms = Rooms.objects.all()
+    else:
+        # Staff users can only see their assigned room
+        try:
+            # Retrieve the room assigned to the logged-in staff user
+            rooms = Rooms.objects.filter(id=request.user.room.id)
+        except AttributeError:
+            # If the user does not have an assigned room, return an empty queryset
+            rooms = Rooms.objects.none()
+
+    # Count the number of rooms in the queryset
     no_of_rooms = rooms.count()
+
+    # Serialize the rooms data
     serializer = RoomSerializer(rooms, many=True)
-    return Response({'data':serializer.data, 'no_of_rooms':no_of_rooms})
+
+    # Return the response
+    return Response({'data': serializer.data, 'no_of_rooms': no_of_rooms})
+    
 
 @api_view(['POST'])
 def room_create(request):
