@@ -114,14 +114,14 @@ def register_user(request):
             return Response({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
     
 
-@api_view(['GET'])
-@permission_classes([])  # No permission classes applied for this example
-def user_list(request):
+#@api_view(['GET'])
+#@permission_classes([])  # No permission classes applied for this example
+#def user_list(request):
     # Handle GET request - retrieve user list
-    if request.method == 'GET':
-        users = CustomUser.objects.filter(usertype="Staff")
-        serializer = CustomUserSerializer(users, many=True)
-        return Response(serializer.data)
+#    if request.method == 'GET':
+#        users = CustomUser.objects.filter(usertype="Staff")
+#        serializer = CustomUserSerializer(users, many=True)
+#        return Response(serializer.data)
 
 
 @api_view(['DELETE'])
@@ -205,3 +205,48 @@ def get_username(request):
         print("Username: ", username)
         response_data = {'username': username}
         return JsonResponse(response_data)
+
+
+
+class EditUserView(APIView):
+
+    def get_object(self, pk):
+        try:
+            return CustomUser.objects.get(pk=pk)
+        except CustomUser.DoesNotExist:
+            return None
+
+    def put(self, request, pk):
+        """
+        Update user details.
+        """
+        user = self.get_object(pk)
+        if not user:
+            return Response({'error': 'User not found'}, status=status.HTTP_404_NOT_FOUND)
+
+        serializer = CustomUserSerializer(user, data=request.data, partial=True)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+
+from collections import defaultdict
+@api_view(['GET'])
+# @permission_classes([AllowAny])  # Adjust permissions as needed
+def user_list(request):
+    if request.method == 'GET':
+        # Fetch all staff users
+        users = CustomUser.objects.filter(usertype="Staff").select_related('room')
+        
+        # Group users by room name
+        grouped_users = defaultdict(list)
+        for user in users:
+            room_name = user.room.name if user.room else "General"  # Handle null room
+            grouped_users[room_name].append(CustomUserSerializer(user).data)
+        
+        # Convert grouped_users to a list of key-value pairs
+        result = [{"room_name": room, "users": users} for room, users in grouped_users.items()]
+        
+        return Response(result)

@@ -1,5 +1,6 @@
 from django.db import models
 from django.utils.crypto import get_random_string
+from students.models import Rooms
 
 # Create your models here.
 from django.contrib.auth.models import AbstractUser
@@ -15,7 +16,7 @@ class CustomUser(AbstractUser):
     is_active = models.BooleanField(default=True)
     groups = models.ManyToManyField(Group, related_name='custom_user_set', blank=True, help_text='The groups this user belongs to. A user will get all permissions granted to each of their groups.')
     user_permissions = models.ManyToManyField(Permission, related_name='custom_user_set', blank=True, help_text='Specific permissions for this user.')
-
+    room = models.ForeignKey(Rooms, on_delete=models.SET_NULL, null=True, blank=True)
 
     # def save(self, *args, **kwargs):
     #     if not self.unique_id:

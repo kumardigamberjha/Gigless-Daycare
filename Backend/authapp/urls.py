@@ -22,4 +22,5 @@ urlpatterns = [
     path('ParentListDetail/<int:parent_id>/', views.parent_detail_list, name='parent-detail-list'),
 
     # path('', csrf_exempt(LogoutView), name='logout'),
+    path('edit-user/<int:pk>/', views.EditUserView.as_view(), name='edit-user'),
 ]
