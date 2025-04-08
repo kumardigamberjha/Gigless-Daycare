@@ -223,7 +223,7 @@ class EditUserView(APIView):
         user = self.get_object(pk)
         room = request.data.get('room')
         usertype = request.data.get('usertype')
-        user.room = Rooms.objects.get(id=room).id
+        user.room = Rooms.objects.get(id=room)
         user.usertype = usertype
         user.save()
 
