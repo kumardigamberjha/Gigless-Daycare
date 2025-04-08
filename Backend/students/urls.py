@@ -27,6 +27,8 @@ urlpatterns = [
 
     # Rooms
     path('rooms/', views.room_list, name='room-list'),
+    path('rooms_list_2/', views.room_list_user, name='room-list_user'),
+
     path('rooms/create/', views.room_create, name='room-create'),
     path('rooms/update/<int:pk>/', views.room_update, name='room-update'),
     path('rooms/delete/<int:pk>/', views.room_delete, name='room-delete'),
