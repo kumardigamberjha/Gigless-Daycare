@@ -205,15 +205,10 @@ def get_username(request):
         print("Username: ", username)
         response_data = {'username': username}
         return JsonResponse(response_data)
-<<<<<<< HEAD
-    
-=======
 
 
->>>>>>> origin/master
 
 class EditUserView(APIView):
-
     def get_object(self, pk):
         try:
             return CustomUser.objects.get(pk=pk)
@@ -222,20 +217,18 @@ class EditUserView(APIView):
 
     def put(self, request, pk):
         """
-        Update user details.
+        Update user details, including the room.
         """
         user = self.get_object(pk)
         if not user:
             return Response({'error': 'User not found'}, status=status.HTTP_404_NOT_FOUND)
 
+        # Pass the request data to the serializer
         serializer = CustomUserSerializer(user, data=request.data, partial=True)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=status.HTTP_200_OK)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-<<<<<<< HEAD
-=======
-
 
 
 from collections import defaultdict
@@ -256,4 +249,3 @@ def user_list(request):
         result = [{"room_name": room, "users": users} for room, users in grouped_users.items()]
         
         return Response(result)
->>>>>>> origin/master
