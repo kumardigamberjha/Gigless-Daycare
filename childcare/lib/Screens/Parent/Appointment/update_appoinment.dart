@@ -32,7 +32,7 @@ class _UpdateAppointmentPageState extends State<UpdateAppointmentPage> {
     try {
       final response = await http.put(
         Uri.parse(
-            'https://child.codingindia.co.in/Parent/updateappointment/${widget.appointmentId}/'),
+            'https://daycare.codingindia.co.in/Parent/updateappointment/${widget.appointmentId}/'),
         headers: {
           'Authorization': 'Bearer $accessToken',
         },

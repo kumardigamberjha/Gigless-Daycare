@@ -55,7 +55,7 @@ class _FeeListPageState extends State<FeeListPage> {
   Future<void> fetchFees() async {
     try {
       final response = await http.get(Uri.parse(
-          'https://child.codingindia.co.in/Accounts/Fees/${widget.childId}/'));
+          'https://daycare.codingindia.co.in/Accounts/Fees/${widget.childId}/'));
 
       if (response.statusCode == 200) {
         final jsonData = json.decode(response.body);

@@ -27,37 +27,52 @@ class _ShowDailyActivityPageState extends State<ShowDailyActivityPage> {
   Future<void> fetchData() async {
     try {
       final response = await http.get(
-          Uri.parse("https://child.codingindia.co.in/student/child-list/"));
+        Uri.parse("https://daycare.codingindia.co.in/student/child-list/"),
+      );
 
       if (response.statusCode == 200) {
         final List<dynamic> data = json.decode(response.body);
 
+        List<Map<String, dynamic>> updatedRecords = [];
         for (var child in data) {
-          final statusResponse = await http.get(Uri.parse(
-              "https://child.codingindia.co.in/student/api/daily-activity/${child['id']}"));
+          try {
+            final statusResponse = await http.get(
+              Uri.parse(
+                "https://daycare.codingindia.co.in/student/api/daily-activity/${child['id']}",
+              ),
+            );
 
-          if (statusResponse.statusCode == 200) {
-            final Map<String, dynamic> statusData =
-                json.decode(statusResponse.body);
-            // child['isActivitySaved'] = statusData['is_activity_saved'];
-            child['isActivitySaved'] = statusData['is_activity_saved'] ?? false;
-          } else {
-            // Assume activity is not saved if there's an error
+            if (statusResponse.statusCode == 200) {
+              final Map<String, dynamic> statusData =
+                  json.decode(statusResponse.body);
+              child['isActivitySaved'] =
+                  statusData['is_activity_saved'] ?? false;
+            } else {
+              child['isActivitySaved'] = false;
+            }
+          } catch (e) {
+            print('Error fetching activity for child ID ${child['id']}: $e');
             child['isActivitySaved'] = false;
           }
+          updatedRecords.add(child.cast<String, dynamic>());
         }
 
         setState(() {
-          childRecords = data.cast<Map<String, dynamic>>();
+          childRecords = updatedRecords;
           isLoading = false;
         });
       } else {
-        print('Failed to load child records. Error: ${response.statusCode}');
-        // Handle error, show a snackbar, or retry option
+        print(
+            'Failed to load child records. Status code: ${response.statusCode}');
+        setState(() {
+          isLoading = false;
+        });
       }
     } catch (e) {
       print('Error fetching data: $e');
-      // Handle error, show a snackbar, or retry option
+      setState(() {
+        isLoading = false;
+      });
     }
   }
 
@@ -140,24 +155,42 @@ class _ShowDailyActivityPageState extends State<ShowDailyActivityPage> {
                             child: Row(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Container(
-                                  width: 80,
-                                  height: 80,
-                                  decoration: BoxDecoration(
-                                    shape: BoxShape.circle,
-                                    border: Border.all(
-                                      color: Colors.black,
-                                      width: 2,
-                                    ),
-                                    image: DecorationImage(
-                                      image: NetworkImage(
-                                        childRecords[index]['image'] ??
-                                            'https://via.placeholder.com/150',
-                                      ),
+                                () {
+                                  // Get the image URL or use an empty string if not provided
+                                  String imageUrl =
+                                      childRecords[index]['image'] ?? '';
+
+                                  // Check if the image URL is empty or null, use a placeholder image
+                                  if (imageUrl.isEmpty) {
+                                    imageUrl =
+                                        'https://via.placeholder.com/150'; // Replace with your desired placeholder URL
+                                  } else if (imageUrl.startsWith('http://')) {
+                                    // Replace http with https
+                                    imageUrl = imageUrl.replaceFirst(
+                                        'http://', 'https://');
+                                  }
+
+                                  // Return the image widget
+                                  return ClipRRect(
+                                    borderRadius: BorderRadius.circular(50),
+                                    child: Image.network(
+                                      imageUrl,
+                                      width: 100,
+                                      height: 100,
                                       fit: BoxFit.cover,
+                                      errorBuilder:
+                                          (context, error, stackTrace) {
+                                        // Fallback in case the image fails to load
+                                        return Image.network(
+                                          'https://via.placeholder.com/150', // Placeholder for failed image loads
+                                          width: 100,
+                                          height: 100,
+                                          fit: BoxFit.cover,
+                                        );
+                                      },
                                     ),
-                                  ),
-                                ),
+                                  );
+                                }(),
                                 SizedBox(width: 16),
                                 Expanded(
                                   child: Column(

@@ -26,7 +26,7 @@ class _CreateParentAppointmentViewState
     String? accessToken = prefs.getString('accessToken');
 
     final response = await http.post(
-      Uri.parse('https://child.codingindia.co.in/Parent/createappointments/'),
+      Uri.parse('https://daycare.codingindia.co.in/Parent/createappointments/'),
       headers: {
         'Authorization': 'Bearer $accessToken',
       },

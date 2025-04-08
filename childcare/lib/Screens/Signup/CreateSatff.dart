@@ -1,4 +1,6 @@
 import 'dart:convert';
+import 'package:childcare/Screens/Homescreen/homescreen.dart';
+import 'package:childcare/Screens/Signup/showParentpage.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
@@ -24,7 +26,7 @@ class _StaffRegistrationPageState extends State<StaffRegistrationPage> {
 
       try {
         final response = await http.post(
-          Uri.parse('https://child.codingindia.co.in/register/'),
+          Uri.parse('https://daycare.codingindia.co.in/register/'),
           headers: {'Content-Type': 'application/json'},
           body: json.encode({
             'username': _usernameController.text,
@@ -44,7 +46,12 @@ class _StaffRegistrationPageState extends State<StaffRegistrationPage> {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(content: Text('Staff registration successful!')),
           );
-          Navigator.pop(context); // Close the registration page
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(
+              builder: (context) => HomeScreen(),
+            ),
+          ); // Close the registration page
         } else if (response.statusCode == 400) {
           setState(() {
             _isLoading = false;

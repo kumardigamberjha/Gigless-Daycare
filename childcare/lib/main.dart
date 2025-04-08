@@ -1,9 +1,9 @@
+import 'package:childcare/Screens/Childrens/child_record.dart';
+import 'package:childcare/Screens/Homescreen/homescreen.dart';
 import 'package:flutter/material.dart';
 import 'package:childcare/Screens/Welcome/Welcome_screen.dart';
 import 'package:childcare/constant.dart';
 import 'package:childcare/Screens/splashscreen.dart';
-
-
 
 void main() {
   runApp(MyApp());
@@ -22,6 +22,12 @@ class MyApp extends StatelessWidget {
         scaffoldBackgroundColor: Colors.white,
       ),
       home: WelcomeScreen(),
+      // initialRoute: '/',
+      routes: {
+        '/dashboard': (context) => HomeScreen(),
+        '/childRecordsPage': (context) =>
+            ChildRecordsPage(), // Define named route here
+      },
     );
   }
 }

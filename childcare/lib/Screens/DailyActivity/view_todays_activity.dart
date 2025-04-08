@@ -33,7 +33,7 @@ class _ViewTodaysActivityPageState extends State<ViewTodaysActivityPage> {
     try {
       final response = await http.get(
         Uri.parse(
-          "https://child.codingindia.co.in/student/api/daily-activity/${widget.childId}/",
+          "https://daycare.codingindia.co.in/student/api/daily-activity/${widget.childId}/",
         ),
       );
 
@@ -173,26 +173,51 @@ class _ViewTodaysActivityPageState extends State<ViewTodaysActivityPage> {
     );
   }
 
+  String? validatedImageUrl(String? url) {
+    if (url != null &&
+        Uri.tryParse(url)?.isAbsolute == true &&
+        url.startsWith('https')) {
+      return url;
+    }
+    return null;
+  }
+
   Widget buildCircleAvatar() {
+    // Get the image URL or use an empty string if not provided
+    String imageUrl = childData['image'] ?? '';
+    print(imageUrl);
+
+    // Check if the image URL is empty or null, use a placeholder image
+    if (imageUrl.isEmpty) {
+      imageUrl =
+          'https://via.placeholder.com/150'; // Placeholder URL if image URL is empty
+    } else if (!imageUrl.startsWith('http://') &&
+        !imageUrl.startsWith('https://')) {
+      // Prepend the base URL if the image URL doesn't already have http:// or https://
+      imageUrl = 'https://daycare.codingindia.co.in$imageUrl';
+    }
+
     return CircleAvatar(
       radius: 80,
       backgroundColor: Color(0xFF0891B2),
       child: CircleAvatar(
         radius: 75,
         child: ClipOval(
-          child: childData['image'] != null
-              ? Image.network(
-                  childData['image'],
-                  fit: BoxFit.cover,
-                  width: 150,
-                  height: 150,
-                )
-              : Image.asset(
-                  'assets/images/main_top.png',
-                  fit: BoxFit.cover,
-                  width: 150,
-                  height: 150,
-                ),
+          child: Image.network(
+            imageUrl,
+            fit: BoxFit.cover,
+            width: 150,
+            height: 150,
+            errorBuilder: (context, error, stackTrace) {
+              // Fallback in case the image fails to load
+              return Image.network(
+                'https://via.placeholder.com/150', // Fallback placeholder for failed image loads
+                fit: BoxFit.cover,
+                width: 150,
+                height: 150,
+              );
+            },
+          ),
         ),
       ),
     );

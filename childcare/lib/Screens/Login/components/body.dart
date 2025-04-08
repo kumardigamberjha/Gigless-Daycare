@@ -17,7 +17,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class AuthService {
   static const String baseUrl =
-      'https://child.codingindia.co.in/'; // Replace with your API base URL
+      'https://daycare.codingindia.co.in/'; // Replace with your API base URL
 
   static Future<Map<String, dynamic>> login(
       String username, String password) async {
@@ -138,35 +138,6 @@ class _BodyState extends State<Body> {
             SizedBox(
               height: size.height * 0.03,
             ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                Text(
-                  "Don't have an Account?",
-                  style: TextStyle(color: KPrimaryColor),
-                ),
-                GestureDetector(
-                  onTap: () {
-                    // Handle sign-up logic
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) {
-                          return SignUpOptions();
-                        },
-                      ),
-                    );
-                  },
-                  child: Text(
-                    " Sign Up",
-                    style: TextStyle(
-                      color: KPrimaryColor,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ),
-              ],
-            ),
           ],
         ),
       ),
@@ -175,7 +146,7 @@ class _BodyState extends State<Body> {
 
   Future<void> loginUser(String username, String password) async {
     final response = await http.post(
-      Uri.parse('https://child.codingindia.co.in/token/'),
+      Uri.parse('https://daycare.codingindia.co.in/token/'),
       body: {
         'username': username,
         'password': password,
@@ -204,14 +175,15 @@ class _BodyState extends State<Body> {
     } else {
       print('Authentication failed');
       print('Error: ${response.body}');
-      _showErrorSnackBar('Login failed. Please check your credentials.');
+      _showErrorSnackBar(
+          'Login failed. Either your username or password is incorrect. Please check your credentials and try again.');
     }
   }
 
   void _showErrorSnackBar(String message) {
     final snackBar = SnackBar(
       content: Text(message),
-      duration: Duration(seconds: 3),
+      duration: Duration(seconds: 6),
     );
     ScaffoldMessenger.of(context).showSnackBar(snackBar);
   }

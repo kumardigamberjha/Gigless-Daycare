@@ -1,10 +1,16 @@
 import 'dart:convert';
 import 'dart:io';
+import 'package:childcare/Screens/Homescreen/homescreen.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart';
+
 import 'package:http/http.dart' as http;
-import 'package:image_picker/image_picker.dart';
+// import 'package:image_picker/image_picker.dart';
+import 'package:file_picker/file_picker.dart';
 import 'package:intl/intl.dart';
 import 'child_record.dart';
+import 'dart:html' as html;
+import 'dart:typed_data';
 
 class ChildCreateView extends StatefulWidget {
   @override
@@ -38,7 +44,10 @@ class _ChildCreateViewState extends State<ChildCreateView>
   bool isSubmitting = false;
   String selectedGender = 'Boy';
   String? selectedBloodGroup;
-  File? _selectedImage;
+  // File? _selectedImage;
+  // File? _selectedImage;
+  dynamic _selectedImage; // Dynamic to handle both `File` and `html.File`
+
   int _currentStep = 0;
   late AnimationController _animationController;
   late Animation<double> _animation;
@@ -62,7 +71,7 @@ class _ChildCreateViewState extends State<ChildCreateView>
 
   Future<void> _fetchRooms() async {
     final response = await http
-        .get(Uri.parse('https://child.codingindia.co.in/student/rooms/'));
+        .get(Uri.parse('https://daycare.codingindia.co.in/student/rooms/'));
     if (response.statusCode == 200) {
       final data = json.decode(response.body);
 
@@ -82,12 +91,36 @@ class _ChildCreateViewState extends State<ChildCreateView>
   }
 
   Future<void> _pickImage() async {
-    final picker = ImagePicker();
-    final pickedImage = await picker.pickImage(source: ImageSource.gallery);
-    if (pickedImage != null) {
-      setState(() {
-        _selectedImage = File(pickedImage.path);
+    if (kIsWeb) {
+      // Web-specific image picker
+      final uploadInput = html.FileUploadInputElement()..accept = 'image/*';
+      uploadInput.click(); // Trigger the file input dialog
+
+      uploadInput.onChange.listen((event) {
+        if (uploadInput.files != null && uploadInput.files!.isNotEmpty) {
+          final file = uploadInput.files!.first;
+          final reader = html.FileReader();
+          reader.readAsArrayBuffer(file); // Use ArrayBuffer for binary data
+
+          reader.onLoadEnd.listen((_) {
+            setState(() {
+              _selectedImage = file; // Assign the selected file
+            });
+          });
+        }
       });
+    } else {
+      // Native (Android/iOS) image picker
+      final result = await FilePicker.platform.pickFiles(
+        type: FileType.image,
+        allowMultiple: false,
+      );
+
+      if (result != null && result.files.isNotEmpty) {
+        setState(() {
+          _selectedImage = File(result.files.single.path!); // Assign the file
+        });
+      }
     }
   }
 
@@ -96,7 +129,7 @@ class _ChildCreateViewState extends State<ChildCreateView>
       isSubmitting = true;
     });
 
-    final String apiUrl = 'https://child.codingindia.co.in/student/children/';
+    final String apiUrl = 'https://daycare.codingindia.co.in/student/children/';
 
     String formattedDateOfBirth = '';
     if (dateOfBirthController.text.isNotEmpty) {
@@ -105,13 +138,14 @@ class _ChildCreateViewState extends State<ChildCreateView>
     }
 
     try {
-      var request = http.MultipartRequest('POST', Uri.parse(apiUrl))
+      var uri = Uri.parse(apiUrl);
+      var request = http.MultipartRequest('POST', uri)
         ..fields.addAll({
           'first_name': firstNameController.text,
           'last_name': lastNameController.text,
           'date_of_birth': formattedDateOfBirth,
           'blood_group': selectedBloodGroup ?? '',
-          'medical_history': medicalHistoryController.text, // Optional field
+          'medical_history': medicalHistoryController.text,
           'gender': selectedGender,
           'child_fees': childFeesController.text,
           'address': addressController.text,
@@ -123,12 +157,28 @@ class _ChildCreateViewState extends State<ChildCreateView>
           'parent2_name': parent2NameController.text,
           'parent2_contact_number': parent2ContactNumberController.text,
           'room': selectedRoom.toString(),
-          'is_active': 'true', // Ensure is_active is set to true
+          'is_active': 'true',
         });
 
       if (_selectedImage != null) {
-        request.files.add(
-            await http.MultipartFile.fromPath('image', _selectedImage!.path));
+        if (kIsWeb) {
+          final reader = html.FileReader();
+          reader.readAsArrayBuffer(_selectedImage);
+          await reader.onLoadEnd.first;
+
+          request.files.add(http.MultipartFile.fromBytes(
+            'image',
+            reader.result as List<int>,
+            filename: (_selectedImage as html.File).name,
+          ));
+        } else {
+          request.files.add(
+            await http.MultipartFile.fromPath(
+              'image',
+              (_selectedImage as File).path,
+            ),
+          );
+        }
       }
 
       final response = await request.send();
@@ -136,15 +186,33 @@ class _ChildCreateViewState extends State<ChildCreateView>
       if (response.statusCode == 201) {
         print('Child created successfully');
         _showSuccessDialog();
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+            builder: (context) => HomeScreen(),
+          ),
+        );
       } else {
-        final errorBody = jsonDecode(await response.stream.bytesToString());
-        final errorMessage = errorBody['error'] ?? 'Unknown error';
+        final responseString = await response.stream.bytesToString();
+        final errorBody = jsonDecode(responseString);
+
+        String errorMessage = 'Unknown error';
+
+        if (errorBody is Map<String, dynamic>) {
+          // If the error body contains field-specific errors, format them properly
+          errorMessage = errorBody.entries
+              .map((entry) => '${entry.key}: ${entry.value}')
+              .join('\n');
+        } else if (errorBody is String) {
+          errorMessage = errorBody;
+        }
+
         print('Error creating child: ${response.statusCode} - $errorMessage');
         _showErrorDialog('Error creating child', errorMessage);
       }
     } catch (error) {
       print('Exception creating child: $error');
-      _showErrorDialog('Exception', '$error');
+      _showErrorDialog('Exception', 'An unexpected error occurred: $error');
     } finally {
       setState(() {
         isSubmitting = false;
@@ -164,7 +232,7 @@ class _ChildCreateViewState extends State<ChildCreateView>
               onPressed: () {
                 Navigator.pushReplacement(
                   context,
-                  MaterialPageRoute(builder: (context) => ChildRecordsPage()),
+                  MaterialPageRoute(builder: (context) => HomeScreen()),
                 );
               },
               child: Text('OK'),
@@ -246,35 +314,37 @@ class _ChildCreateViewState extends State<ChildCreateView>
                             crossAxisAlignment: CrossAxisAlignment.stretch,
                             children: [
                               GestureDetector(
-                                onTap: _pickImage,
-                                child: AnimatedBuilder(
-                                  animation: _animationController,
-                                  builder: (context, child) {
-                                    return Container(
-                                      height: 150,
-                                      decoration: BoxDecoration(
-                                        color: Colors.blue[50],
-                                        borderRadius:
-                                            BorderRadius.circular(10.0),
-                                        image: _selectedImage != null
+                                onTap: _pickImage, // Call the _pickImage method
+                                child: Container(
+                                  height: 150,
+                                  decoration: BoxDecoration(
+                                    color: Colors.grey[200],
+                                    borderRadius: BorderRadius.circular(10.0),
+                                    image: _selectedImage != null
+                                        ? kIsWeb
                                             ? DecorationImage(
-                                                image:
-                                                    FileImage(_selectedImage!),
+                                                image: NetworkImage(
+                                                  html.Url.createObjectUrl(
+                                                      _selectedImage),
+                                                ),
                                                 fit: BoxFit.cover,
                                               )
-                                            : null,
-                                      ),
-                                      child: _selectedImage == null
-                                          ? Center(
-                                              child: Icon(
-                                                Icons.add_a_photo,
-                                                color: Color(0xFF0891B2),
-                                                size: 50.0,
-                                              ),
-                                            )
-                                          : null,
-                                    );
-                                  },
+                                            : DecorationImage(
+                                                image: FileImage(
+                                                    _selectedImage as File),
+                                                fit: BoxFit.cover,
+                                              )
+                                        : null,
+                                  ),
+                                  child: _selectedImage == null
+                                      ? Center(
+                                          child: Icon(
+                                            Icons.add_a_photo,
+                                            color: Colors.blue,
+                                            size: 50.0,
+                                          ),
+                                        )
+                                      : null,
                                 ),
                               ),
                               SizedBox(height: 20),
@@ -507,7 +577,7 @@ class _ChildCreateViewState extends State<ChildCreateView>
                                   labelText: 'Zip Code',
                                   border: OutlineInputBorder(),
                                 ),
-                                keyboardType: TextInputType.number,
+                                // keyboardType: TextInputType.number,
                                 validator: (value) {
                                   if (value == null || value.isEmpty) {
                                     return 'Please enter zip code';
@@ -536,7 +606,9 @@ class _ChildCreateViewState extends State<ChildCreateView>
                                   labelText: 'Parent 1 Contact Number',
                                   border: OutlineInputBorder(),
                                 ),
-                                keyboardType: TextInputType.phone,
+                                // keyboardType: TextInputType.phone,
+                                keyboardType: TextInputType.number,
+
                                 validator: (value) {
                                   if (value == null || value.isEmpty) {
                                     return 'Please enter parent 1 contact number';
@@ -559,7 +631,7 @@ class _ChildCreateViewState extends State<ChildCreateView>
                                   labelText: 'Parent 2 Contact Number',
                                   border: OutlineInputBorder(),
                                 ),
-                                keyboardType: TextInputType.phone,
+                                keyboardType: TextInputType.number,
                               ),
                             ],
                           ),

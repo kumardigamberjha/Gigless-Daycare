@@ -22,7 +22,7 @@ class _TotalPaymentsCurrentMonthPageState
   Future<void> fetchTotalPaymentsCurrentMonth() async {
     try {
       final response = await http.get(Uri.parse(
-          'https://child.codingindia.co.in/Accounts/total-payments-current-month/'));
+          'https://daycare.codingindia.co.in/Accounts/total-payments-current-month/'));
 
       if (response.statusCode == 200) {
         final data = json.decode(response.body);

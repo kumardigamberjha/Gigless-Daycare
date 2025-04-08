@@ -25,7 +25,7 @@ class _ParentRegistrationPageState extends State<ParentRegistrationPage> {
 
       try {
         final response = await http.post(
-          Uri.parse('https://child.codingindia.co.in/register/'),
+          Uri.parse('https://daycare.codingindia.co.in/register/'),
           headers: {'Content-Type': 'application/json'},
           body: json.encode({
             'username': _usernameController.text,

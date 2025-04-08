@@ -3,6 +3,7 @@ import 'package:childcare/Screens/RoomMedia/viewRoomMedia.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class RoomPage extends StatefulWidget {
   @override
@@ -14,6 +15,7 @@ class _RoomPageState extends State<RoomPage> {
   String _name = '';
   List<dynamic> _rooms = [];
   int _noOfRooms = 0;
+  bool isSuperuser = false;
 
   @override
   void initState() {
@@ -22,8 +24,17 @@ class _RoomPageState extends State<RoomPage> {
   }
 
   Future<void> _fetchRooms() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String? accessToken = prefs.getString('accessToken');
+    bool? superuserStatus = prefs.getBool('is_superuser');
+
+    // Update isSuperuser state
+    setState(() {
+      isSuperuser = superuserStatus ?? false; // Default to false if null
+    });
+
     final response = await http
-        .get(Uri.parse('https://child.codingindia.co.in/student/rooms/'));
+        .get(Uri.parse('https://daycare.codingindia.co.in/student/rooms/'));
     if (response.statusCode == 200) {
       final data = json.decode(response.body);
 
@@ -40,7 +51,7 @@ class _RoomPageState extends State<RoomPage> {
     if (_formKey.currentState!.validate()) {
       _formKey.currentState!.save();
       final response = await http.post(
-        Uri.parse('https://child.codingindia.co.in/student/rooms/create/'),
+        Uri.parse('https://daycare.codingindia.co.in/student/rooms/create/'),
         headers: {'Content-Type': 'application/json'},
         body: json.encode({'name': _name}),
       );
@@ -54,7 +65,8 @@ class _RoomPageState extends State<RoomPage> {
     if (_formKey.currentState!.validate()) {
       _formKey.currentState!.save();
       final response = await http.put(
-        Uri.parse('https://child.codingindia.co.in/student/rooms/update/$id/'),
+        Uri.parse(
+            'https://daycare.codingindia.co.in/student/rooms/update/$id/'),
         headers: {'Content-Type': 'application/json'},
         body: json.encode({'name': _name}),
       );
@@ -66,7 +78,7 @@ class _RoomPageState extends State<RoomPage> {
 
   Future<void> _deleteRoom(int id) async {
     final response = await http.delete(
-      Uri.parse('https://child.codingindia.co.in/student/rooms/delete/$id/'),
+      Uri.parse('https://daycare.codingindia.co.in/student/rooms/delete/$id/'),
     );
     if (response.statusCode == 204) {
       _fetchRooms();
@@ -127,19 +139,21 @@ class _RoomPageState extends State<RoomPage> {
                     trailing: Row(
                       mainAxisSize: MainAxisSize.min,
                       children: <Widget>[
-                        IconButton(
-                          icon: Icon(Icons.edit),
-                          onPressed: () {
-                            _name = room['name'];
-                            _updateRoom(room['id']);
-                          },
-                        ),
-                        IconButton(
-                          icon: Icon(Icons.delete),
-                          onPressed: () {
-                            _deleteRoom(room['id']);
-                          },
-                        ),
+                        if (isSuperuser)
+                          IconButton(
+                            icon: Icon(Icons.edit),
+                            onPressed: () {
+                              _name = room['name'];
+                              _updateRoom(room['id']);
+                            },
+                          ),
+                        if (isSuperuser)
+                          IconButton(
+                            icon: Icon(Icons.delete),
+                            onPressed: () {
+                              _deleteRoom(room['id']);
+                            },
+                          ),
                         // New icon button to view media files
                         IconButton(
                           icon: Icon(Icons.visibility),

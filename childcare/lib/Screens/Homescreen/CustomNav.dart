@@ -105,7 +105,7 @@ class CustomDrawer extends StatelessWidget {
             title: Text('Students'),
             backgroundColor: Color.fromARGB(255, 59, 168, 218),
             children: [
-              if (user != null && (user!.userType == "Staff"))
+              if (user != null && (user!.is_superuser == true))
                 Padding(
                   padding: EdgeInsets.only(left: 16.0),
                   child: ListTile(
@@ -191,7 +191,7 @@ class CustomDrawer extends StatelessWidget {
               ],
             ),
           if (user != null &&
-              (user!.userType != "Parent" && user!.userType == "Staff"))
+              (user!.userType != "Parent" && user!.is_superuser == true))
             ExpansionTile(
               title: Text('Staff'),
               backgroundColor: Color.fromARGB(255, 59, 168, 218),
@@ -306,62 +306,64 @@ class CustomDrawer extends StatelessWidget {
                 );
               },
             ),
-          ExpansionTile(
-            title: Text('Appointment'),
-            backgroundColor: Color.fromARGB(255, 59, 168, 218),
-            children: [
-              if (user != null &&
-                  (user!.userType == "Parent" && user!.userType != "Staff"))
-                Padding(
-                  padding: EdgeInsets.only(left: 16.0),
-                  child: ListTile(
-                    title: Text('Request'),
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => CreateParentAppointmentView(),
-                        ),
-                      );
-                    },
-                  ),
-                ),
-              if (user != null &&
-                  (user!.userType == "Parent" && user!.userType != "Staff"))
-                Padding(
-                  padding: EdgeInsets.only(left: 16.0),
-                  child: ListTile(
-                    title: Text('View Status'),
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => AppointmentStatusPage(),
-                        ),
-                      );
-                    },
-                  ),
-                ),
-              if (user != null &&
-                  (user!.userType != "Parent" && user!.userType == "Staff"))
-                Padding(
-                  padding: EdgeInsets.only(left: 16.0),
-                  child: ListTile(
-                    title: Text('View Status'),
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => AppointmentStatusStaffPage(),
-                        ),
-                      );
-                    },
-                  ),
-                ),
-            ],
-          ),
           if (user != null &&
-              (user!.userType != "Parent" && user!.userType == "Staff"))
+              (user!.userType != "Parent" && user!.is_superuser == true))
+            ExpansionTile(
+              title: Text('Appointment'),
+              backgroundColor: Color.fromARGB(255, 59, 168, 218),
+              children: [
+                if (user != null &&
+                    (user!.userType == "Parent" && user!.is_superuser == true))
+                  Padding(
+                    padding: EdgeInsets.only(left: 16.0),
+                    child: ListTile(
+                      title: Text('Request'),
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => CreateParentAppointmentView(),
+                          ),
+                        );
+                      },
+                    ),
+                  ),
+                if (user != null &&
+                    (user!.userType == "Parent" && user!.userType != "Staff"))
+                  Padding(
+                    padding: EdgeInsets.only(left: 16.0),
+                    child: ListTile(
+                      title: Text('View Status'),
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => AppointmentStatusPage(),
+                          ),
+                        );
+                      },
+                    ),
+                  ),
+                if (user != null &&
+                    (user!.userType != "Parent" && user!.userType == "Staff"))
+                  Padding(
+                    padding: EdgeInsets.only(left: 16.0),
+                    child: ListTile(
+                      title: Text('View Status'),
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => AppointmentStatusStaffPage(),
+                          ),
+                        );
+                      },
+                    ),
+                  ),
+              ],
+            ),
+          if (user != null &&
+              (user!.userType != "Parent" && user!.is_superuser == true))
             ExpansionTile(
               title: Text('Accounts'),
               backgroundColor: Color.fromARGB(255, 59, 168, 218),
@@ -445,29 +447,28 @@ class CustomDrawer extends StatelessWidget {
               showDialog(
                 context: context,
                 builder: (BuildContext context) {
-                  if (Navigator.of(context).canPop()) {
-                    return AlertDialog(
-                      title: Text('Logout'),
-                      content: Text('Are you sure you want to logout?'),
-                      actions: <Widget>[
-                        ElevatedButton(
-                          onPressed: () {
-                            Navigator.of(context).pop();
-                            logout(context);
-                          },
-                          child: Text('Yes'),
-                        ),
-                        TextButton(
-                          onPressed: () {
-                            Navigator.of(context).pop();
-                          },
-                          child: Text('No'),
-                        ),
-                      ],
-                    );
-                  } else {
-                    return Container();
-                  }
+                  return AlertDialog(
+                    title: Text('Logout'),
+                    content: Text('Are you sure you want to logout?'),
+                    actions: <Widget>[
+                      ElevatedButton(
+                        onPressed: () {
+                          // Close the dialog
+                          // Navigator.of(context).pop();
+                          // Perform the logout action
+                          logout(context);
+                        },
+                        child: Text('Yes'),
+                      ),
+                      TextButton(
+                        onPressed: () {
+                          // Close the dialog
+                          Navigator.of(context).pop();
+                        },
+                        child: Text('No'),
+                      ),
+                    ],
+                  );
                 },
               );
             },

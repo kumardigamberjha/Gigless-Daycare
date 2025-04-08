@@ -28,7 +28,7 @@ class _CurrentYearAccountDetailPageState
     try {
       final response = await http.get(
         Uri.parse(
-            'https://child.codingindia.co.in/Accounts/current-year-payments/'),
+            'https://daycare.codingindia.co.in/Accounts/current-year-payments/'),
       );
 
       if (response.statusCode == 200) {

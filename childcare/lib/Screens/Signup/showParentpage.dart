@@ -14,7 +14,7 @@ class _ParentListPageState extends State<ParentListPage> {
 
   Future<void> fetchUsers() async {
     final response = await http
-        .get(Uri.parse('https://child.codingindia.co.in/ParentList/'));
+        .get(Uri.parse('https://daycare.codingindia.co.in/ParentList/'));
     if (response.statusCode == 200) {
       setState(() {
         users = json.decode(response.body);
@@ -108,7 +108,7 @@ class _ParentDetailPageState extends State<ParentDetailPage> {
 
   Future<void> fetchParentDetails() async {
     final response = await http.get(Uri.parse(
-        'https://child.codingindia.co.in/ParentListDetail/${widget.parentId}/'));
+        'https://daycare.codingindia.co.in/ParentListDetail/${widget.parentId}/'));
     if (response.statusCode == 200) {
       setState(() {
         final data = json.decode(response.body);
@@ -123,7 +123,7 @@ class _ParentDetailPageState extends State<ParentDetailPage> {
   Future<void> deleteParent(BuildContext context) async {
     final response = await http.delete(
       Uri.parse(
-          'https://child.codingindia.co.in/deleteusersrecord/${widget.parentId}/'),
+          'https://daycare.codingindia.co.in/deleteusersrecord/${widget.parentId}/'),
     );
 
     if (response.statusCode == 204) {

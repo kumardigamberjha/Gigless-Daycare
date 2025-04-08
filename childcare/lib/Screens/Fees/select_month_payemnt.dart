@@ -34,7 +34,7 @@ class _SelectedMonthlyPaymentsPageState
     try {
       final response = await http.get(
         Uri.parse(
-            'https://child.codingindia.co.in/Accounts/total-payments-selected-month/?month=$month&year=$year'),
+            'https://daycare.codingindia.co.in/Accounts/total-payments-selected-month/?month=$month&year=$year'),
       );
 
       if (response.statusCode == 200) {

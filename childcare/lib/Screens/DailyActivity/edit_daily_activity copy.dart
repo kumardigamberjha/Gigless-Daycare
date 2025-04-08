@@ -50,7 +50,7 @@ class _EditDailyActivityPageState extends State<EditDailyActivityPage> {
     try {
       final response = await http.get(
         Uri.parse(
-          "https://child.codingindia.co.in/student/api/daily-activity/${widget.childId}/",
+          "https://daycare.codingindia.co.in/student/api/daily-activity/${widget.childId}/",
         ),
       );
 
@@ -114,7 +114,7 @@ class _EditDailyActivityPageState extends State<EditDailyActivityPage> {
       var request = http.MultipartRequest(
         'POST',
         Uri.parse(
-            'https://child.codingindia.co.in/student/api/edit-daily-activity/${widget.childId}/'),
+            'https://daycare.codingindia.co.in/student/api/edit-daily-activity/${widget.childId}/'),
       );
       request.fields['child'] = widget.childId.toString();
       request.fields['meal_description'] = mealDescriptionController.text;

@@ -60,8 +60,8 @@ class _CalendarScreenState extends State<CalendarScreen> {
 
   void _fetchEvents() async {
     // Make an HTTP GET request to your backend API endpoint
-    var response = await http.get(
-        Uri.parse('https://child.codingindia.co.in/CalendarEvent/api/events/'));
+    var response = await http.get(Uri.parse(
+        'https://daycare.codingindia.co.in/CalendarEvent/api/events/'));
 
     // Check if the request was successful (HTTP 200 OK)
     if (response.statusCode == 200) {
@@ -250,7 +250,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
                 // Send HTTP POST request to backend to create event
                 final response = await http.post(
                   Uri.parse(
-                      'https://child.codingindia.co.in/CalendarEvent/api/create-event/'),
+                      'https://daycare.codingindia.co.in/CalendarEvent/api/create-event/'),
                   headers: <String, String>{
                     'Content-Type': 'application/json; charset=UTF-8',
                   },
@@ -321,7 +321,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
                 try {
                   final response = await http.post(
                     Uri.parse(
-                        'https://child.codingindia.co.in/CalendarEvent/edit-event/'),
+                        'https://daycare.codingindia.co.in/CalendarEvent/edit-event/'),
                     headers: <String, String>{
                       'Content-Type': 'application/json; charset=UTF-8',
                     },
@@ -382,7 +382,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
                 try {
                   final response = await http.delete(
                     Uri.parse(
-                        'https://child.codingindia.co.in/CalendarEvent/DeleteEvent/$eventId/'),
+                        'https://daycare.codingindia.co.in/CalendarEvent/DeleteEvent/$eventId/'),
                     headers: <String, String>{
                       'Content-Type': 'application/json; charset=UTF-8',
                     },

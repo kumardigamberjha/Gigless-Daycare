@@ -41,7 +41,7 @@ class _UpdateMediaPageState extends State<UpdateMediaPage> {
 
     try {
       Response response = await dio.put(
-        'https://child.codingindia.co.in/student/rooms/${widget.roomId}/media/${widget.mediaId}/update/',
+        'https://daycare.codingindia.co.in/student/rooms/${widget.roomId}/media/${widget.mediaId}/update/',
         data: formData,
       );
       if (response.statusCode == 200) {

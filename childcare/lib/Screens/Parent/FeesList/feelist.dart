@@ -24,7 +24,7 @@ class _PPaymentsPageState extends State<PPaymentsPage> {
       String? accessToken = prefs.getString('accessToken');
 
       String apiUrl =
-          'https://child.codingindia.co.in/Parent/ParentCurrentmonth_payments_list/';
+          'https://daycare.codingindia.co.in/Parent/ParentCurrentmonth_payments_list/';
       final response = await http.get(
         Uri.parse(apiUrl),
         headers: {

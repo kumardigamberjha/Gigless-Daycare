@@ -1,6 +1,7 @@
+import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import 'dart:convert';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class ViewMediaPage extends StatefulWidget {
   final int roomId;
@@ -14,34 +15,71 @@ class ViewMediaPage extends StatefulWidget {
 class _ViewMediaPageState extends State<ViewMediaPage> {
   List<dynamic> _mediaFiles = [];
   bool _isLoading = true;
+  bool isSuperuser = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _fetchMediaFiles();
+  }
 
   Future<void> _fetchMediaFiles() async {
-    final response = await http.get(Uri.parse(
-        'https://child.codingindia.co.in/student/rooms/${widget.roomId}/media/'));
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String? accessToken = prefs.getString('accessToken');
+    bool? superuserStatus = prefs.getBool('is_superuser');
 
-    if (response.statusCode == 200) {
+    // Update isSuperuser state
+    setState(() {
+      isSuperuser = superuserStatus ?? false; // Default to false if null
+    });
+
+    try {
+      final response = await http.get(
+        Uri.parse(
+            'https://daycare.codingindia.co.in/student/rooms/${widget.roomId}/media/'),
+      );
+
+      if (response.statusCode == 200) {
+        setState(() {
+          _mediaFiles = jsonDecode(response.body);
+          _isLoading = false;
+        });
+      } else {
+        throw Exception('Failed to load media files');
+      }
+    } catch (e) {
+      print('Error fetching media files: $e');
       setState(() {
-        _mediaFiles = jsonDecode(response.body);
         _isLoading = false;
       });
-    } else {
-      throw Exception('Failed to load media files');
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Failed to load media files')),
+      );
     }
   }
 
   Future<void> _deleteMediaFile(int mediaId) async {
-    final response = await http.delete(Uri.parse(
-        'https://child.codingindia.co.in/student/rooms/${widget.roomId}/media/$mediaId/delete/'));
+    try {
+      final response = await http.delete(
+        Uri.parse(
+            'https://daycare.codingindia.co.in/student/rooms/${widget.roomId}/media/$mediaId/delete/'),
+      );
 
-    if (response.statusCode == 204) {
-      setState(() {
-        _mediaFiles.removeWhere((media) => media['id'] == mediaId);
-      });
-      ScaffoldMessenger.of(context)
-          .showSnackBar(SnackBar(content: Text('Media deleted successfully')));
-    } else {
-      ScaffoldMessenger.of(context)
-          .showSnackBar(SnackBar(content: Text('Failed to delete media')));
+      if (response.statusCode == 204) {
+        setState(() {
+          _mediaFiles.removeWhere((media) => media['id'] == mediaId);
+        });
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Media deleted successfully')),
+        );
+      } else {
+        throw Exception('Failed to delete media');
+      }
+    } catch (e) {
+      print('Error deleting media file: $e');
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Failed to delete media')),
+      );
     }
   }
 
@@ -72,19 +110,24 @@ class _ViewMediaPageState extends State<ViewMediaPage> {
     );
   }
 
-  @override
-  void initState() {
-    super.initState();
-    _fetchMediaFiles();
-  }
-
   void _openImage(String imageUrl) {
+    print(imageUrl);
     Navigator.push(
       context,
       MaterialPageRoute(
         builder: (context) => FullScreenImageView(imageUrl: imageUrl),
       ),
     );
+  }
+
+  String enforceHttps(String? url) {
+    if (url == null || url.isEmpty) {
+      return 'https://via.placeholder.com/150'; // Default placeholder image
+    }
+    if (url.startsWith('http://')) {
+      return url.replaceFirst('http://', 'https://');
+    }
+    return url;
   }
 
   @override
@@ -99,8 +142,8 @@ class _ViewMediaPageState extends State<ViewMediaPage> {
                   itemCount: _mediaFiles.length,
                   itemBuilder: (context, index) {
                     final media = _mediaFiles[index];
-                    final mediaUrl =
-                        'https://child.codingindia.co.in${media['media_file']}'; // Full URL for the image
+                    final mediaUrl = enforceHttps(
+                        'https://daycare.codingindia.co.in${media['media_file']}');
 
                     return Card(
                       child: ListTile(
@@ -108,11 +151,10 @@ class _ViewMediaPageState extends State<ViewMediaPage> {
                                 media['media_file'].endsWith(".png")
                             ? GestureDetector(
                                 onTap: () {
-                                  _openImage(
-                                      mediaUrl); // Use full URL for full-screen view
+                                  _openImage(mediaUrl);
                                 },
                                 child: Image.network(
-                                  mediaUrl, // Full URL for image preview
+                                  mediaUrl,
                                   width: 50,
                                   height: 50,
                                   fit: BoxFit.cover,
@@ -124,12 +166,14 @@ class _ViewMediaPageState extends State<ViewMediaPage> {
                             : Icon(Icons.insert_drive_file),
                         title: Text(media['media_file'].split('/').last),
                         subtitle: Text('Uploaded on: ${media['uploaded_at']}'),
-                        trailing: IconButton(
-                          icon: Icon(Icons.delete, color: Colors.red),
-                          onPressed: () {
-                            _confirmDelete(media['id']);
-                          },
-                        ),
+                        trailing: isSuperuser
+                            ? IconButton(
+                                icon: Icon(Icons.delete, color: Colors.red),
+                                onPressed: () {
+                                  _confirmDelete(media['id']);
+                                },
+                              )
+                            : null,
                       ),
                     );
                   },

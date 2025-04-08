@@ -36,7 +36,7 @@ class _ParentChildPageState extends State<ParentChildPage> {
       String? accessToken = prefs.getString('accessToken');
       final response = await http.get(
         Uri.parse(
-            'https://child.codingindia.co.in/Parent/childtodaysattendancep/'),
+            'https://daycare.codingindia.co.in/Parent/childtodaysattendancep/'),
         headers: {
           'Authorization': 'Bearer $accessToken',
         },
@@ -61,7 +61,7 @@ class _ParentChildPageState extends State<ParentChildPage> {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String? accessToken = prefs.getString('accessToken');
     final response = await http.get(
-      Uri.parse("https://child.codingindia.co.in/Parent/"),
+      Uri.parse("https://daycare.codingindia.co.in/Parent/"),
       headers: {
         'Authorization': 'Bearer $accessToken',
       },
@@ -146,24 +146,53 @@ class _ParentChildPageState extends State<ParentChildPage> {
                                     children: [
                                       Column(
                                         children: [
-                                          Container(
-                                            width: 80,
-                                            height: 80,
-                                            decoration: BoxDecoration(
-                                              shape: BoxShape.circle,
-                                              border: Border.all(
-                                                  color: Color(0xFF0891B2),
-                                                  width: 4),
-                                              image: DecorationImage(
-                                                image: NetworkImage(
-                                                  childRecords[index]
-                                                          ['image'] ??
-                                                      'https://via.placeholder.com/150',
-                                                ),
+                                          () {
+                                            // Get the image URL or use an empty string if not provided
+                                            String imageUrl =
+                                                childRecords[index]['image'] ??
+                                                    '';
+                                            print("Image: ${imageUrl}");
+
+                                            // Check if the image URL is empty or null, use a placeholder image
+                                            if (imageUrl.isEmpty) {
+                                              imageUrl =
+                                                  'https://via.placeholder.com/150'; // Placeholder URL if image URL is empty
+                                            } else if (!imageUrl
+                                                    .startsWith('http://') &&
+                                                !imageUrl
+                                                    .startsWith('https://')) {
+                                              // Prepend the base URL if the image URL doesn't already have http:// or https://
+                                              imageUrl =
+                                                  'https://daycare.codingindia.co.in$imageUrl';
+                                            } else if (imageUrl
+                                                .startsWith('http://')) {
+                                              // Replace http with https
+                                              imageUrl = imageUrl.replaceFirst(
+                                                  'http://', 'https://');
+                                            }
+
+                                            // Return the image widget
+                                            return ClipRRect(
+                                              borderRadius:
+                                                  BorderRadius.circular(50),
+                                              child: Image.network(
+                                                imageUrl,
+                                                width: 100,
+                                                height: 100,
                                                 fit: BoxFit.cover,
+                                                errorBuilder: (context, error,
+                                                    stackTrace) {
+                                                  // Fallback in case the image fails to load
+                                                  return Image.network(
+                                                    'https://via.placeholder.com/150', // Placeholder for failed image loads
+                                                    width: 100,
+                                                    height: 100,
+                                                    fit: BoxFit.cover,
+                                                  );
+                                                },
                                               ),
-                                            ),
-                                          ),
+                                            );
+                                          }(),
                                           Text(
                                             '#${childRecords[index]['unique_id'] ?? ''}',
                                             style: TextStyle(

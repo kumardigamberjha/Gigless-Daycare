@@ -42,7 +42,7 @@ class _DailyActivityPageState extends State<DailyActivityPage> {
       var request = http.MultipartRequest(
         'POST',
         Uri.parse(
-            'https://child.codingindia.co.in/student/api/create-daily-activity/${widget.childId}/'),
+            'https://daycare.codingindia.co.in/student/api/create-daily-activity/${widget.childId}/'),
       );
       request.fields['child'] = widget.childId.toString();
       request.fields['meal_description'] = mealDescriptionController.text;

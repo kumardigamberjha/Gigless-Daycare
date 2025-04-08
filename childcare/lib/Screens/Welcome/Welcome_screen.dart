@@ -68,7 +68,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
 
   Future<bool> validateToken(String accessToken) async {
     final response = await http.post(
-      Uri.parse('https://child.codingindia.co.in/validate-token/'),
+      Uri.parse('https://daycare.codingindia.co.in/validate-token/'),
       headers: {'Content-Type': 'application/json'},
       body: jsonEncode({'token': accessToken}),
     );

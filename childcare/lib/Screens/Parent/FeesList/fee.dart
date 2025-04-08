@@ -44,7 +44,7 @@ class _FeeFormPageForParentState extends State<FeeFormPageForParent> {
     final lastDayOfMonth = DateTime(now.year, now.month + 1, 0);
 
     final String apiUrl =
-        'https://child.codingindia.co.in/Parent/Fees/${widget.childId}/';
+        'https://daycare.codingindia.co.in/Parent/Fees/${widget.childId}/';
 
     try {
       final response = await http.get(
@@ -94,7 +94,7 @@ class _FeeFormPageForParentState extends State<FeeFormPageForParent> {
     });
 
     final String apiUrl =
-        'https://child.codingindia.co.in/Accounts/Fees/${widget.childId}/';
+        'https://daycare.codingindia.co.in/Accounts/Fees/${widget.childId}/';
 
     final response = await http.post(
       Uri.parse(apiUrl),

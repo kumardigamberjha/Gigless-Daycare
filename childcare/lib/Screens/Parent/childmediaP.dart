@@ -25,8 +25,8 @@ class _ChildMediaPageState extends State<ChildMediaPage> {
     try {
       final response = await http.get(
         Uri.parse(
-            'https://child.codingindia.co.in/Parent/dailyactivitymediaforparent/${widget.childId}'),
-        // Replace 'https://child.codingindia.co.in/ChildMediaForParent/${widget.childId}' with your actual API endpoint
+            'https://daycare.codingindia.co.in/Parent/dailyactivitymediaforparent/${widget.childId}'),
+        // Replace 'https://daycare.codingindia.co.in/ChildMediaForParent/${widget.childId}' with your actual API endpoint
         headers: {
           'Content-Type': 'application/json',
           // Add any required headers

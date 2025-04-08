@@ -14,6 +14,8 @@ class CustomUser {
   final String email;
   final String mobileNumber;
   final String userType;
+  final bool is_superuser;
+
   int _noOfRooms = 0;
 
   CustomUser({
@@ -21,15 +23,16 @@ class CustomUser {
     required this.email,
     required this.mobileNumber,
     required this.userType,
+    required this.is_superuser,
   });
 
   factory CustomUser.fromJson(Map<String, dynamic> json) {
     return CustomUser(
-      username: json['username'],
-      email: json['email'],
-      mobileNumber: json['mobile_number'],
-      userType: json['usertype'],
-    );
+        username: json['username'],
+        email: json['email'],
+        mobileNumber: json['mobile_number'],
+        userType: json['usertype'],
+        is_superuser: json['is_superuser']);
   }
 }
 
@@ -40,24 +43,27 @@ Future<void> logout(BuildContext context) async {
 
     if (refreshToken != null) {
       var response = await http.post(
-        Uri.parse('https://child.codingindia.co.in/logout/'),
+        Uri.parse('https://daycare.codingindia.co.in/logout/'),
         body: {'refresh_token': refreshToken},
       );
 
       if (response.statusCode == 200) {
         // Clear access token from local storage
-        prefs.remove('accessToken');
-        // Navigate to home screen
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(
-            builder: (context) {
-              return LoginScreen(
-                successMessage: 'Registration successful. Please log in.',
-              );
-            },
-          ),
-        );
+        await prefs.remove('accessToken');
+
+        // Navigate to the login screen safely
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(
+              builder: (context) {
+                return LoginScreen(
+                  successMessage: 'Logout successful. Please log in.',
+                );
+              },
+            ),
+          );
+        });
       } else {
         // Handle logout failure
         print('Failed to logout: ${response.body}');
@@ -95,7 +101,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
     if (accessToken != null) {
       final response = await http.get(
-        Uri.parse('https://child.codingindia.co.in/student/api/user/'),
+        Uri.parse('https://daycare.codingindia.co.in/student/api/user/'),
         headers: {
           'Authorization': 'Bearer $accessToken',
         },
@@ -106,6 +112,9 @@ class _HomeScreenState extends State<HomeScreen> {
         setState(() {
           _user = CustomUser.fromJson(jsonBody);
         });
+        await prefs.setBool('is_superuser', jsonBody['is_superuser']);
+        await prefs.setString('userId', jsonBody['id'].toString());
+        await prefs.setString('username', jsonBody['username']);
       } else {
         print('Failed to fetch user data');
       }
@@ -115,8 +124,8 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Future<Map<String, dynamic>> fetchDashboardData() async {
-    final response = await http
-        .get(Uri.parse('https://child.codingindia.co.in/Accounts/dashboard/'));
+    final response = await http.get(
+        Uri.parse('https://daycare.codingindia.co.in/Accounts/dashboard/'));
 
     if (response.statusCode == 200) {
       return jsonDecode(response.body);

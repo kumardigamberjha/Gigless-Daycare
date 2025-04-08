@@ -2,6 +2,8 @@ import 'package:childcare/Screens/Childrens/child_record.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+import 'package:shared_preferences/shared_preferences.dart';
+
 import 'package:url_launcher/url_launcher.dart';
 
 class ShowChildDetail extends StatefulWidget {
@@ -15,6 +17,7 @@ class ShowChildDetail extends StatefulWidget {
 
 class _ShowChildDetailState extends State<ShowChildDetail> {
   Map<String, dynamic> childData = {};
+  bool isSuperuser = false;
 
   @override
   void initState() {
@@ -23,10 +26,19 @@ class _ShowChildDetailState extends State<ShowChildDetail> {
   }
 
   Future<void> fetchData() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String? accessToken = prefs.getString('accessToken');
+    bool? superuserStatus = prefs.getBool('is_superuser');
+
+    // Update isSuperuser state
+    setState(() {
+      isSuperuser = superuserStatus ?? false; // Default to false if null
+    });
+
     try {
       final response = await http.get(
         Uri.parse(
-          "https://child.codingindia.co.in/student/children/${widget.childId}/",
+          "https://daycare.codingindia.co.in/student/children/${widget.childId}/",
         ),
       );
 
@@ -54,7 +66,7 @@ class _ShowChildDetailState extends State<ShowChildDetail> {
     try {
       final response = await http.delete(
         Uri.parse(
-            'https://child.codingindia.co.in/student/delete-child-data/${widget.childId}/'),
+            'https://daycare.codingindia.co.in/student/delete-child-data/${widget.childId}/'),
       );
 
       if (response.statusCode == 200) {
@@ -153,11 +165,18 @@ class _ShowChildDetailState extends State<ShowChildDetail> {
                 radius: 80,
                 backgroundColor: Color(0xFF0891B2),
                 child: CircleAvatar(
-                    radius: 75,
-                    backgroundImage: childData['image'] != null
-                        ? NetworkImage(childData['image'])
-                        : AssetImage('assets/images/placeholder_image.png')
-                            as ImageProvider),
+                  radius: 75,
+                  backgroundImage: (childData['image'] != null &&
+                          childData['image'].isNotEmpty)
+                      ? NetworkImage(
+                          childData['image'].startsWith('http://')
+                              ? childData['image']
+                                  .replaceFirst('http://', 'https://')
+                              : childData['image'],
+                        )
+                      : AssetImage('assets/images/placeholder_image.png')
+                          as ImageProvider,
+                ),
               ),
               SizedBox(height: 20),
               Text(
@@ -231,17 +250,19 @@ class _ShowChildDetailState extends State<ShowChildDetail> {
                 Icons.people,
               ),
               SizedBox(height: 20),
-              // Delete Button
-              ElevatedButton(
-                onPressed: () {
-                  _confirmDelete(context); // Show confirmation dialog
-                },
-                style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.red,
-                    foregroundColor: Colors.white // Red color for delete action
-                    ),
-                child: Text("Delete Child"),
-              ),
+              if (isSuperuser)
+                // Delete Button
+                ElevatedButton(
+                  onPressed: () {
+                    _confirmDelete(context); // Show confirmation dialog
+                  },
+                  style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.red,
+                      foregroundColor:
+                          Colors.white // Red color for delete action
+                      ),
+                  child: Text("Delete Child"),
+                ),
             ],
           ),
         ),

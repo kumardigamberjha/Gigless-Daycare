@@ -15,6 +15,7 @@ class ChildRoomMedia extends StatefulWidget {
 class _ChildRoomMediaState extends State<ChildRoomMedia> {
   List<dynamic> _mediaFiles = [];
   bool _isLoading = true;
+  bool isSuperuser = false;
 
   @override
   void initState() {
@@ -26,10 +27,16 @@ class _ChildRoomMediaState extends State<ChildRoomMedia> {
   Future<void> fetchRoomMedia(int childId) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String? accessToken = prefs.getString('accessToken');
+    bool? superuserStatus = prefs.getBool('is_superuser');
+
+    // Update isSuperuser state
+    setState(() {
+      isSuperuser = superuserStatus ?? false; // Default to false if null
+    });
 
     final response = await http.get(
       Uri.parse(
-          'https://child.codingindia.co.in/Parent/childroomforparents/$childId/'),
+          'https://daycare.codingindia.co.in/Parent/childroomforparents/$childId/'),
       headers: {
         'Authorization': 'Bearer $accessToken',
       },
@@ -53,7 +60,7 @@ class _ChildRoomMediaState extends State<ChildRoomMedia> {
 
     final response = await http.delete(
       Uri.parse(
-          'https://child.codingindia.co.in/Parent/roommedia/$mediaId/delete/'),
+          'https://daycare.codingindia.co.in/Parent/roommedia/$mediaId/delete/'),
       headers: {
         'Authorization': 'Bearer $accessToken',
       },
@@ -100,7 +107,7 @@ class _ChildRoomMediaState extends State<ChildRoomMedia> {
   }
 
   // Open full-screen image view
-  void openImage(String imageUrl) {
+  void _openImage(String imageUrl) {
     Navigator.push(
       context,
       MaterialPageRoute(
@@ -112,8 +119,18 @@ class _ChildRoomMediaState extends State<ChildRoomMedia> {
   // Convert relative image path to full URL
   String getImageUrl(String path) {
     String baseUrl =
-        "https://child.codingindia.co.in"; // Replace with your actual base URL
+        "https://daycare.codingindia.co.in"; // Replace with your actual base URL
     return path.startsWith('/') ? "$baseUrl$path" : path;
+  }
+
+  String enforceHttps(String? url) {
+    if (url == null || url.isEmpty) {
+      return 'https://via.placeholder.com/150'; // Default placeholder image
+    }
+    if (url.startsWith('http://')) {
+      return url.replaceFirst('http://', 'https://');
+    }
+    return url;
   }
 
   @override
@@ -124,34 +141,34 @@ class _ChildRoomMediaState extends State<ChildRoomMedia> {
           ? Center(child: CircularProgressIndicator())
           : _mediaFiles.isEmpty
               ? Center(child: Text('No media uploaded'))
-              : GridView.builder(
-                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 3, // Number of images per row
-                    crossAxisSpacing: 4.0,
-                    mainAxisSpacing: 4.0,
-                  ),
+              : ListView.builder(
                   itemCount: _mediaFiles.length,
                   itemBuilder: (context, index) {
                     final media = _mediaFiles[index];
-                    final mediaUrl = getImageUrl(
-                        media['media_file']); // Full URL for the image
+                    final mediaUrl = enforceHttps(
+                        'https://daycare.codingindia.co.in${media['media_file']}');
 
-                    return GestureDetector(
-                      onTap: () {
-                        openImage(mediaUrl); // Open image in full-screen view
-                      },
-                      child: Card(
-                        clipBehavior: Clip.antiAlias,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(8.0),
-                        ),
-                        child: Image.network(
-                          mediaUrl, // Full URL for image
-                          fit: BoxFit.cover,
-                          errorBuilder: (context, error, stackTrace) {
-                            return Icon(Icons.broken_image, size: 50);
-                          },
-                        ),
+                    return Card(
+                      child: ListTile(
+                        leading: media['media_file'].endsWith(".jpg") ||
+                                media['media_file'].endsWith(".png")
+                            ? GestureDetector(
+                                onTap: () {
+                                  _openImage(mediaUrl);
+                                },
+                                child: Image.network(
+                                  mediaUrl,
+                                  width: 50,
+                                  height: 50,
+                                  fit: BoxFit.cover,
+                                  errorBuilder: (context, error, stackTrace) {
+                                    return Icon(Icons.broken_image, size: 50);
+                                  },
+                                ),
+                              )
+                            : Icon(Icons.insert_drive_file),
+                        title: Text(media['media_file'].split('/').last),
+                        subtitle: Text('Uploaded on: ${media['uploaded_at']}'),
                       ),
                     );
                   },

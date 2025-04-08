@@ -23,17 +23,21 @@ class _ChildMediaDetailPageState extends State<ChildMediaDetailPage> {
   }
 
   Future<void> _fetchChildMedia() async {
-    final url =
-        'https://child.codingindia.co.in/student/child-media/${widget.childId}/';
-    final response = await http.get(Uri.parse(url));
+    try {
+      final url =
+          'https://daycare.codingindia.co.in/student/child-media/${widget.childId}/';
+      final response = await http.get(Uri.parse(url));
 
-    if (response.statusCode == 200) {
-      setState(() {
-        _isLoading = false;
-        _childMediaList = json.decode(response.body)['data'];
-      });
-    } else {
-      print('Failed to fetch child media');
+      if (response.statusCode == 200) {
+        setState(() {
+          _isLoading = false;
+          _childMediaList = json.decode(response.body)['data'] ?? [];
+        });
+      } else {
+        print('Failed to fetch child media: ${response.statusCode}');
+      }
+    } catch (e) {
+      print('Error fetching child media: $e');
     }
   }
 
@@ -100,29 +104,39 @@ class _ChildMediaDetailPageState extends State<ChildMediaDetailPage> {
   }
 
   Widget _buildMediaWidget(String fileUrl, String mediaType) {
+    final fullUrl = _buildMediaUrl(fileUrl);
+    print("Full Image: ${fullUrl}");
     if (mediaType == 'Image') {
       return Image.network(
-        fileUrl,
+        fullUrl,
         height: 200,
         fit: BoxFit.cover,
+        errorBuilder: (context, error, stackTrace) {
+          return Image.network(
+            'https://via.placeholder.com/150',
+            height: 200,
+            fit: BoxFit.cover,
+          );
+        },
       );
     } else if (mediaType == 'Video') {
-      return VideoPlayerWidget(videoUrl: fileUrl);
+      return VideoPlayerWidget(videoUrl: fullUrl);
     } else {
       return SizedBox.shrink();
     }
   }
 
   void _showMedia(String fileUrl, String mediaType) {
+    final fullUrl = _buildMediaUrl(fileUrl);
     if (mediaType == 'Video') {
       Navigator.push(
         context,
         MaterialPageRoute(
-          builder: (context) => VideoPlayerScreen(videoUrl: fileUrl),
+          builder: (context) => VideoPlayerScreen(videoUrl: fullUrl),
         ),
       );
     } else {
-      _showFullScreenImage(fileUrl);
+      _showFullScreenImage(fullUrl);
     }
   }
 
@@ -143,6 +157,13 @@ class _ChildMediaDetailPageState extends State<ChildMediaDetailPage> {
         );
       },
     );
+  }
+
+  String _buildMediaUrl(String? url) {
+    if (url == null || url.isEmpty) {
+      return 'https://via.placeholder.com/150'; // Default fallback image
+    }
+    return 'https://daycare.codingindia.co.in$url';
   }
 }
 
@@ -167,8 +188,8 @@ class _VideoPlayerWidgetState extends State<VideoPlayerWidget> {
         setState(() {});
       });
     _initializeVideoPlayerFuture = _controller.initialize();
-    _controller.setLooping(true); // This will loop the video indefinitely
-    _controller.play(); // This will start playing the video
+    _controller.setLooping(true);
+    _controller.play();
   }
 
   @override
@@ -205,6 +226,7 @@ class VideoPlayerScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text('Video Player'),
+        backgroundColor: Color(0xFF0891B2),
       ),
       body: Center(
         child: VideoPlayerWidget(videoUrl: videoUrl),

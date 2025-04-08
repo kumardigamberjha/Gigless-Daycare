@@ -1,11 +1,11 @@
-import 'dart:convert';
+import 'dart:typed_data'; // For handling bytes
 import 'dart:io';
-
+import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
-import 'package:image_picker/image_picker.dart';
-import 'package:http/http.dart' as http;
 import 'package:file_picker/file_picker.dart';
-import 'package:video_player/video_player.dart';
+import 'package:http/http.dart' as http;
+import 'dart:html' as html;
+import 'dart:convert'; // Import to handle base64 encoding for web
 
 class AddChildMediaPage extends StatefulWidget {
   final int childId;
@@ -17,8 +17,7 @@ class AddChildMediaPage extends StatefulWidget {
 }
 
 class _AddChildMediaPageState extends State<AddChildMediaPage> {
-  File? _selectedMedia;
-  VideoPlayerController? _videoPlayerController;
+  dynamic _selectedMedia; // Handles both File (mobile) and html.File (web)
   String? _mediaType;
   String? _activityType;
   TextEditingController _descController = TextEditingController();
@@ -31,12 +30,6 @@ class _AddChildMediaPageState extends State<AddChildMediaPage> {
     'Bathroom',
     'Other'
   ];
-
-  @override
-  void dispose() {
-    _videoPlayerController?.dispose();
-    super.dispose();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -119,24 +112,28 @@ class _AddChildMediaPageState extends State<AddChildMediaPage> {
   Widget _buildSelectedMedia() {
     if (_selectedMedia != null) {
       if (_mediaType == 'Image') {
-        return Image.file(
-          _selectedMedia!,
-          height: 200,
-          width: double.infinity,
-          fit: BoxFit.cover,
-        );
+        if (kIsWeb) {
+          return Image.network(
+            html.Url.createObjectUrl(_selectedMedia),
+            height: 200,
+            width: double.infinity,
+            fit: BoxFit.cover,
+          );
+        } else {
+          return Image.file(
+            _selectedMedia as File,
+            height: 200,
+            width: double.infinity,
+            fit: BoxFit.cover,
+          );
+        }
       } else if (_mediaType == 'Video') {
-        _videoPlayerController ??= VideoPlayerController.file(_selectedMedia!)
-          ..initialize().then((_) {
-            // Ensure the first frame is shown after the video is initialized
-            setState(() {});
-          });
-        return _videoPlayerController!.value.isInitialized
-            ? AspectRatio(
-                aspectRatio: _videoPlayerController!.value.aspectRatio,
-                child: VideoPlayer(_videoPlayerController!),
-              )
-            : Container();
+        return Container(
+          height: 200,
+          child: Center(
+            child: Text('Video preview is not supported in this demo.'),
+          ),
+        );
       }
     }
     return Container(
@@ -155,17 +152,33 @@ class _AddChildMediaPageState extends State<AddChildMediaPage> {
   }
 
   Future<void> _pickMedia() async {
-    FilePickerResult? result = await FilePicker.platform.pickFiles(
-      type: FileType.media,
-      allowCompression: true,
-    );
+    if (kIsWeb) {
+      final uploadInput = html.FileUploadInputElement()
+        ..accept = 'image/*,video/*';
+      uploadInput.click();
 
-    if (result != null) {
-      PlatformFile file = result.files.first;
-      setState(() {
-        _selectedMedia = File(file.path!);
-        _mediaType = file.extension == 'mp4' ? 'Video' : 'Image';
+      uploadInput.onChange.listen((event) {
+        if (uploadInput.files != null && uploadInput.files!.isNotEmpty) {
+          final file = uploadInput.files!.first;
+          setState(() {
+            _mediaType = file.type.startsWith('video/') ? 'Video' : 'Image';
+            _selectedMedia = file;
+          });
+        }
       });
+    } else {
+      final result = await FilePicker.platform.pickFiles(
+        type: FileType.media,
+        allowCompression: true,
+      );
+
+      if (result != null) {
+        final file = result.files.first;
+        setState(() {
+          _mediaType = file.extension == 'mp4' ? 'Video' : 'Image';
+          _selectedMedia = File(file.path!);
+        });
+      }
     }
   }
 
@@ -183,7 +196,7 @@ class _AddChildMediaPageState extends State<AddChildMediaPage> {
     }
 
     final String apiUrl =
-        'https://child.codingindia.co.in/student/child-media/';
+        'https://daycare.codingindia.co.in/student/child-media/';
     final String childId = widget.childId.toString();
 
     try {
@@ -191,25 +204,38 @@ class _AddChildMediaPageState extends State<AddChildMediaPage> {
         ..fields['child'] = childId
         ..fields['media_type'] = _mediaType ?? ''
         ..fields['activity_type'] = _activityType ?? ''
-        ..fields['desc'] = _descController.text
-        ..files.add(
-          await http.MultipartFile.fromPath(
+        ..fields['desc'] = _descController.text;
+
+      if (kIsWeb) {
+        final reader = html.FileReader();
+        reader.readAsArrayBuffer(_selectedMedia);
+        await reader.onLoadEnd.first;
+
+        request.files.add(
+          http.MultipartFile.fromBytes(
             'file',
-            _selectedMedia!.path,
+            reader.result as List<int>,
+            filename: (_selectedMedia as html.File).name,
           ),
         );
+      } else {
+        request.files.add(
+          await http.MultipartFile.fromPath(
+            'file',
+            (_selectedMedia as File).path,
+          ),
+        );
+      }
 
       final response = await request.send();
 
       if (response.statusCode == 201) {
         _showSnackBar('Activity saved');
-        await Future.delayed(Duration(seconds: 2)); // Wait for 2 seconds
-        Navigator.pop(context); // Return to previous page after saving
+        Navigator.pop(context);
       } else {
         _showSnackBar('Error: Failed to upload media');
       }
     } catch (error) {
-      print('Exception uploading media: $error');
       _showSnackBar('Exception: $error');
     } finally {
       setState(() {

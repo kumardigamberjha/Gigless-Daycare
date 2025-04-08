@@ -33,7 +33,8 @@ class _AppointmentStatusStaffPageState
     String? accessToken = prefs.getString('accessToken');
     try {
       final response = await http.get(
-        Uri.parse('https://child.codingindia.co.in/Parent/appointmentstatus/'),
+        Uri.parse(
+            'https://daycare.codingindia.co.in/Parent/appointmentstatus/'),
         headers: {
           'Authorization': 'Bearer $accessToken',
         },
