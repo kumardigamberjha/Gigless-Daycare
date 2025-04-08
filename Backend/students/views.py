@@ -57,10 +57,40 @@ class ChildListCreateView(generics.ListCreateAPIView):
             return Response({'error': str(e)}, status=500)
 
 
-class ChildListView(generics.ListAPIView):
-    queryset = Child.objects.all()
-    serializer_class = ChildSerializerGet
+# class ChildListView(generics.ListAPIView):
+#     queryset = Child.objects.all()
+#     serializer_class = ChildSerializerGet
 
+
+class ChildListView(APIView):
+    permission_classes = [IsAuthenticated]  # Ensure the user is authenticated
+
+    def get(self, request, *args, **kwargs):
+        # Check if the user is a superuser
+        if request.user.is_superuser:
+            # Superusers can see all children
+            children = Child.objects.all()
+        else:
+            try:
+                # Retrieve children associated with the logged-in staff user's assigned room
+                assigned_room = request.user.room
+                children = Child.objects.filter(room=assigned_room)
+            except AttributeError:
+                # If the user does not have an assigned room, return an empty queryset
+                children = Child.objects.none()
+
+        # Count the number of children in the queryset
+        no_of_children = children.count()
+
+        # Serialize the children data
+        serializer = ChildSerializerGet(children, many=True)
+
+        # Return the response with the same structure as before
+        return Response({
+            'data': serializer.data,
+            'no_of_rooms': no_of_children  # Use 'no_of_rooms' for consistency with frontend
+        })
+    
 
 class ChildDetailView(generics.RetrieveUpdateDestroyAPIView):
     queryset = Child.objects.all()
