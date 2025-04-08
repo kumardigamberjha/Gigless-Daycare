@@ -205,3 +205,26 @@ def get_username(request):
         print("Username: ", username)
         response_data = {'username': username}
         return JsonResponse(response_data)
+    
+
+class EditUserView(APIView):
+
+    def get_object(self, pk):
+        try:
+            return CustomUser.objects.get(pk=pk)
+        except CustomUser.DoesNotExist:
+            return None
+
+    def put(self, request, pk):
+        """
+        Update user details.
+        """
+        user = self.get_object(pk)
+        if not user:
+            return Response({'error': 'User not found'}, status=status.HTTP_404_NOT_FOUND)
+
+        serializer = CustomUserSerializer(user, data=request.data, partial=True)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
