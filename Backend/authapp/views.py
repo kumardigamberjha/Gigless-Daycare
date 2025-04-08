@@ -220,15 +220,13 @@ class EditUserView(APIView):
         Update user details, including the room.
         """
         user = self.get_object(pk)
-        if not user:
-            return Response({'error': 'User not found'}, status=status.HTTP_404_NOT_FOUND)
+        room = request.data.get('room')
+        usertype = request.data.get('usertype')
+        user.room = room
+        user.usertype = usertype
+        user.save()
 
-        # Pass the request data to the serializer
-        serializer = CustomUserSerializer(user, data=request.data, partial=True)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_200_OK)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        return Response({"Data": "Saved"}, status=status.HTTP_200_OK)
 
 
 from collections import defaultdict
