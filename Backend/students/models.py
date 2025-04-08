@@ -3,13 +3,13 @@ from django.utils.crypto import get_random_string
 from PIL import Image
 from django.core.files.uploadedfile import InMemoryUploadedFile
 import io, os
-import ffmpeg
-from django.core.files.base import ContentFile
-from io import BytesIO
-from authapp.models import CustomUser
+#import ffmpeg
+#from django.core.files.base import ContentFile
+#from io import BytesIO
+#from authapp.models import CustomUser
 from django.conf import settings
-import subprocess
-from moviepy.editor import VideoFileClip
+#import subprocess
+#from moviepy.editor import VideoFileClip
 import boto3 
 s3_client = boto3.client('s3')
 
