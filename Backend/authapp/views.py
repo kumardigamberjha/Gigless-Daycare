@@ -24,6 +24,7 @@ from django.db.models import Q
 from django.contrib.auth.hashers import make_password
 from django.core.mail import send_mail
 from Backend.settings import EMAIL_HOST_USER
+from students.models import Rooms
 
 class TokenValidationView(APIView):
     @authentication_classes([])  # Use an empty list to disable authentication for this view
@@ -222,7 +223,7 @@ class EditUserView(APIView):
         user = self.get_object(pk)
         room = request.data.get('room')
         usertype = request.data.get('usertype')
-        user.room = room
+        user.room = Rooms.objects.get(id=room).id
         user.usertype = usertype
         user.save()
 
