@@ -57,9 +57,9 @@ class ChildListCreateView(generics.ListCreateAPIView):
             return Response({'error': str(e)}, status=500)
 
 
-# class ChildListView(generics.ListAPIView):
-#     queryset = Child.objects.all()
-#     serializer_class = ChildSerializerGet
+class ChildListView2(generics.ListAPIView):
+    queryset = Child.objects.all()
+    serializer_class = ChildSerializerGet
 
 
 class ChildListView(APIView):

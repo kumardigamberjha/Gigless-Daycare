@@ -5,6 +5,8 @@ urlpatterns = [
     path('children/', views.ChildListCreateView.as_view(), name='child-list-create'),
     path('children/<int:pk>/', views.ChildDetailView.as_view(), name='child-detail'),
     path('child-list/', views.ChildListView.as_view(), name='child-list'),
+    path('child-list2/', views.ChildListView2.as_view(), name='child-list2'),
+
     path('delete-child-data/<int:id>/', views.DeleteChildData, name='delete-child-data'),
 
     path('mark_attendance/', views.MarkAttendanceView.as_view(), name='mark-attendance'),
