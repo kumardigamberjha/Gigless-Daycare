@@ -112,7 +112,7 @@ class DailyActivity(models.Model):
     child = models.ForeignKey(Child, on_delete=models.CASCADE)
     ondate = models.DateField(auto_now=True)
     meal_description = models.TextField(blank=True, null=True)
-    nap_duration = models.DurationField(blank=True, null=True)
+    nap_duration = models.CharField(blank=True, null=True)
     playtime_activities = models.TextField(blank=True, null=True)
     bathroom_breaks = models.PositiveIntegerField(default=0, blank=True, null=True)
     mood = models.CharField(max_length=20, blank=True, null=True)
