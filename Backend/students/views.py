@@ -18,6 +18,7 @@ from authapp.serializers import CustomUserSerializer
 from rest_framework.permissions import IsAuthenticated
 from django.views import View
 from .tasks import save_images_and_videos_to_s3
+from django.db.models import Prefetch
 
 class ChildListCreateView(generics.ListCreateAPIView):
     queryset = Child.objects.all()
