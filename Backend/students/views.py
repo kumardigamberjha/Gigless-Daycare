@@ -319,33 +319,34 @@ def edit_daily_activity_view(request, child_id):
     except Exception as e:
         return Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
-
 @api_view(['GET'])
 def daily_activity_view(request, child_id):
     today = date.today()
-    print("Today: ", today)
-    try:
-        qs = get_object_or_404(Child, id=child_id)
-        daily_activities = DailyActivity.objects.filter(child=qs, ondate=today)
-        # Serialize daily activities
-        serializer = DailyActivitySerializer(daily_activities, many=True)
-        
-        # Check if any daily activity exists for today
-        is_activity_saved = daily_activities.exists()
 
-        # Serialize child details (single instance)
-        child_ser = ChildSerializer(qs)
+    # Fetch the child and prefetch related daily activities for today
+    try:
+        child = Child.objects.prefetch_related(
+            Prefetch('dailyactivity_set', queryset=DailyActivity.objects.filter(ondate=today))
+        ).get(id=child_id)
+
+        # Extract prefetched daily activities
+        daily_activities = child.dailyactivity_set.all()
+
+        # Serialize data
+        serializer = DailyActivitySerializer(daily_activities, many=True)
+        child_serializer = ChildSerializer(child)
+
         response_data = {
             'data': serializer.data,
-            'user': child_ser.data,  # Access serialized data attribute for a single instance
-            'is_activity_saved': is_activity_saved,
+            'user': child_serializer.data,
+            'is_activity_saved': bool(daily_activities),  # Check if any activity exists
         }
 
         return Response(response_data, status=status.HTTP_200_OK)
+
     except Child.DoesNotExist:
         return Response({'error': 'Child not found'}, status=status.HTTP_404_NOT_FOUND)
     
-
 
 @api_view(['GET', 'POST'])
 def child_media_list(request):
