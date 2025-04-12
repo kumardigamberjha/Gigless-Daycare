@@ -116,7 +116,7 @@ class DailyActivity(models.Model):
     playtime_activities = models.TextField(blank=True, null=True)
     bathroom_breaks = models.CharField(default=0, blank=True, null=True)
     mood = models.CharField(max_length=20, blank=True, null=True)
-    temperature = models.CharField(max_length=5, decimal_places=2, blank=True, null=True)
+    temperature = models.CharField(max_length=5, blank=True, null=True)
     medication_given = models.TextField(blank=True, null=True)
 
     def __str__(self):
