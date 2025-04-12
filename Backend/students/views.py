@@ -330,17 +330,17 @@ def daily_activity_view(request, child_id):
             Prefetch('dailyactivity_set', queryset=DailyActivity.objects.filter(ondate=today))
         ).get(id=child_id)
 
-        # Extract prefetched daily activities
-        daily_activities = child.dailyactivity_set.all()
+        # # Extract prefetched daily activities
+        # daily_activities = child.dailyactivity_set.all()
 
-        # Serialize data
-        serializer = DailyActivitySerializer(daily_activities, many=True)
+        # # Serialize data
+        # serializer = DailyActivitySerializer(daily_activities, many=True)
         child_serializer = ChildSerializer(child)
 
         response_data = {
-            'data': serializer.data,
+            # 'data': serializer.data,
             'user': child_serializer.data,
-            'is_activity_saved': bool(daily_activities),  # Check if any activity exists
+            # 'is_activity_saved': bool(daily_activities),  # Check if any activity exists
         }
 
         return Response(response_data, status=status.HTTP_200_OK)
