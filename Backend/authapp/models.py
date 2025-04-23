@@ -35,4 +35,4 @@ class CustomUser(AbstractUser):
         return get_random_string(length=10)
     
     def __str__(self):
-        return "{self.id} - {self.email}"
+        return f"{self.id} - {self.email}"
