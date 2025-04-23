@@ -18,7 +18,7 @@ class Rooms(models.Model):
     name = models.CharField(max_length=55)
 
     def __str__(self):
-        return self.name
+        return f"{self.id} - {self.name}"
 
 
 class RoomMedia(models.Model):
