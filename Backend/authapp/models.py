@@ -33,3 +33,6 @@ class CustomUser(AbstractUser):
     def generate_unique_id(self):
         # Generate a unique ID using a random string
         return get_random_string(length=10)
+    
+    def __str__(self):
+        return "{self.id} - {self.email}"
