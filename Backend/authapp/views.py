@@ -248,3 +248,11 @@ def user_list(request):
         result = [{"room_name": room, "users": users} for room, users in grouped_users.items()]
         
         return Response(result)
+
+
+@api_view(['GET'])
+def StaffListView(request):
+    user = CustomUser.objects.filter(usertype="Staff")
+    ser = CustomUserSerializer(user, many=True)
+    return Response({'status': ser.data})
+

@@ -627,3 +627,17 @@ def delete_media_file(request, room_id, media_id):
 
     media.delete()
     return Response({'success': 'Media deleted'}, status=status.HTTP_204_NO_CONTENT)
+
+
+
+@api_view(['GET'])
+def StaffWiseStudent(request, id):
+    user = CustomUser.objects.get(id=id)
+    room = user.room
+    print("Room: ", room)
+    x = Child.objects.filter(room=room)
+    ser = ChildSerializer(x, many=True)
+    print("I: ", x)
+
+    print("User: ", user)
+    return Response({"data": ser.data})

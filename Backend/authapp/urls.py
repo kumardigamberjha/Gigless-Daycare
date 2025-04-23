@@ -23,4 +23,8 @@ urlpatterns = [
 
     # path('', csrf_exempt(LogoutView), name='logout'),
     path('edit-user/<int:pk>/', views.EditUserView.as_view(), name='edit-user'),
+    path('StaffLists/', views.StaffListView, name='staffListViews'),
+
+
+
 ]
