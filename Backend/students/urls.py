@@ -46,6 +46,8 @@ urlpatterns = [
     path('rooms/<int:room_id>/media/<int:media_id>/delete/', views.delete_media_file, name='delete_media_file'),
 
     path('roomwisestudent/<int:id>/', views.StaffWiseStudent, name='StaffWiseStudent'),
+    path('StaffRoomStudent/', views.StaffRoomStudent, name='StaffRoomStudent'),
+
     
 
 ]
