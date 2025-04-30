@@ -140,13 +140,8 @@ WSGI_APPLICATION = 'Backend.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-<<<<<<< HEAD
         'NAME': 'ubauntu',
         'USER': 'ubauntu',
-=======
-        'NAME': 'child',
-        'USER': 'postgres',
->>>>>>> origin/master
         'PASSWORD': 'dj@jha1011',
         'HOST': '127.0.0.1',  # Replace with your host machine's IP address
         'PORT': '5432',

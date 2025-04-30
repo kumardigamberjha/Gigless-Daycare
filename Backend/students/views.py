@@ -634,10 +634,24 @@ def delete_media_file(request, room_id, media_id):
 def StaffWiseStudent(request, id):
     user = CustomUser.objects.get(id=id)
     room = user.room
-    print("Room: ", room)
     x = Child.objects.filter(room=room)
     ser = ChildSerializer(x, many=True)
-    print("I: ", x)
 
-    print("User: ", user)
     return Response({"data": ser.data})
+
+
+@api_view(['GET'])
+def StaffRoomStudent(request):
+    if request.user and request.user.is_authenticated:
+        try:
+            user = CustomUser.objects.get(id=request.user.id)
+            room = user.room
+            students = Child.objects.filter(room=room)
+            serializer = ChildSerializer(students, many=True)
+            return Response({"data": serializer.data}, status=200)
+        except CustomUser.DoesNotExist:
+            return Response({"error": "User not found."}, status=404)
+        except Exception as e:
+            return Response({"error": str(e)}, status=500)
+    else:
+        return Response({"error": "Authentication required."}, status=401)
