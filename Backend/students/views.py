@@ -7,7 +7,7 @@ from django.db import IntegrityError
 from rest_framework import status
 from django.http import JsonResponse
 from django.shortcuts import get_object_or_404
-from datetime import datetime, date
+from datetime import datetime, date, timezone
 from rest_framework.views import APIView
 from rest_framework.decorators import api_view
 from .serializers import AttendanceStatusSerializer
@@ -353,6 +353,48 @@ def daily_activity_view(request, child_id):
     except Child.DoesNotExist:
         return Response({'error': 'Child not found'}, status=status.HTTP_404_NOT_FOUND)
     
+
+@api_view(['GET'])
+def daily_activity_view_old(request, child_id):
+    # Get date from query parameters or default to today
+    date_str = request.query_params.get('date')
+    if date_str:
+        try:
+            filter_date = datetime.strptime(date_str, '%Y-%m-%d').date()
+        except ValueError:
+            return Response(
+                {'error': 'Invalid date format. Use YYYY-MM-DD.'},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+    else:
+        filter_date = timezone.now().date()
+
+    try:
+        child = Child.objects.prefetch_related(
+            Prefetch(
+                'dailyactivity_set',
+                queryset=DailyActivity.objects.filter(date=filter_date),
+                to_attr='filtered_activities'
+            )
+        ).get(id=child_id)
+
+        daily_activities = child.filtered_activities  # Access prefetched data
+
+        serializer = DailyActivitySerializer(daily_activities, many=True)
+        child_serializer = ChildSerializer(child)
+
+        response_data = {
+            'data': serializer.data,
+            'user': child_serializer.data,
+            'is_activity_saved': len(daily_activities) > 0,
+            'filter_date': filter_date,
+        }
+
+        return Response(response_data, status=status.HTTP_200_OK)
+
+    except Child.DoesNotExist:
+        return Response({'error': 'Child not found'}, status=status.HTTP_404_NOT_FOUND)
+
 
 @api_view(['GET', 'POST'])
 def child_media_list(request):
