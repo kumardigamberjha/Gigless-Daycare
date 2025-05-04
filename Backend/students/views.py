@@ -331,13 +331,13 @@ def daily_activity_view(request, child_id):
         child = Child.objects.prefetch_related(
             Prefetch(
                 'dailyactivity_set',
-                queryset=DailyActivity.objects.filter(date=today),
+                queryset=DailyActivity.objects.filter(ondate=today),
                 to_attr='todays_activities'
             )
         ).get(id=child_id)
 
         # Access prefetched activities
-        daily_activities = child.todays_activities  # Using `to_attr` defined above
+        daily_activities = child.todays_activities
 
         # Serialize data
         serializer = DailyActivitySerializer(daily_activities, many=True)
@@ -353,7 +353,7 @@ def daily_activity_view(request, child_id):
 
     except Child.DoesNotExist:
         return Response({'error': 'Child not found'}, status=status.HTTP_404_NOT_FOUND)
-    
+        
 
 @api_view(['GET'])
 def daily_activity_view_old(request, child_id):
@@ -374,12 +374,12 @@ def daily_activity_view_old(request, child_id):
         child = Child.objects.prefetch_related(
             Prefetch(
                 'dailyactivity_set',
-                queryset=DailyActivity.objects.filter(date=filter_date),
+                queryset=DailyActivity.objects.filter(ondate=filter_date),
                 to_attr='filtered_activities'
             )
         ).get(id=child_id)
 
-        daily_activities = child.filtered_activities  # Access prefetched data
+        daily_activities = child.filtered_activities
 
         serializer = DailyActivitySerializer(daily_activities, many=True)
         child_serializer = ChildSerializer(child)
