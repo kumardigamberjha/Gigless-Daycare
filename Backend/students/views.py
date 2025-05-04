@@ -324,16 +324,19 @@ def edit_daily_activity_view(request, child_id):
 
 @api_view(['GET'])
 def daily_activity_view(request, child_id):
-    today = date.today()
+    today = timezone.now().date()
 
-    # Fetch the child and prefetch related daily activities for today
     try:
         child = Child.objects.prefetch_related(
-            Prefetch('dailyactivity_set', queryset=DailyActivity.objects.last())
+            Prefetch(
+                'dailyactivity_set',
+                queryset=DailyActivity.objects.filter(date=today),
+                to_attr='todays_activities'
+            )
         ).get(id=child_id)
 
-        # Extract prefetched daily activities
-        daily_activities = child.dailyactivity_set.all()
+        # Access prefetched activities
+        daily_activities = child.todays_activities  # Using `to_attr` defined above
 
         # Serialize data
         serializer = DailyActivitySerializer(daily_activities, many=True)
@@ -342,7 +345,7 @@ def daily_activity_view(request, child_id):
         response_data = {
             'data': serializer.data,
             'user': child_serializer.data,
-            'is_activity_saved': bool(daily_activities),  # Check if any activity exists
+            'is_activity_saved': len(daily_activities) > 0,
         }
 
         return Response(response_data, status=status.HTTP_200_OK)
