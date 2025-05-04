@@ -329,7 +329,7 @@ def daily_activity_view(request, child_id):
     # Fetch the child and prefetch related daily activities for today
     try:
         child = Child.objects.prefetch_related(
-            Prefetch('dailyactivity_set', queryset=DailyActivity.objects.filter(ondate=today))
+            Prefetch('dailyactivity_set', queryset=DailyActivity.objects.last())
         ).get(id=child_id)
 
         # Extract prefetched daily activities
