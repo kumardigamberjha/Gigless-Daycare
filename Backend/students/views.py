@@ -7,7 +7,7 @@ from django.db import IntegrityError
 from rest_framework import status
 from django.http import JsonResponse
 from django.shortcuts import get_object_or_404
-from datetime import datetime, date, timezone
+from datetime import datetime, date
 from rest_framework.views import APIView
 from rest_framework.decorators import api_view
 from .serializers import AttendanceStatusSerializer
@@ -20,6 +20,7 @@ from rest_framework.decorators import permission_classes
 from django.views import View
 from .tasks import save_images_and_videos_to_s3
 from django.db.models import Prefetch
+from django.utils import timezone
 
 class ChildListCreateView(generics.ListCreateAPIView):
     queryset = Child.objects.all()
@@ -324,7 +325,7 @@ def edit_daily_activity_view(request, child_id):
 
 @api_view(['GET'])
 def daily_activity_view(request, child_id):
-    today = timezone.now().date()
+    today = date.today()
 
     try:
         child = Child.objects.prefetch_related(
