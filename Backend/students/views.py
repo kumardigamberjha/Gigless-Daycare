@@ -325,43 +325,12 @@ def edit_daily_activity_view(request, child_id):
 
 @api_view(['GET'])
 def daily_activity_view(request, child_id):
-    today = date.today()
-
-    try:
-        child = Child.objects.prefetch_related(
-            Prefetch(
-                'dailyactivity_set',
-                queryset=DailyActivity.objects.filter(ondate=today),
-                to_attr='todays_activities'
-            )
-        ).get(id=child_id)
-
-        # Access prefetched activities
-        daily_activities = child.todays_activities
-
-        # Serialize data
-        serializer = DailyActivitySerializer(daily_activities, many=True)
-        child_serializer = ChildSerializer(child)
-
-        response_data = {
-            'data': serializer.data,
-            'user': child_serializer.data,
-            'is_activity_saved': len(daily_activities) > 0,
-        }
-
-        return Response(response_data, status=status.HTTP_200_OK)
-
-    except Child.DoesNotExist:
-        return Response({'error': 'Child not found'}, status=status.HTTP_404_NOT_FOUND)
-        
-
-@api_view(['GET'])
-def daily_activity_view_old(request, child_id):
-    # Get date from query parameters or default to today
+    # Get optional date from query parameters
     date_str = request.query_params.get('date')
+    
     if date_str:
         try:
-            filter_date = datetime.strptime(date_str, '%Y-%m-%d').date()
+            filter_date = date.fromisoformat(date_str)
         except ValueError:
             return Response(
                 {'error': 'Invalid date format. Use YYYY-MM-DD.'},
@@ -388,14 +357,14 @@ def daily_activity_view_old(request, child_id):
             'data': serializer.data,
             'user': child_serializer.data,
             'is_activity_saved': len(daily_activities) > 0,
-            'filter_date': filter_date,
+            'filter_date': filter_date.isoformat(),  # Always include date in response
         }
 
         return Response(response_data, status=status.HTTP_200_OK)
 
     except Child.DoesNotExist:
         return Response({'error': 'Child not found'}, status=status.HTTP_404_NOT_FOUND)
-
+    
 
 @api_view(['GET', 'POST'])
 def child_media_list(request):
