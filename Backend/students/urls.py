@@ -17,6 +17,8 @@ urlpatterns = [
     path('api/edit-daily-activity/<int:child_id>/', views.edit_daily_activity_view, name='edit_daily-activity'),
 
     path('api/daily-activity/<int:child_id>/', views.daily_activity_view, name='daily-activity'),
+    path('api/daily-activity_old/<int:child_id>/', views.daily_activity_view_old, name='daily-activity_old'),
+    
     path('child-media/', views.child_media_list, name="child_media"),
     path('child-media/<int:pk>/', views.child_media_detail, name="child_media_detail"),
     # Current User API View 
