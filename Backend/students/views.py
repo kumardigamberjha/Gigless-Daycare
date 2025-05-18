@@ -373,7 +373,7 @@ def child_media_list(request):
         today = date.today()
         
         # Filter child media uploaded on today's date
-        child_media = ChildMedia.objects.filter(uploaded_at__date=today)
+        child_media = ChildMedia.objects.last()
         
         serializer = ChildMediaSerializer(child_media, many=True)
         return Response(serializer.data)
@@ -414,7 +414,7 @@ def child_media_detail(request, pk):
     today = date.today()
     try:
         child = Child.objects.get(id=pk)
-        child_media = ChildMedia.objects.filter(child=child.id, uploaded_at__date=today)
+        child_media = ChildMedia.objects.filter(child=child.id)
         print("Child Media: ", child_media)
         serializer = ChildMediaSerializer(child_media, many=True)
         
