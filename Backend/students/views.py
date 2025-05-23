@@ -411,7 +411,6 @@ def child_media_list(request):
 
 @api_view(['GET'])
 def child_media_detail(request, pk):
-    today = date.today()
     try:
         child = Child.objects.get(id=pk)
         child_media = ChildMedia.objects.filter(child=child.id)

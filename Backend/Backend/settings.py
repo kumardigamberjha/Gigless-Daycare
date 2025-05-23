@@ -137,27 +137,27 @@ WSGI_APPLICATION = 'Backend.wsgi.application'
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
 
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'ubauntu',
-        'USER': 'ubauntu',
-        'PASSWORD': 'dj@jha1011',
-        'HOST': '127.0.0.1',  # Replace with your host machine's IP address
-        'PORT': '5432',
-    }
-}
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.postgresql',
+#         'NAME': 'ubauntu',
+#         'USER': 'ubauntu',
+#         'PASSWORD': 'dj@jha1011',
+#         'HOST': '127.0.0.1',  # Replace with your host machine's IP address
+#         'PORT': '5432',
+#     }
+# }
 
-#DATABASES = {
-#    'default': {
-#        'ENGINE': 'django.db.backends.postgresql',
-#        'NAME': 'daycare',
-#        'USER': 'postgres',
-#        'PASSWORD': 'dj@jha1011',
-#        'HOST': '127.0.0.1',  # Replace with your host machine's IP address
-#        'PORT': '5432',
-#    }
-#}
+DATABASES = {
+   'default': {
+       'ENGINE': 'django.db.backends.postgresql',
+       'NAME': 'daycare',
+       'USER': 'postgres',
+       'PASSWORD': 'dj@jha1011',
+       'HOST': '127.0.0.1',  # Replace with your host machine's IP address
+       'PORT': '5432',
+   }
+}
 
 # Password validation
 # https://docs.djangoproject.com/en/5.0/ref/settings/#auth-password-validators
