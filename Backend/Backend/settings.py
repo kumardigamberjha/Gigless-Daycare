@@ -153,7 +153,7 @@ DATABASES = {
        'ENGINE': 'django.db.backends.postgresql',
        'NAME': 'daycare',
        'USER': 'postgres',
-       'PASSWORD': 'dj@jha1011',
+       'PASSWORD': '1011',
        'HOST': '127.0.0.1',  # Replace with your host machine's IP address
        'PORT': '5432',
    }
@@ -183,7 +183,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'Asia/Kolkata'
+TIME_ZONE = 'America/Edmonton'
 
 USE_I18N = True
 

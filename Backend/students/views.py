@@ -427,6 +427,16 @@ def child_media_detail(request, pk):
         return Response(status=status.HTTP_404_NOT_FOUND)
 
 
+@api_view(['DELETE'])
+def delete_child_media(request, pk):
+    try:
+        media = ChildMedia.objects.get(id=pk)
+        media.delete()
+        return Response({"message": "Media deleted successfully."}, status=status.HTTP_204_NO_CONTENT)
+    
+    except ChildMedia.DoesNotExist:
+        return Response({"error": "Media not found."}, status=status.HTTP_404_NOT_FOUND)
+
 
 
 class CustomUserAPIView(APIView):
