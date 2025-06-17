@@ -20,6 +20,8 @@ urlpatterns = [
     
     path('child-media/', views.child_media_list, name="child_media"),
     path('child-media/<int:pk>/', views.child_media_detail, name="child_media_detail"),
+    path('delete_child_media/<int:pk>/', views.delete_child_media, name="delete_child_media"),
+
     # Current User API View 
     path('api/user/', views.CustomUserAPIView.as_view(), name='api-user-detail'),
 
