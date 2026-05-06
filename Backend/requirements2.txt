@@ -1,0 +1,239 @@
+aiofiles==25.1.0
+aiohappyeyeballs==2.6.1
+aiohttp==3.13.5
+aiosignal==1.4.0
+aiosqlite==0.22.1
+albucore==0.0.24
+albumentations==2.0.8
+alembic==1.18.4
+alphashape==1.3.1
+amqp==5.3.1
+anaconda-anon-usage @ file:///opt/miniconda3/conda-bld/anaconda-anon-usage_1764636648062/work
+anaconda-auth @ file:///home/task_176583888028164/conda-bld/anaconda-cloud-auth-split_1765839818582/work
+anaconda-cli-base @ file:///home/task_176488869080098/conda-bld/anaconda-cli-base_1764888740587/work
+annotated-doc==0.0.4
+annotated-types @ file:///home/task_176174487847081/conda-bld/annotated-types_1761744928471/work
+anyio==4.12.1
+archspec @ file:///home/task_175812491784513/conda-bld/archspec_1758124989039/work
+asgiref==3.11.1
+attrs==26.1.0
+beautifulsoup4==4.14.3
+billiard==4.2.4
+boltons @ file:///croot/boltons_1751383775419/work
+boto3==1.43.4
+botocore==1.43.4
+brotli==1.2.0
+brotlicffi @ file:///home/task_176496126124857/conda-bld/brotlicffi_1764961326114/work
+celery==5.6.3
+certifi==2026.4.22
+cffi @ file:///home/task_176183214835616/conda-bld/cffi_1761832774688/work
+channels==4.3.2
+chardet==7.4.3
+charset-normalizer @ file:///home/task_176174481524083/conda-bld/charset-normalizer_1761744828711/work
+click @ file:///home/task_176433224228540/conda-bld/click_1764332256338/work
+click-didyoumean==0.3.1
+click-log==0.4.0
+click-plugins==1.1.1.2
+click-repl==0.3.0
+colorama==0.4.6
+comfy-aimdo==0.2.12
+conda @ file:///home/task_176556791054345/conda-bld/conda_1765567979493/work/conda-src
+conda-anaconda-telemetry @ file:///croot/conda-anaconda-telemetry_1755883788794/work
+conda-anaconda-tos @ file:///croot/conda-anaconda-tos_1755123313635/work
+conda-content-trust @ file:///work/perseverance-python-buildout/croot/conda-content-trust_1728487058234/work
+conda-libmamba-solver @ file:///C:/miniconda3/conda-bld/conda-libmamba-solver_1764245615235/work/src
+conda-package-handling @ file:///home/task_176236637997838/conda-bld/conda-package-handling_1762366405159/work
+conda_package_streaming @ file:///home/task_176236152622180/conda-bld/conda-package-streaming_1762361633858/work
+contourpy==1.3.3
+Crawl4AI==0.8.6
+cryptography @ file:///home/task_176193173929288/conda-bld/cryptography-split_1761931963149/work
+cssselect==1.4.0
+cycler==0.12.1
+Cython==3.2.4
+ddgs==9.14.2
+distro @ file:///work/perseverance-python-buildout/croot/distro_1728396110052/work
+Django==6.0.5
+django-channels==0.7.0
+django-cors-headers==4.9.0
+djangorestframework==3.17.1
+djangorestframework_simplejwt==5.5.1
+dnspython==2.8.0
+duckduckgo_search==8.1.1
+easydict==1.13
+email-validator==2.3.0
+et_xmlfile==2.0.0
+fake-useragent==2.2.0
+fastapi==0.135.1
+fastuuid==0.14.0
+filelock==3.25.2
+fonttools==4.62.1
+fpdf==1.7.2
+frozendict @ file:///home/task_176175049677026/conda-bld/frozendict_1761750665451/work
+frozenlist==1.8.0
+fsspec==2026.2.0
+google-auth==2.48.0
+google-genai==1.65.0
+greenlet==3.4.0
+groq==1.2.0
+h11==0.16.0
+h2==4.3.0
+hf-xet==1.4.2
+hpack==4.1.0
+httpcore==1.0.9
+httptools==0.7.1
+httpx==0.28.1
+huggingface_hub==1.7.2
+humanize==4.15.0
+hyperframe==6.1.0
+idna @ file:///home/task_176191175488988/conda-bld/idna_1761911981595/work
+ImageIO==2.37.3
+importlib_metadata==9.0.0
+insightface==0.7.3
+jaraco.classes @ file:///croot/jaraco.classes_1755516327832/work
+jaraco.context @ file:///io/perseverance-python-buildout/croot/jaraco.context_1731706750665/work
+jaraco.functools @ file:///croot/jaraco.functools_1740408111753/work
+jeepney @ file:///tmp/build/80754af9/jeepney_1627537048313/work
+Jinja2==3.1.6
+jiter==0.13.0
+jmespath==1.1.0
+joblib==1.5.3
+jsonpatch @ file:///work/perseverance-python-buildout/croot/jsonpatch_1728399595941/work
+jsonpointer @ file:///croot/jsonpointer_1753788433671/work
+jsonschema==4.26.0
+jsonschema-specifications==2025.9.1
+keyring @ file:///home/task_176363713576885/conda-bld/keyring_1763637184857/work
+kiwisolver==1.5.0
+kombu==5.6.2
+langchain-classic==1.0.4
+langchain-core==1.3.2
+langchain-protocol==0.0.12
+langchain-text-splitters==1.1.2
+langsmith==0.7.37
+lark==1.3.1
+lazy-loader==0.5
+libmambapy @ file:///home/task_176311149180614/conda-bld/mamba-split_1763111570862/work/libmambapy
+lxml==5.4.0
+Mako==1.3.11
+markdown-it-py @ file:///croot/markdown-it-py_1756299186942/work
+MarkupSafe==3.0.3
+matplotlib==3.10.9
+mdurl @ file:///home/task_175855216352428/conda-bld/mdurl_1758552176751/work
+menuinst @ file:///home/task_176538230483207/conda-bld/menuinst_1765382366331/work
+ml_dtypes==0.5.4
+more-itertools @ file:///home/task_176112148319406/conda-bld/more-itertools_1761121494880/work
+msgpack @ file:///croot/msgpack-python_1750958623279/work
+multidict==6.7.1
+networkx==3.6.1
+nltk==3.9.4
+numpy==2.4.2
+oauthlib==3.3.1
+onnx==1.21.0
+openai==2.28.0
+opencv-python-headless==4.13.0.92
+openpyxl==3.1.5
+orjson==3.11.8
+outcome==1.3.0.post0
+packaging @ file:///home/task_176104878999627/conda-bld/packaging_1761049078606/work
+pandas==3.0.1
+patchright==1.59.1
+pillow==12.1.1
+pkce @ file:///work/perseverance-python-buildout/croot/pkce_1728388093137/work
+platformdirs @ file:///home/task_176235602006708/conda-bld/platformdirs_1762356487962/work
+playwright==1.59.0
+playwright-stealth==2.0.3
+pluggy @ file:///croot/pluggy_1733169602837/work
+prettytable==3.17.0
+primp==1.2.3
+prompt_toolkit==3.0.52
+propcache==0.4.1
+protobuf==7.34.1
+psutil==7.2.2
+psycopg2==2.9.11
+pyasn1==0.6.2
+pyasn1_modules==0.4.2
+pycosat @ file:///croot/pycosat_1736868416091/work
+pycparser @ file:///home/task_175749564936714/conda-bld/pycparser_1757496040682/work
+pydantic @ file:///home/task_176408303339170/conda-bld/pydantic_1764083529211/work
+pydantic-settings @ file:///home/task_176416496069032/conda-bld/pydantic-settings_1764165165402/work
+pydantic_core @ file:///home/task_176400924785639/conda-bld/pydantic-core_1764009747660/work
+pyee==13.0.1
+Pygments @ file:///home/task_176243137807904/conda-bld/pygments_1762431407645/work
+PyJWT @ file:///home/task_176433208417911/conda-bld/pyjwt_1764332098101/work
+pyOpenSSL==26.2.0
+pyparsing==3.3.2
+PySocks @ file:///home/task_176175235884818/conda-bld/pysocks_1761753009495/work
+python-dateutil==2.9.0.post0
+python-dotenv @ file:///croot/python-dotenv_1745610241282/work
+python-multipart==0.0.22
+PyYAML==6.0.3
+rank-bm25==0.2.2
+readchar @ file:///home/task_176061336965958/conda-bld/readchar_1760613437376/work
+referencing==0.37.0
+regex==2026.4.4
+requests @ file:///home/task_176235918788486/conda-bld/requests_1762359591632/work
+requests-file==3.0.1
+requests-oauthlib==2.0.0
+requests-toolbelt==1.0.0
+rich @ file:///home/task_176037557612320/conda-bld/rich_1760375632000/work
+rpds-py==0.30.0
+rsa==4.9.1
+rtree==1.4.1
+ruamel.yaml @ file:///home/task_176253595903435/conda-bld/ruamel.yaml_1762535972567/work
+ruamel.yaml.clib @ file:///home/task_176253026438192/conda-bld/ruamel.yaml.clib_1762530278005/work
+s3transfer==0.17.0
+scikit-image==0.26.0
+scikit-learn==1.8.0
+scipy==1.17.1
+SecretStorage @ file:///home/task_175793143758247/conda-bld/secretstorage_1757931467244/work
+selenium==4.43.0
+semver @ file:///home/task_176190313959014/conda-bld/semver_1761903196627/work
+setuptools==80.9.0
+shapely==2.1.2
+shellingham @ file:///home/task_176191203629823/conda-bld/shellingham_1761912204430/work
+simsimd==6.5.16
+six==1.17.0
+sniffio==1.3.1
+snowballstemmer==2.2.0
+sortedcontainers==2.4.0
+soupsieve==2.8.3
+SQLAlchemy==2.0.49
+sqlparse==0.5.5
+starlette==0.52.1
+stringzilla==4.6.0
+structlog==25.5.0
+tenacity==9.1.4
+threadpoolctl==3.6.0
+tifffile==2026.4.11
+tiktoken==0.12.0
+tldextract==5.3.1
+tokenizers==0.23.1
+tomli @ file:///croot/tomli_1753774587605/work
+tqdm @ file:///home/task_176286304944547/conda-bld/tqdm_1762863349742/work
+trimesh==4.12.2
+trio==0.33.0
+trio-websocket==0.12.2
+truststore @ file:///home/task_176252074050774/conda-bld/truststore_1762520903993/work
+typer==0.20.0
+typer-slim==0.20.0
+typing-inspection @ file:///home/task_176061348700415/conda-bld/typing-inspection_1760614166875/work
+typing_extensions @ file:///croot/typing_extensions_1756280817316/work
+tzdata==2026.2
+tzlocal==5.3.1
+unclecode-litellm==1.81.13
+urllib3==2.6.3
+uuid_utils==0.14.1
+uvicorn==0.41.0
+uvloop==0.22.1
+vine==5.1.0
+watchfiles==1.1.1
+wcwidth==0.6.0
+webdriver-manager==4.0.2
+websocket-client==1.9.0
+websockets==16.0
+wheel==0.45.1
+wsproto==1.3.2
+xlrd==2.0.2
+xxhash==3.7.0
+yarl==1.23.0
+zipp==3.23.1
+zstandard @ file:///home/task_175818846949212/conda-bld/zstandard_1758189073015/work
