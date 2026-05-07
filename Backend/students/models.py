@@ -26,6 +26,25 @@ class RoomMedia(models.Model):
     media_file = models.FileField(upload_to='room_media/')
     uploaded_at = models.DateField(auto_now_add=True)  # Automatically saves the current date when the media is uploaded
 
+    def save(self, *args, **kwargs):
+        if self.media_file:
+            # We try to compress. The compress_image logic handles non-image files.
+            # Using the method from Child model as a reference or repeating logic for simplicity
+            self.media_file = self.compress_image(self.media_file)
+        super().save(*args, **kwargs)
+
+    def compress_image(self, image):
+        try:
+            img = Image.open(image)
+            if img.mode != 'RGB':
+                img = img.convert('RGB')
+            output = io.BytesIO()
+            img.save(output, format='JPEG', quality=60)
+            output.seek(0)
+            return InMemoryUploadedFile(output, 'FileField', image.name, 'image/jpeg', output.getbuffer().nbytes, None)
+        except Exception:
+            return image
+
     def __str__(self):
         return f'{self.room.name} - {self.media_file.name}'
 
@@ -77,7 +96,11 @@ class Child(models.Model):
 
     def compress_image(self, image):
         # Open the image using Pillow
-        img = Image.open(image)
+        try:
+            img = Image.open(image)
+        except Exception:
+            # If it's not an image (e.g. video), return as is
+            return image
 
         # Check if image mode is not 'RGB' and convert it
         if img.mode != 'RGB':
@@ -143,6 +166,23 @@ class ChildMedia(models.Model):
     uploaded_at = models.DateTimeField(auto_now_add=True)
     activity_type = models.CharField(max_length=20, choices=ACTIVITY_TYPES, default='other')
     desc = models.CharField(max_length=500,blank=True, null=True)
+
+    def save(self, *args, **kwargs):
+        if self.file and self.media_type == 'Image':
+            self.file = self.compress_image(self.file)
+        super().save(*args, **kwargs)
+
+    def compress_image(self, image):
+        try:
+            img = Image.open(image)
+            if img.mode != 'RGB':
+                img = img.convert('RGB')
+            output = io.BytesIO()
+            img.save(output, format='JPEG', quality=60)
+            output.seek(0)
+            return InMemoryUploadedFile(output, 'FileField', image.name, 'image/jpeg', output.getbuffer().nbytes, None)
+        except Exception:
+            return image
 
     def __str__(self):
         return f"{self.get_media_type_display()} of {self.child.first_name} {self.child.last_name} uploaded at {self.uploaded_at} for {self.get_activity_type_display()}"
